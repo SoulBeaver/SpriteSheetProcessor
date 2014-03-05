@@ -1,4 +1,4 @@
-package com.sbg.rpg.unpacker
+ package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.util.readImage
 import java.nio.file.Path
@@ -100,11 +100,10 @@ private fun plotSprite(image: BufferedImage, point: Point, backgroundColor: Colo
         val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y))
 
         if (currentColor != backgroundColor) {
-            unvisited.addAll(neighbors(currentPoint, image) filter {
-                !visited.contains(it) &&
-                !unvisited.contains(it) &&
-                image.getRGB(it.x, it.y) != backgroundColor.getRGB()
-            })
+            unvisited.addAll(neighbors(currentPoint, image).filter {
+                                 !visited.contains(it) && !unvisited.contains(it) &&
+                                 image.getRGB(it.x, it.y) != backgroundColor.getRGB()
+                             })
 
             visited.add(currentPoint)
         }
