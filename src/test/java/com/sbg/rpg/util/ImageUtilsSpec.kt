@@ -5,6 +5,8 @@ import java.nio.file.Paths
 import kotlin.test.assertFalse
 import kotlin.test.assertEquals
 import java.awt.Image
+import java.awt.Color
+import java.awt.Dimension
 
 class ImageUtilsSpec: Spek() {{
     given("An image") {
@@ -71,21 +73,72 @@ class ImageUtilsSpec: Spek() {{
     }
 
     given("A 200x200 image") {
-        on("creating a simple copy") {
-            it("should preserve identity") {
+        val imageUrl = javaClass<ImageUtilsSpec>().getClassLoader()!!.getResource("unpacker/200x200.png")!!
 
+        on("creating a simple copy") {
+            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val copy = copy(image)
+
+            it("should be distinct") {
+                assertFalse(copy == image)
+            }
+
+            it("should contain the same content") {
+                for (pixel in copy)
+                    assertEquals(pixel.color, Color(image.getRGB(pixel.point.x, pixel.point.y)))
             }
         }
 
         on("creating a larger copy with black border") {
-            it("should have a 5 pixel wide border on all sides") {
+            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val copyWithBorder = copyWithBorder(image,
+                                                Dimension(image.getWidth() + 10,
+                                                          image.getHeight() + 10),
+                                                Color.BLACK)
 
+            it("should be 210x210 large") {
+                assertEquals(210, copyWithBorder.getWidth(),
+                             "Expected width of border copy to be 210, but was ${copyWithBorder.getWidth()}")
+                assertEquals(210, copyWithBorder.getHeight(),
+                             "Expected width of border copy to be 210, but was ${copyWithBorder.getHeight()}")
+            }
+
+            it("should have a 5 pixel wide border on all sides") {
+                for (y in 0..4) {
+                    for (x in 0..copyWithBorder.getWidth() - 1) {
+                        assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
+                    }
+                }
+
+                for (y in 205..209) {
+                    for (x in 0..copyWithBorder.getWidth() - 1) {
+                        assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
+                    }
+                }
+
+                for (x in 0..4) {
+                    for (y in 0..copyWithBorder.getHeight() - 1) {
+                        assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
+                    }
+                }
+
+                for (x in 205..209) {
+                    for (y in 0..copyWithBorder.getHeight() - 1) {
+                        assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
+                    }
+                }
             }
         }
 
         on("creating 50x50 sub-image copy") {
-            it("") {
+            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val subImage = copySubImage(image, java.awt.Rectangle(0, 0, 50, 50))
 
+            it("should be exactly 50x50") {
+                assertEquals(50, subImage.getWidth(),
+                             "Expected sub-image width of 50, but was ${subImage.getWidth()}")
+                assertEquals(50, subImage.getHeight(),
+                             "Expected sub-image height of 50, but was ${subImage.getHeight()}")
             }
         }
     }
