@@ -6,6 +6,8 @@ import com.beust.jcommander.IParameterValidator
 import com.beust.jcommander.ParameterException
 import java.util.Arrays
 import kotlin.properties.Delegates
+import java.nio.file.Paths
+import java.nio.file.Files
 
 data class CommandLineArguments {
     Parameter(description = "Sprite sheets to (un)pack",
@@ -27,7 +29,8 @@ data class CommandLineArguments {
 
     Parameter(names = array("-export-folder", "-e"),
               description = "Where to export the new files.",
-              required = true)
+              required = true,
+              validateWith = javaClass<FolderExistsValidator>())
     val exportFolder: String = ""
 }
 
@@ -41,5 +44,16 @@ class MetadataOutputFormatValidator: IParameterValidator {
         val trimmedValue = value.trim().toLowerCase()
         if (!acceptedOutputFormats.contains(trimmedValue))
             throw ParameterException("Accepted metadata output formats:  {json, yaml, txt}, received:  $value")
+    }
+}
+
+class FolderExistsValidator: IParameterValidator {
+    override fun validate(name: String?, value: String?) {
+        if (value == null || value.isEmpty())
+            throw ParameterException("export-folder value may not be empty")
+
+        val path = Paths.get(value)!!.toAbsolutePath()!!
+        if (!Files.exists(path))
+            throw ParameterException("Path $path does not exist.")
     }
 }

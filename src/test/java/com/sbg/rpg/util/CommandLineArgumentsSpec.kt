@@ -17,7 +17,7 @@ class CommandLineArgumentsSpec: Spek() {{
         on("setting parameters using the verbose names") {
             val args: Array<String?> = array("-verbose",
                                              "-metadata-output-format", "json",
-                                             "-export-folder", "./export",
+                                             "-export-folder", "target",
                                              "unpack/SingleSprite.png")
 
             it("the parameters are correctly set") {
@@ -32,7 +32,7 @@ class CommandLineArgumentsSpec: Spek() {{
         on("setting parameters using the short names") {
             val args: Array<String?> = array("-v",
                                              "-mof", "json",
-                                             "-e", "./export",
+                                             "-e", "target",
                                              "unpack/SingleSprite.png")
 
             it("the parameters are correctly set") {
@@ -46,7 +46,7 @@ class CommandLineArgumentsSpec: Spek() {{
 
         on("using an empty metadata output format value") {
             val args: Array<String?> = array("-mof", "",
-                                             "-e", "./export",
+                                             "-e", "target",
                                              "unpack/SingleSprite.png")
 
             it("a ParameterException is thrown") {
@@ -58,7 +58,7 @@ class CommandLineArgumentsSpec: Spek() {{
 
         on("using an invalid metadata output format") {
             val args: Array<String?> = array("-mof", "python",
-                                             "-e", "./export",
+                                             "-e", "target",
                                              "unpack/SingleSprite.png")
 
             it("a ParameterException is thrown") {
@@ -70,7 +70,7 @@ class CommandLineArgumentsSpec: Spek() {{
 
         on("using a valid, uppercased output format") {
             val args: Array<String?> = array("-mof", "YAML",
-                                             "-e", "./export",
+                                             "-e", "target",
                                              "unpack/SingleSprite.png")
 
             it("ignores casing and parses argument") {
@@ -89,9 +89,19 @@ class CommandLineArgumentsSpec: Spek() {{
         }
 
         on("not including any sprite sheets") {
-            val args: Array<String?> = array("-e", "./export")
+            val args: Array<String?> = array("-e", "target")
 
             it("throws a ParameterException") {
+                failsWith(javaClass<ParameterException>()) {
+                    JCommander(cla, *args)
+                }
+            }
+        }
+
+        on("including a non-existent export folder") {
+            val args: Array<String?> = array("-e", "C:/Rawr/Pssshhhoooooooommmasdf")
+
+            it("throws ParameterException") {
                 failsWith(javaClass<ParameterException>()) {
                     JCommander(cla, *args)
                 }
