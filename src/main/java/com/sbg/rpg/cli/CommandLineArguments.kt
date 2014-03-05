@@ -18,11 +18,11 @@ data class CommandLineArguments {
     val metadataOutputFormat = "yaml"
 
     Parameter(names = array("-verbose", "-v"),
-              description = "Enable debug statements without logging to file")
+              description = "Turn on debug statements, but without logging to file")
     val verbose = false
 
     Parameter(names = array("-debug", "-d"),
-              description = "Enable debug statements with logging to file")
+              description = "Turn on debug statements with logging to file")
     val debugMode = false
 
     Parameter(names = array("-export-folder", "-e"),
