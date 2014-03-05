@@ -84,7 +84,9 @@ class ImageUtilsSpec: Spek() {{
         }
 
         on("creating 50x50 sub-image copy") {
-            it("")
+            it("") {
+
+            }
         }
     }
 }}
