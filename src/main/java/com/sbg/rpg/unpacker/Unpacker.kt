@@ -47,8 +47,6 @@ private val logger = LogManager.getLogger("Unpacker")!!
  * @throws IllegalArgumentException if the file could not be found
  */
 fun unpack(spriteSheet: Path): List<Image> {
-    logger.info("Entered unpacking stage.")
-
     Preconditions.checkArgument(Files.exists(spriteSheet),
                                 "The file ${spriteSheet.getFileName()} does not exist")
 

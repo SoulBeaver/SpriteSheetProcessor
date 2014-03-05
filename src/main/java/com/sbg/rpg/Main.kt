@@ -22,11 +22,18 @@ fun main(args: Array<String?>) {
 
     if (commandLineArguments.verbose || commandLineArguments.debugMode)
         enableVerboseOutput()
-    if (commandLineArguments.debugMode)
-        enableLoggingToFile()
+    if (!commandLineArguments.debugMode)
+        disableLoggingToFile()
 
+    val logger = LogManager.getLogger("Main")!!
+
+    logger.info("Unpacking sprites")
     // 1) Unpack:  Path -> List<Image>
+
+    logger.info("Creating metadata")
     // 2) Create metadata:  List<Image> -> String {yaml, json, txt}
+
+    logger.info("Packing sprites")
     // 3) Pack:  List<Image> -> Image
 }
 
@@ -38,11 +45,8 @@ private fun enableVerboseOutput() {
     loggerContext.updateLoggers(configuration)
 }
 
-private fun enableLoggingToFile() {
+private fun disableLoggingToFile() {
     val loggerContext = LogManager.getContext(false) as LoggerContext
     val configuration = loggerContext.getConfiguration()!!
-    configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.setLevel(Level.DEBUG)
-
-    // TODO: Add file appender
-    // configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME).addAppender(FileAppender())
+    configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.removeAppender("LogFile")
 }
