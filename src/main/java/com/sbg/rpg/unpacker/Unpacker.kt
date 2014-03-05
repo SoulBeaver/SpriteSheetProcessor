@@ -33,6 +33,9 @@ import com.sbg.rpg.util.bindFirst
 import com.sbg.rpg.util.bindSecond
 import com.sbg.rpg.util.iterator
 import com.sbg.rpg.util.iterable
+import org.apache.logging.log4j.LogManager
+
+private val logger = LogManager.getLogger("Unpacker")!!
 
 /**
  * Given a valid path to a sprite sheet, detects and returns every individual sprite. The method may not be perfect and
@@ -44,11 +47,17 @@ import com.sbg.rpg.util.iterable
  * @throws IllegalArgumentException if the file could not be found
  */
 fun unpack(spriteSheet: Path): List<Image> {
+    logger.info("Entered unpacking stage.")
+
     Preconditions.checkArgument(Files.exists(spriteSheet),
                                 "The file ${spriteSheet.getFileName()} does not exist")
 
+    logger.debug("Loading sprite sheet.")
     val spriteSheetImage = readImage(spriteSheet).toBufferedImage()
+
+    logger.debug("Determining most probable background color.")
     val backgroundColor  = determineProbableBackgroundColor(spriteSheetImage)
+    logger.debug("The most probable background color is $backgroundColor")
 
     val copyAndClean = compose(::cleanSprite.bindSecond(backgroundColor),
                                ::copySubImage.bindFirst(spriteSheetImage))
@@ -65,12 +74,18 @@ private fun findSprites(image: BufferedImage,
         val (point, color) = pixel
 
         if (color != backgroundColor) {
+            logger.debug("Found a sprite starting at (${point.x}, ${point.y})")
             val spritePlot = plotSprite(workingImage, point, backgroundColor)
-            spriteRectangles.add(Rectangle(spritePlot, image))
+            val spriteRectangle = Rectangle(spritePlot, image)
+
+            logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
+
+            spriteRectangles.add(spriteRectangle)
             eraseSprite(workingImage, backgroundColor, spritePlot)
         }
     }
 
+    logger.info("Found ${spriteRectangles.size()} sprites.")
     return spriteRectangles
 }
 

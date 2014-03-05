@@ -11,21 +11,13 @@ import com.beust.jcommander.Parameter
 import java.util.ArrayList
 import com.beust.jcommander.JCommander
 import com.sbg.rpg.cli.CommandLineArguments
+import org.apache.logging.log4j.LogManager
 
 fun main(args: Array<String?>) {
+    val logger = LogManager.getLogger("main")!!
+
+    logger.debug("Received arguments:  $it")
+
     val commandLineArguments = CommandLineArguments()
     JCommander(commandLineArguments).parse(*args)
-}
-
-private fun withYamlExtension(path: Path): Path {
-    val fileName = path.getFileName().toString()
-    val fileNameWithoutExtension = fileName.substring(0, fileName.indexOf('.'))
-
-    return path.resolveSibling("${fileNameWithoutExtension}.yaml")!!
-}
-
-private fun write(yaml: String, destination: Path) {
-    ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)).use {
-        Files.copy(it, destination)
-    }
 }
