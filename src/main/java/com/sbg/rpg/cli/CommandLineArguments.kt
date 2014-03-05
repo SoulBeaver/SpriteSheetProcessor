@@ -5,9 +5,11 @@ import java.util.ArrayList
 import com.beust.jcommander.IParameterValidator
 import com.beust.jcommander.ParameterException
 import java.util.Arrays
+import kotlin.properties.Delegates
 
 data class CommandLineArguments {
-    Parameter
+    Parameter(description = "Sprite sheets to (un)pack",
+              required= true)
     val spriteSheetPaths = ArrayList<String>()
 
     Parameter(names = array("-metadata-output-format", "-mof"),
@@ -22,6 +24,11 @@ data class CommandLineArguments {
     Parameter(names = array("-debug", "-d"),
               description = "Enable debug statements with logging to file")
     val debugMode = false
+
+    Parameter(names = array("-export-folder", "-e"),
+              description = "Where to export the new files.",
+              required = true)
+    val exportFolder: String = ""
 }
 
 class MetadataOutputFormatValidator: IParameterValidator {
