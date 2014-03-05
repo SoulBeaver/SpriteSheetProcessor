@@ -7,16 +7,14 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.io.ByteArrayInputStream
 import com.sbg.rpg.metadata.convertToYaml
+import com.beust.jcommander.Parameter
+import java.util.ArrayList
+import com.beust.jcommander.JCommander
+import com.sbg.rpg.cli.CommandLineArguments
 
-fun main(args: Array<String>) {
-    // TODO: Usage example
-    // TODO: Error handling
-    for (arg in args) {
-        val metadata = Paths.get(arg)!!
-        val yaml = convertToYaml(metadata)
-
-        write(yaml, withYamlExtension(metadata))
-    }
+fun main(args: Array<String?>) {
+    val commandLineArguments = CommandLineArguments()
+    JCommander(commandLineArguments).parse(*args)
 }
 
 private fun withYamlExtension(path: Path): Path {

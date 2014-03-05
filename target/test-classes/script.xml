@@ -4,6 +4,7 @@
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/metadata/ConverterSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/unpacker/FindProbableBackgroundColorSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/unpacker/UnpackerSpec.kt"/>
+        <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/util/CommandLineArgumentsSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/util/ImageUtilsSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/util/MapUtilsSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/util/RectangleUtilsSpec.kt"/>

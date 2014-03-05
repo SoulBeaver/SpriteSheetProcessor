@@ -2,6 +2,7 @@
     <!-- Module script for production -->
     <module name="SpriteSheetProcessor" outputDir="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/target/classes">
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/Main.kt"/>
+        <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/cli/CommandLineArguments.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/metadata/Converter.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/unpacker/Unpacker.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/util/FunctionalUtils.kt"/>
