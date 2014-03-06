@@ -32,6 +32,9 @@ data class CommandLineArguments {
               required = true,
               validateWith = javaClass<FolderExistsValidator>())
     val exportFolder: String = ""
+
+    Parameter(names = array("-help", "-h"), help = true)
+    val help: Boolean = false
 }
 
 class MetadataOutputFormatValidator: IParameterValidator {

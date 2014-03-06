@@ -132,5 +132,7 @@ private fun cleanSprite(sprite: BufferedImage, backgroundColor: Color): Buffered
                                                      sprite.getHeight() + 2),
                                            backgroundColor)
 
+
+
     return sprite
 }

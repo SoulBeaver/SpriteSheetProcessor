@@ -15,6 +15,14 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.core.appender.FileAppender
+import com.sbg.rpg.unpacker.unpack
+import com.sbg.rpg.metadata.createJsonMetadata
+import com.sbg.rpg.metadata.createYamlMetadata
+import com.sbg.rpg.metadata.createTextMetadata
+import com.sbg.rpg.packer.packSprites
+import java.awt.Image
+
+private val logger = LogManager.getLogger("Main")!!
 
 fun main(args: Array<String?>) {
     val commandLineArguments = CommandLineArguments()
@@ -25,16 +33,7 @@ fun main(args: Array<String?>) {
     if (!commandLineArguments.debugMode)
         disableLoggingToFile()
 
-    val logger = LogManager.getLogger("Main")!!
-
-    logger.info("Unpacking sprites")
-    // 1) Unpack:  Path -> List<Image>
-
-    logger.info("Creating metadata")
-    // 2) Create metadata:  List<Image> -> String {yaml, json, txt}
-
-    logger.info("Packing sprites")
-    // 3) Pack:  List<Image> -> Image
+    processSpriteSheets(commandLineArguments)
 }
 
 private fun enableVerboseOutput() {
@@ -49,4 +48,33 @@ private fun disableLoggingToFile() {
     val loggerContext = LogManager.getContext(false) as LoggerContext
     val configuration = loggerContext.getConfiguration()!!
     configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.removeAppender("LogFile")
+}
+
+data class SpriteSheetWithMetadata(val spriteSheet: Image, val metadata: String)
+
+private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
+    val spriteSheetsWithMetadata = ArrayList<SpriteSheetWithMetadata>()
+
+    for (rawSpriteSheetPath in commandLineArguments.spriteSheetPaths) {
+        logger.info("Working on $rawSpriteSheetPath")
+        val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
+
+        logger.info("Unpacking sprites")
+        val sprites = unpack(spriteSheetPath)
+
+        logger.info("Creating ${commandLineArguments.metadataOutputFormat} metadata")
+        val metadata = when(commandLineArguments.metadataOutputFormat) {
+            "json" -> createJsonMetadata(sprites)
+            "yaml" -> createYamlMetadata(sprites)
+            "txt"  -> createTextMetadata(sprites)
+            else   -> throw IllegalArgumentException("Metadata Output Format must be one of {yaml, json, txt}")
+        }
+
+        logger.info("Packing sprites")
+        val packedSpriteSheet = packSprites(sprites)
+
+        spriteSheetsWithMetadata.add(SpriteSheetWithMetadata(packedSpriteSheet, metadata))
+    }
+
+    // TODO: Export SpriteSheetsWithMetadata
 }
