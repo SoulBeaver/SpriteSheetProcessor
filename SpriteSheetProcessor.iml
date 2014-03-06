@@ -18,9 +18,10 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-runtime:0.6.1673" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.beust:jcommander:1.30" level="project" />
-    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.14-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.0-rc1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.0-rc1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.14-SNAPSHOT" level="project" />
   </component>
 </module>
 
