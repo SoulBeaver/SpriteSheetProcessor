@@ -59,13 +59,13 @@ private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
         logger.info("Working on $rawSpriteSheetPath")
         val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
 
-        logger.info("Unpacking sprites")
+        logger.debug("Unpacking sprites")
         val sprites = unpack(spriteSheetPath)
 
-        logger.info("Packing sprites")
+        logger.debug("Packing sprites")
         val (packedSpriteSheet, spritesBounds) = packSprites(sprites)
 
-        logger.info("Creating ${commandLineArguments.metadataOutputFormat} metadata")
+        logger.debug("Creating ${commandLineArguments.metadataOutputFormat} metadata")
         val metadata = when(commandLineArguments.metadataOutputFormat) {
             "json" -> createJsonMetadata(spritesBounds)
             "yaml" -> createYamlMetadata(spritesBounds)
