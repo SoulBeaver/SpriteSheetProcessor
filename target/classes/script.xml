@@ -4,6 +4,8 @@
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/Main.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/cli/CommandLineArguments.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/metadata/Converter.kt"/>
+        <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/metadata/MetadataCreator.kt"/>
+        <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/packer/SpriteSheetPacker.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/unpacker/Unpacker.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/util/FunctionalUtils.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java/com/sbg/rpg/util/ImageUtils.kt"/>
@@ -38,9 +40,10 @@
         <classpath path="C:/Users/SoulBeaver/.m2/repository/org/jetbrains/kotlin/kotlin-runtime/0.6.1673/kotlin-runtime-0.6.1673.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/com/google/guava/guava/16.0.1/guava-16.0.1.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/com/beust/jcommander/1.30/jcommander-1.30.jar"/>
-        <classpath path="C:/Users/SoulBeaver/.m2/repository/org/yaml/snakeyaml/1.14-SNAPSHOT/snakeyaml-1.14-20130905.182741-1.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/org/apache/logging/log4j/log4j-api/2.0-rc1/log4j-api-2.0-rc1.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/org/apache/logging/log4j/log4j-core/2.0-rc1/log4j-core-2.0-rc1.jar"/>
+        <classpath path="C:/Users/SoulBeaver/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"/>
+        <classpath path="C:/Users/SoulBeaver/.m2/repository/org/yaml/snakeyaml/1.14-SNAPSHOT/snakeyaml-1.14-20130905.182741-1.jar"/>
         <!-- Java Source Roots -->
         <classpath path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/main/java"/>
         <!-- External annotations -->

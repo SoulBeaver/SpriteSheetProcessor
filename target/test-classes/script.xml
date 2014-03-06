@@ -2,6 +2,7 @@
     <!-- Module script for tests -->
     <module name="SpriteSheetProcessor" outputDir="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/target/test-classes">
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/metadata/ConverterSpec.kt"/>
+        <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/metadata/MetadataCreatorSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/unpacker/FindProbableBackgroundColorSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/unpacker/UnpackerSpec.kt"/>
         <sources path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java/com/sbg/rpg/util/CommandLineArgumentsSpec.kt"/>
@@ -39,9 +40,10 @@
         <classpath path="C:/Users/SoulBeaver/.m2/repository/org/jetbrains/kotlin/kotlin-runtime/0.6.1673/kotlin-runtime-0.6.1673.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/com/google/guava/guava/16.0.1/guava-16.0.1.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/com/beust/jcommander/1.30/jcommander-1.30.jar"/>
-        <classpath path="C:/Users/SoulBeaver/.m2/repository/org/yaml/snakeyaml/1.14-SNAPSHOT/snakeyaml-1.14-20130905.182741-1.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/org/apache/logging/log4j/log4j-api/2.0-rc1/log4j-api-2.0-rc1.jar"/>
         <classpath path="C:/Users/SoulBeaver/.m2/repository/org/apache/logging/log4j/log4j-core/2.0-rc1/log4j-core-2.0-rc1.jar"/>
+        <classpath path="C:/Users/SoulBeaver/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"/>
+        <classpath path="C:/Users/SoulBeaver/.m2/repository/org/yaml/snakeyaml/1.14-SNAPSHOT/snakeyaml-1.14-20130905.182741-1.jar"/>
         <!-- Java Source Roots -->
         <classpath path="C:/Users/SoulBeaver/Documents/GitHub/SpriteSheetProcessor/src/test/java"/>
         <!-- External annotations -->

@@ -7,16 +7,32 @@ import org.yaml.snakeyaml.Yaml
 import com.sbg.rpg.packer.SpriteBounds
 import com.google.common.base.Joiner
 
-fun createJsonMetadata(spritesBounds: List<SpriteBounds>): String {
-    return Gson().toJson(spritesBounds)!!
+fun createJsonMetadata(spriteBoundsList: List<SpriteBounds>): String {
+    if (spriteBoundsList.isEmpty())
+        return ""
+
+    return Gson().toJson(spriteBoundsList)!!
 }
 
-fun createYamlMetadata(spritesBounds: List<SpriteBounds>): String {
-    return Yaml().dump(spritesBounds)!!
+fun createYamlMetadata(spriteBoundsList: List<SpriteBounds>): String {
+    if (spriteBoundsList.isEmpty())
+        return ""
+
+    val yamlBuilder = StringBuilder()
+    yamlBuilder.append("Frames:${System.lineSeparator()}")
+    spriteBoundsList.forEach {
+        yamlBuilder.append("  - Index: ${it.frame}${System.lineSeparator()}")
+        yamlBuilder.append("    Bounds: [${it.bounds.x}, ${it.bounds.y}, ${it.bounds.width}, ${it.bounds.height}]${System.lineSeparator()}")
+    }
+
+    return yamlBuilder.toString()
 }
 
-fun createTextMetadata(spritesBounds: List<SpriteBounds>): String {
-    val entries = spritesBounds.map {
+fun createTextMetadata(spriteBoundsList: List<SpriteBounds>): String {
+    if (spriteBoundsList.isEmpty())
+        return ""
+
+    val entries = spriteBoundsList.map {
         "${it.frame}=${it.bounds.x} ${it.bounds.y} ${it.bounds.width} ${it.bounds.height}"
     }
 
