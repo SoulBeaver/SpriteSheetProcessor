@@ -62,16 +62,16 @@ private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
         logger.info("Unpacking sprites")
         val sprites = unpack(spriteSheetPath)
 
+        logger.info("Packing sprites")
+        val (packedSpriteSheet, spritesBounds) = packSprites(sprites)
+
         logger.info("Creating ${commandLineArguments.metadataOutputFormat} metadata")
         val metadata = when(commandLineArguments.metadataOutputFormat) {
-            "json" -> createJsonMetadata(sprites)
-            "yaml" -> createYamlMetadata(sprites)
-            "txt"  -> createTextMetadata(sprites)
+            "json" -> createJsonMetadata(spritesBounds)
+            "yaml" -> createYamlMetadata(spritesBounds)
+            "txt"  -> createTextMetadata(spritesBounds)
             else   -> throw IllegalArgumentException("Metadata Output Format must be one of {yaml, json, txt}")
         }
-
-        logger.info("Packing sprites")
-        val packedSpriteSheet = packSprites(sprites)
 
         spriteSheetsWithMetadata.add(SpriteSheetWithMetadata(packedSpriteSheet, metadata))
     }
