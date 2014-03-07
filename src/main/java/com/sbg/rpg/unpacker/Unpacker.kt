@@ -51,16 +51,14 @@ fun unpack(spriteSheet: Path): List<Image> {
                                 "The file ${spriteSheet.getFileName()} does not exist")
 
     logger.debug("Loading sprite sheet.")
+    // TODO: Convert to png so we have an alpha layer to work with
     val spriteSheetImage = readImage(spriteSheet).toBufferedImage()
 
     logger.debug("Determining most probable background color.")
     val backgroundColor  = determineProbableBackgroundColor(spriteSheetImage)
     logger.debug("The most probable background color is $backgroundColor")
 
-    val copyAndClean = compose(::cleanSprite.bindSecond(backgroundColor),
-                               ::copySubImage.bindFirst(spriteSheetImage))
-
-    return findSprites(spriteSheetImage, backgroundColor) map(copyAndClean)
+    return findSprites(spriteSheetImage, backgroundColor) map(::copySubImage.bindFirst(spriteSheetImage))
 }
 
 private fun findSprites(image: BufferedImage,
@@ -73,7 +71,7 @@ private fun findSprites(image: BufferedImage,
 
         if (color != backgroundColor) {
             logger.debug("Found a sprite starting at (${point.x}, ${point.y})")
-            val spritePlot = plotSprite(workingImage, point, backgroundColor)
+            val spritePlot = findContiguous(workingImage, point) { it != backgroundColor }
             val spriteRectangle = Rectangle(spritePlot, image)
 
             logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
@@ -87,21 +85,21 @@ private fun findSprites(image: BufferedImage,
     return spriteRectangles
 }
 
-private fun plotSprite(image: BufferedImage, point: Point, backgroundColor: Color): List<Point> {
+private fun findContiguous(image: BufferedImage, point: Point, predicate: (Color) -> Boolean): List<Point> {
     val unvisited = LinkedList<Point>()
     val visited   = HashSet<Point>()
 
-    unvisited.addAll(neighbors(point, image) filter { image.getRGB(it.x, it.y) != backgroundColor.getRGB() })
+    unvisited.addAll(neighbors(point, image) filter { predicate(Color(image.getRGB(it.x, it.y))) })
 
     while (unvisited.isNotEmpty()) {
         val currentPoint = unvisited.pop()
         val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y))
 
-        if (currentColor != backgroundColor) {
-            unvisited.addAll(neighbors(currentPoint, image).filter {
-                                 !visited.contains(it) && !unvisited.contains(it) &&
-                                 image.getRGB(it.x, it.y) != backgroundColor.getRGB()
-                             })
+        if (predicate(currentColor)) {
+            unvisited.addAll(neighbors(currentPoint, image) filter {
+                !visited.contains(it) && !unvisited.contains(it) &&
+                predicate(Color(image.getRGB(it.x, it.y)))
+            })
 
             visited.add(currentPoint)
         }
@@ -126,11 +124,18 @@ private fun neighbors(point: Point, image: Image): List<Point> {
     return points
 }
 
+ /*
 private fun cleanSprite(sprite: BufferedImage, backgroundColor: Color): BufferedImage {
     val spriteWithBorders = copyWithBorder(sprite,
                                            Dimension(sprite.getWidth() + 2,
                                                      sprite.getHeight() + 2),
                                            backgroundColor)
 
-    return sprite
+    val backgroundPlot = findContiguous(sprite, Point(0, 0)) { it == backgroundColor }
+    for (point in backgroundPlot)
+        spriteWithBorders.setRGB(point.x, point.y, Color(0, 0, 0, 0).getRGB())
+
+    return copySubImage(spriteWithBorders, Rectangle(1, 1,
+                                                     sprite.getWidth(), sprite.getHeight()))
 }
+ */

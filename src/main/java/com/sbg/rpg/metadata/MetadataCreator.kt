@@ -6,6 +6,9 @@ import com.google.gson.Gson
 import org.yaml.snakeyaml.Yaml
 import com.sbg.rpg.packer.SpriteBounds
 import com.google.common.base.Joiner
+import org.apache.logging.log4j.LogManager
+
+private val logger = LogManager.getLogger("MetadataCreator")!!
 
 /**
  * Converts a list of SpriteBounds, essentially a pair of Frame Index and the location and area of the Rectangle,
