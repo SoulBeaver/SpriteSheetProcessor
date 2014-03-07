@@ -7,6 +7,15 @@ import org.yaml.snakeyaml.Yaml
 import com.sbg.rpg.packer.SpriteBounds
 import com.google.common.base.Joiner
 
+/**
+ * Converts a list of SpriteBounds, essentially a pair of Frame Index and the location and area of the Rectangle,
+ * into a json string representation. The string is guaranteed to have proper line breaks for each OS, but not
+ * necessarily a human-readable format,
+ *
+ * @param spriteBoundsList The SpriteBounds to convert
+ * @return A json representation of the SpriteBounds or
+ *         en empty ("") string if empty
+ */
 fun createJsonMetadata(spriteBoundsList: List<SpriteBounds>): String {
     if (spriteBoundsList.isEmpty())
         return ""
@@ -14,6 +23,24 @@ fun createJsonMetadata(spriteBoundsList: List<SpriteBounds>): String {
     return Gson().toJson(spriteBoundsList)!!
 }
 
+/**
+ * Converts a list of SpriteBounds, essentially a pair of Frame Index and the location and area of the Rectangle,
+ * into a yaml string representation. The string is guaranteed to have proper line breaks for each OS and a
+ * readable format.
+ *
+ * <pre>
+ *     Frames:
+ *       - Index: 0
+ *         Bounds: 0 0 50 50
+ *       - Index: 1
+ *         Bounds: 51 51 50 50
+ *       ...
+ * </pre>
+ *
+ * @param spriteBoundsList The SpriteBounds to convert
+ * @return A yaml representation of the SpriteBounds or
+ *         en empty ("") string if empty
+ */
 fun createYamlMetadata(spriteBoundsList: List<SpriteBounds>): String {
     if (spriteBoundsList.isEmpty())
         return ""
@@ -28,6 +55,27 @@ fun createYamlMetadata(spriteBoundsList: List<SpriteBounds>): String {
     return yamlBuilder.toString()
 }
 
+/**
+ * Converts a list of SpriteBounds, essentially a pair of Frame Index and the location and area of the Rectangle,
+ * into a text string representation. The string is guaranteed to have proper line breaks for each OS and a
+ * somewhat readable format.
+ *
+ * Schema:
+ * <pre>
+ *     <Index>=<X> <Y> <Width> <Height>
+ * </pre>
+ *
+ * Example:
+ * <pre>
+ *     0=0 0 50 50
+ *     1=51 51 50 50
+ *     ...
+ * </pre>
+ *
+ * @param spriteBoundsList The SpriteBounds to convert
+ * @return A plain text representation of the SpriteBounds or
+ *         en empty ("") string if empty
+ */
 fun createTextMetadata(spriteBoundsList: List<SpriteBounds>): String {
     if (spriteBoundsList.isEmpty())
         return ""
