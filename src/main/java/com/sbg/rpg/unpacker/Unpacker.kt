@@ -123,19 +123,3 @@ private fun neighbors(point: Point, image: Image): List<Point> {
 
     return points
 }
-
- /*
-private fun cleanSprite(sprite: BufferedImage, backgroundColor: Color): BufferedImage {
-    val spriteWithBorders = copyWithBorder(sprite,
-                                           Dimension(sprite.getWidth() + 2,
-                                                     sprite.getHeight() + 2),
-                                           backgroundColor)
-
-    val backgroundPlot = findContiguous(sprite, Point(0, 0)) { it == backgroundColor }
-    for (point in backgroundPlot)
-        spriteWithBorders.setRGB(point.x, point.y, Color(0, 0, 0, 0).getRGB())
-
-    return copySubImage(spriteWithBorders, Rectangle(1, 1,
-                                                     sprite.getWidth(), sprite.getHeight()))
-}
- */

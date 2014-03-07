@@ -6,7 +6,6 @@ import java.nio.file.Files
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.io.ByteArrayInputStream
-import com.sbg.rpg.metadata.convertToYaml
 import com.beust.jcommander.Parameter
 import java.util.ArrayList
 import com.beust.jcommander.JCommander
@@ -21,6 +20,9 @@ import com.sbg.rpg.metadata.createYamlMetadata
 import com.sbg.rpg.metadata.createTextMetadata
 import com.sbg.rpg.packer.packSprites
 import java.awt.Image
+import java.util.UUID
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 private val logger = LogManager.getLogger("Main")!!
 
@@ -50,7 +52,7 @@ private fun disableLoggingToFile() {
     configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.removeAppender("LogFile")
 }
 
-data class SpriteSheetWithMetadata(val spriteSheet: Image, val metadata: String)
+data class SpriteSheetWithMetadata(val spriteSheet: BufferedImage, val metadata: String)
 
 private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
     val spriteSheetsWithMetadata = ArrayList<SpriteSheetWithMetadata>()
@@ -75,6 +77,4 @@ private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
 
         spriteSheetsWithMetadata.add(SpriteSheetWithMetadata(packedSpriteSheet, metadata))
     }
-
-    // TODO: Export SpriteSheetsWithMetadata
 }
