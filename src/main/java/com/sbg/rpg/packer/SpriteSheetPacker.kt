@@ -13,7 +13,7 @@ fun packSprites(sprites: List<Image>, margin: Int = 1): PackedSpriteSheet {
     val minimumWidth  = sprites map { it.getWidth(null) } reduce { current, next -> current + next }
     val minimumHeight = sprites.map { it.getHeight(null) } reduce { current, next -> current + next }
 
-    val spriteSheet = BufferedImage
+    // val spriteSheet = BufferedImage
 
     return PackedSpriteSheet(sprites.first!!, listOf())
 }
