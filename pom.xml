@@ -14,6 +14,15 @@
             <name>SnakeYAML repository</name>
             <url>http://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>jebrains-all</id>
+            <url>http://repository.jetbrains.com/all</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -42,11 +51,6 @@
             <version>1.14-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.beust</groupId>
-            <artifactId>jcommander</artifactId>
-            <version>1.30</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>2.0-rc1</version>
@@ -55,6 +59,16 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.0-rc1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.spek</groupId>
+            <artifactId>spek</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.funktionale</groupId>
+            <artifactId>funktionale</artifactId>
+            <version>0.2.3_M6.2</version>
         </dependency>
     </dependencies>
 
