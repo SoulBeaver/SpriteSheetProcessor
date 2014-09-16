@@ -5,7 +5,7 @@ import java.awt.Rectangle
 import java.util.ArrayList
 import java.awt.image.BufferedImage
 
-data class PackedSpriteSheet(val spriteSheet: BufferedImage, val spriteBoundsList: List<SpriteBounds>)
+data class PackedSpriteSheet(val spriteSheet: Image, val spriteBoundsList: List<SpriteBounds>)
 data class SpriteBounds(val frame: Int, val bounds: Rectangle)
 
 fun packSprites(sprites: List<Image>, margin: Int = 1): PackedSpriteSheet {

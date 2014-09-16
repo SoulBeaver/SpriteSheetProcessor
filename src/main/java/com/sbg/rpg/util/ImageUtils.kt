@@ -126,7 +126,7 @@ fun readImage(path: Path): Image {
     }
 }
 
-class ImageReadException(val message: String = "", val cause: Throwable? = null): RuntimeException(message, cause)
+class ImageReadException(val errorMessage: String = "", val c: Throwable? = null): RuntimeException(errorMessage, c)
 
 fun eraseSprite(from: BufferedImage, withColor: Color, points: List<Point>) {
     points.forEach { from.setRGB(it.x, it.y, withColor.getRGB()) }

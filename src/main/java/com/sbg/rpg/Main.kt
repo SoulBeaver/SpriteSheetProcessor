@@ -26,9 +26,9 @@ import java.awt.image.BufferedImage
 
 private val logger = LogManager.getLogger("Main")!!
 
-fun main(args: Array<String?>) {
+fun main(args: Array<String>) {
     val commandLineArguments = CommandLineArguments()
-    JCommander(commandLineArguments).parse(*args)
+    JCommander(commandLineArguments).parse(*(args.map { it: String?}.copyToArray()))
 
     if (commandLineArguments.verbose || commandLineArguments.debugMode)
         enableVerboseOutput()
@@ -52,7 +52,7 @@ private fun disableLoggingToFile() {
     configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.removeAppender("LogFile")
 }
 
-data class SpriteSheetWithMetadata(val spriteSheet: BufferedImage, val metadata: String)
+data class SpriteSheetWithMetadata(val spriteSheet: Image, val metadata: String)
 
 private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
     val spriteSheetsWithMetadata = ArrayList<SpriteSheetWithMetadata>()
