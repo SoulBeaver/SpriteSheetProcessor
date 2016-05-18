@@ -43,7 +43,7 @@ fun unpack(spriteSheet: Path): List<Image> {
     val backgroundColor  = determineProbableBackgroundColor(spriteSheetImage)
     logger.debug("The most probable background color is $backgroundColor")
 
-    return findSprites(spriteSheetImage, backgroundColor).map(::copySubImage.bindFirst(spriteSheetImage))
+    return findSprites(spriteSheetImage, backgroundColor).map { subImage -> copySubImage(spriteSheetImage, subImage) }
 }
 
 private fun findSprites(image: BufferedImage,
