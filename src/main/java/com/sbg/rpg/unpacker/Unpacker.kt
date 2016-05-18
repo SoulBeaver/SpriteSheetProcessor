@@ -17,7 +17,6 @@ import com.sbg.rpg.util.eraseSprite
 import com.sbg.rpg.util.Rectangle
 import com.sbg.rpg.util.determineProbableBackgroundColor
 import com.sbg.rpg.util.copySubImage
-import com.sbg.rpg.util.bindFirst
 import com.sbg.rpg.util.iterator
 import org.apache.logging.log4j.LogManager
 

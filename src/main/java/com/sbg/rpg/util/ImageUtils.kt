@@ -18,14 +18,14 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
         var currentY = 0
 
         override fun hasNext(): Boolean {
-            return currentY != getHeight()
+            return currentY != height
         }
 
         override fun next(): Pixel {
             val point = Point(currentX, currentY)
             val color = Color(getRGB(currentX, currentY))
 
-            if (currentX == getWidth() - 1) {
+            if (currentX == width - 1) {
                 currentX = 0
                 currentY += 1
             } else {
@@ -38,11 +38,11 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
 }
 
 fun copy(image: BufferedImage): BufferedImage {
-    val colorMode = image.getColorModel()!!
+    val colorMode = image.colorModel
 
     return BufferedImage(colorMode,
                          image.copyData(null),
-                         colorMode.isAlphaPremultiplied(),
+                         colorMode.isAlphaPremultiplied,
                          null)
 }
 
@@ -51,10 +51,10 @@ fun copySubImage(original: BufferedImage, area: Rectangle): BufferedImage {
     require(area.width > 0 && area.height > 0) { "Rectangle must have positive, non-zero width and height; width=${area.width}, height=${area.height}" }
 
     val subImage = original.getSubimage(area.x, area.y, area.width, area.height)
-    val target = BufferedImage(subImage.getWidth(), subImage.getHeight(), subImage.getType())
+    val target = BufferedImage(subImage.width, subImage.height, subImage.type)
 
     for (pixel in subImage)
-        target.setRGB(pixel.point.x, pixel.point.y, pixel.color.getRGB())
+        target.setRGB(pixel.point.x, pixel.point.y, pixel.color.rgb)
 
     return target
 }
@@ -65,27 +65,27 @@ fun copyWithBorder(sprite: BufferedImage, dimensions: Dimension, borderColor: Co
 
     val target = BufferedImage(dimensions.width,
                                dimensions.height,
-                               sprite.getType())
+                               sprite.type)
 
-    val widthDifference  = (dimensions.width - sprite.getWidth()) / 2
-    val heightDifference = (dimensions.height - sprite.getHeight()) / 2
+    val widthDifference  = (dimensions.width - sprite.width) / 2
+    val heightDifference = (dimensions.height - sprite.height) / 2
 
     for (pixel in sprite) {
         val (point, color) = pixel
 
         target.setRGB(point.x + widthDifference,
                       point.y + heightDifference,
-                      color.getRGB())
+                      color.rgb)
     }
 
-    for (x in 0..target.getWidth() - 1) {
+    for (x in 0..target.width - 1) {
         target.setRGB(x, 0, borderColor.getRGB())
-        target.setRGB(x, target.getHeight() - 1, borderColor.getRGB())
+        target.setRGB(x, target.height - 1, borderColor.rgb)
     }
 
-    for (y in 0..target.getHeight() - 1) {
+    for (y in 0..target.height - 1) {
         target.setRGB(0, y, borderColor.getRGB())
-        target.setRGB(target.getWidth() - 1, y, borderColor.getRGB())
+        target.setRGB(target.width - 1, y, borderColor.rgb)
     }
 
     return target
@@ -93,12 +93,12 @@ fun copyWithBorder(sprite: BufferedImage, dimensions: Dimension, borderColor: Co
 
 fun Image.toBufferedImage(imageType: Int = BufferedImage.TYPE_INT_RGB): BufferedImage {
     if (this is BufferedImage)
-        return this as BufferedImage
+        return this
 
     val bufferedImage = BufferedImage(getWidth(null),
                                       getHeight(null),
                                       imageType)
-    val graphics = bufferedImage.createGraphics()!!
+    val graphics = bufferedImage.createGraphics()
     graphics.drawImage(this, 0, 0, null)
     graphics.dispose()
 
@@ -107,7 +107,7 @@ fun Image.toBufferedImage(imageType: Int = BufferedImage.TYPE_INT_RGB): Buffered
 
 fun readImage(path: Path): Image {
     try {
-        return ImageIO.read(path.toFile()!!)!!
+        return ImageIO.read(path.toFile())
     } catch (e: Exception) {
         throw ImageReadException("Could not convert file to an image! Is this really an image?", e)
     }
@@ -116,12 +116,14 @@ fun readImage(path: Path): Image {
 class ImageReadException(val errorMessage: String = "", val c: Throwable? = null): RuntimeException(errorMessage, c)
 
 fun eraseSprite(from: BufferedImage, withColor: Color, points: List<Point>) {
-    points.forEach { from.setRGB(it.x, it.y, withColor.getRGB()) }
+    points.forEach { from.setRGB(it.x, it.y, withColor.rgb) }
 }
 
 fun determineProbableBackgroundColor(image: BufferedImage): Color {
-    val width  = image.getWidth()
-    val height = image.getHeight()
+    require(image.width > 0 && image.height > 0) { "Image must have positive, non-zero width and height; width=${image.width}, height=${image.height}" }
+
+    val width  = image.width
+    val height = image.height
 
     val colorMap = HashMap<Color, Int>()
 
@@ -129,10 +131,7 @@ fun determineProbableBackgroundColor(image: BufferedImage): Color {
         for (y in 0..(height - 1)) {
             val colorAtXY = Color(image.getRGB(x, y))
 
-            if (colorMap.containsKey(colorAtXY))
-                colorMap.put(colorAtXY, colorMap.get(colorAtXY)!! + 1)
-            else
-                colorMap.put(colorAtXY, 1)
+            colorMap[colorAtXY] = colorMap.getOrDefault(colorAtXY, 0) + 1
         }
     }
 
