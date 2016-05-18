@@ -3,10 +3,10 @@ package com.sbg.rpg.util
 fun <K, V : Comparable<V>> Map<K, V>.max(): Pair<K, V>? {
     if (isEmpty()) return null
 
-    val max = entrySet().reduce {
-        current, next -> if (current.getValue() < next.getValue()) next
+    val max = entries.reduce {
+        current, next -> if (current.value < next.value) next
                          else current
     }
 
-    return Pair(max.getKey(), max.getValue())
+    return Pair(max.key, max.value)
 }

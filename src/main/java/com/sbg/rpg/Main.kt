@@ -28,7 +28,7 @@ private val logger = LogManager.getLogger("Main")!!
 
 fun main(args: Array<String>) {
     val commandLineArguments = CommandLineArguments()
-    JCommander(commandLineArguments).parse(*(args.map { it: String?}.copyToArray()))
+    JCommander(commandLineArguments).parse(*args)
 
     if (commandLineArguments.verbose || commandLineArguments.debugMode)
         enableVerboseOutput()

@@ -1,17 +1,17 @@
 package com.sbg.rpg.unpacker
 
-import org.spek.Spek
 import java.nio.file.Paths
 import java.awt.Color
 import kotlin.test.assertEquals
 import com.sbg.rpg.util.readImage
 import com.sbg.rpg.util.toBufferedImage
 import com.sbg.rpg.util.determineProbableBackgroundColor
+import org.jetbrains.spek.api.Spek
 
-class FindProbableBackgroundColorSpec: Spek() {{
+class FindProbableBackgroundColorSpec: Spek() { init {
     given("A function to determine probable background colors") {
         on("an image with a white background") {
-            val emptyUrl = javaClass<FindProbableBackgroundColorSpec>().getClassLoader()!!.getResource("unpacker/Empty.png")!!
+            val emptyUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
 
             it("finds white as the probable background color") {
                 val image = readImage(Paths.get(emptyUrl.toURI())!!).toBufferedImage()
@@ -25,7 +25,7 @@ class FindProbableBackgroundColorSpec: Spek() {{
         }
 
         on("an image containing a single sprite") {
-            val singleSpriteUrl = javaClass<FindProbableBackgroundColorSpec>().getClassLoader()!!.getResource("unpacker/SingleSprite.png")!!
+            val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
 
             it("finds white as the probable background color") {
                 val image = readImage(Paths.get(singleSpriteUrl.toURI())!!).toBufferedImage()
@@ -39,7 +39,7 @@ class FindProbableBackgroundColorSpec: Spek() {{
         }
 
         on("an image containing many sprites") {
-            val manySpritesUrl = javaClass<FindProbableBackgroundColorSpec>().getClassLoader()!!.getResource("unpacker/ManySprites.gif")!!
+            val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.gif")
 
             it("finds purple-ish as the probable background color") {
                 val image = readImage(Paths.get(manySpritesUrl.toURI())!!).toBufferedImage()

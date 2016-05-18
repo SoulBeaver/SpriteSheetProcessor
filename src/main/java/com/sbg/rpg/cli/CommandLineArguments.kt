@@ -4,38 +4,36 @@ import com.beust.jcommander.Parameter
 import java.util.ArrayList
 import com.beust.jcommander.IParameterValidator
 import com.beust.jcommander.ParameterException
-import java.util.Arrays
-import kotlin.properties.Delegates
 import java.nio.file.Paths
 import java.nio.file.Files
 
-data class CommandLineArguments {
-    Parameter(description = "Sprite sheets to (un)pack",
-              required= true)
-    val spriteSheetPaths = ArrayList<String>()
+data class CommandLineArguments(
+    @Parameter(description = "Sprite sheets to (un)pack",
+               required= true)
+    val spriteSheetPaths: ArrayList<String> = ArrayList<String>(),
 
-    Parameter(names = array("-metadata-output-format", "-mof"),
-              description = "Structure of the metadata file. Any of {json, yaml, txt}",
-              validateWith = javaClass<MetadataOutputFormatValidator>())
-    val metadataOutputFormat = "yaml"
+    @Parameter(names = arrayOf("-metadata-output-format", "-mof"),
+               description = "Structure of the metadata file. Any of {json, yaml, txt}",
+               validateWith = MetadataOutputFormatValidator::class)
+    val metadataOutputFormat: String = "yaml",
 
-    Parameter(names = array("-verbose", "-v"),
-              description = "Turn on debug statements, but without logging to file")
-    val verbose = false
+    @Parameter(names = arrayOf("-verbose", "-v"),
+               description = "Turn on debug statements, but without logging to file")
+    val verbose: Boolean = false,
 
-    Parameter(names = array("-debug", "-d"),
-              description = "Turn on debug statements with logging to file")
-    val debugMode = false
+    @Parameter(names = arrayOf("-debug", "-d"),
+               description = "Turn on debug statements with logging to file")
+    val debugMode: Boolean = false,
 
-    Parameter(names = array("-export-folder", "-e"),
-              description = "Where to export the new files.",
-              required = true,
-              validateWith = javaClass<FolderExistsValidator>())
-    val exportFolder: String = ""
+    @Parameter(names = arrayOf("-export-folder", "-e"),
+               description = "Where to export the new files.",
+               required = true,
+               validateWith = FolderExistsValidator::class)
+    val exportFolder: String = "",
 
-    Parameter(names = array("-help", "-h"), help = true)
+    @Parameter(names = arrayOf("-help", "-h"), help = true)
     val help: Boolean = false
-}
+)
 
 class MetadataOutputFormatValidator: IParameterValidator {
     val acceptedOutputFormats = listOf("json", "yaml", "txt")

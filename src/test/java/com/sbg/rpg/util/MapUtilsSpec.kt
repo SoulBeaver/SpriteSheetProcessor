@@ -1,11 +1,11 @@
 package com.sbg.rpg.util
 
-import org.spek.Spek
+import org.jetbrains.spek.api.Spek
 import java.util.HashMap
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 
-class MapUtilsSpec: Spek() {{
+class MapUtilsSpec: Spek() { init {
     given("A map") {
         val map = HashMap<Int, Int>()
 

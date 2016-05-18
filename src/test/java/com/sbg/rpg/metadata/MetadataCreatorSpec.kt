@@ -1,12 +1,12 @@
 package com.sbg.rpg.metadata
 
-import org.spek.Spek
 import com.sbg.rpg.packer.SpriteBounds
+import org.jetbrains.spek.api.Spek
 import kotlin.test.assertTrue
 import java.awt.Rectangle
 import kotlin.test.assertEquals
 
-class MetadataCreatorSpec: Spek() {{
+class MetadataCreatorSpec: Spek() { init {
     given("An empty list of SpriteBounds") {
         val spriteBoundsList = listOf<SpriteBounds>()
 

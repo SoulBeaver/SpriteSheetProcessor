@@ -2,37 +2,23 @@
 
 import com.sbg.rpg.util.readImage
 import java.nio.file.Path
-import com.google.common.base.Preconditions
 import java.nio.file.Files
-import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 import java.awt.Image
 import java.util.ArrayList
-import java.util.HashMap
-import com.google.common.collect.ImmutableMap
-import com.sbg.rpg.util.max
 import java.awt.Color
 import java.awt.Rectangle
-import java.nio.file.Paths
 import java.awt.Point
 import java.util.LinkedList
 import java.util.HashSet
-import java.util.UUID
-import java.awt.image.renderable.RenderableImage
-import java.awt.image.RenderedImage
 import com.sbg.rpg.util.toBufferedImage
 import com.sbg.rpg.util.copy
 import com.sbg.rpg.util.eraseSprite
 import com.sbg.rpg.util.Rectangle
 import com.sbg.rpg.util.determineProbableBackgroundColor
 import com.sbg.rpg.util.copySubImage
-import com.sbg.rpg.util.compose
-import java.awt.Dimension
-import com.sbg.rpg.util.copyWithBorder
 import com.sbg.rpg.util.bindFirst
-import com.sbg.rpg.util.bindSecond
 import com.sbg.rpg.util.iterator
-import com.sbg.rpg.util.iterable
 import org.apache.logging.log4j.LogManager
 
 private val logger = LogManager.getLogger("Unpacker")!!
@@ -47,8 +33,7 @@ private val logger = LogManager.getLogger("Unpacker")!!
  * @throws IllegalArgumentException if the file could not be found
  */
 fun unpack(spriteSheet: Path): List<Image> {
-    Preconditions.checkArgument(Files.exists(spriteSheet),
-                                "The file ${spriteSheet.getFileName()} does not exist")
+    require(Files.exists(spriteSheet)) { "The file ${spriteSheet.getFileName()} does not exist" }
 
     logger.debug("Loading sprite sheet.")
     // TODO: Convert to png so we have an alpha layer to work with
@@ -58,7 +43,7 @@ fun unpack(spriteSheet: Path): List<Image> {
     val backgroundColor  = determineProbableBackgroundColor(spriteSheetImage)
     logger.debug("The most probable background color is $backgroundColor")
 
-    return findSprites(spriteSheetImage, backgroundColor) map(::copySubImage.bindFirst(spriteSheetImage))
+    return findSprites(spriteSheetImage, backgroundColor).map(::copySubImage.bindFirst(spriteSheetImage))
 }
 
 private fun findSprites(image: BufferedImage,
@@ -81,7 +66,7 @@ private fun findSprites(image: BufferedImage,
         }
     }
 
-    logger.info("Found ${spriteRectangles.size()} sprites.")
+    logger.info("Found ${spriteRectangles.size} sprites.")
     return spriteRectangles
 }
 
@@ -89,14 +74,14 @@ private fun findContiguous(image: BufferedImage, point: Point, predicate: (Color
     val unvisited = LinkedList<Point>()
     val visited   = HashSet<Point>()
 
-    unvisited.addAll(neighbors(point, image) filter { predicate(Color(image.getRGB(it.x, it.y))) })
+    unvisited.addAll(neighbors(point, image).filter { predicate(Color(image.getRGB(it.x, it.y))) })
 
     while (unvisited.isNotEmpty()) {
         val currentPoint = unvisited.pop()
         val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y))
 
         if (predicate(currentColor)) {
-            unvisited.addAll(neighbors(currentPoint, image) filter {
+            unvisited.addAll(neighbors(currentPoint, image).filter {
                 !visited.contains(it) && !unvisited.contains(it) &&
                 predicate(Color(image.getRGB(it.x, it.y)))
             })

@@ -1,13 +1,10 @@
 package com.sbg.rpg.metadata
 
-import org.spek.Spek
-import org.spek.Given
+import org.jetbrains.spek.api.*
 import java.nio.file.Paths
-import kotlin.test.failsWith
-import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 
-class ConverterSpec: Spek() {{
+class ConverterSpec: Spek() { init {
     /*
     given("A .txt -> .yaml converter") {
         on("loading a non-existent file") {
@@ -86,17 +83,17 @@ class ConverterSpec: Spek() {{
         }
 
         on("loading file with no frames but animations") {
-            val onlyAnimationFileUrl = javaClass<ConverterSpec>().getClassLoader()!!.getResource("converter/OnlyAnimation.txt")!!
+            val onlyAnimationFileUrl = ConverterSpec::class.java.classLoader.getResource("converter/OnlyAnimation.txt")!!
 
             it("throws a TextParseException") {
-                failsWith(javaClass<TextParseException>()) {
+                failsWith(TextParseException::class.java) {
                     convertToYaml(Paths.get(onlyAnimationFileUrl.toURI())!!)
                 }
             }
         }
 
         on("loading file with trailing newlines") {
-            val trailingNewlines = javaClass<ConverterSpec>().getClassLoader()!!.getResource("converter/TrailingNewlines.txt")!!
+            val trailingNewlines = ConverterSpec::class.java.classLoader.getResource("converter/TrailingNewlines.txt")!!
 
             it("loads normally and ignores trailing newlines") {
                 val expected = "Frames:\n" +
@@ -117,7 +114,7 @@ class ConverterSpec: Spek() {{
         }
 
         on("Loading a file with unnatural ordering") {
-            val unnaturalOrdering = javaClass<ConverterSpec>().getClassLoader()!!.getResource("converter/UnsortedFrames.txt")!!
+            val unnaturalOrdering = ConverterSpec::class.java.classLoader.getResource("converter/UnsortedFrames.txt")!!
 
             it("loads and sorts frames into natural order") {
                 val expected = "Frames:\n" +
@@ -135,5 +132,6 @@ class ConverterSpec: Spek() {{
                 assertEquals(expected, output)
             }
         }
-    }*/
+    }
+    */
 }}

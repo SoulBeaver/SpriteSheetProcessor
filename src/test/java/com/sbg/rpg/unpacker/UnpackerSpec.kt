@@ -1,37 +1,35 @@
 package com.sbg.rpg.unpacker
 
-import org.spek.Spek
-import kotlin.test.failsWith
+import com.sbg.rpg.util.ImageReadException
 import java.nio.file.Paths
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import java.awt.Rectangle
-import java.awt.Color
-import java.awt.image.BufferedImage
-import com.sbg.rpg.util.ImageReadException
+import org.jetbrains.spek.api.Spek
+import kotlin.test.assertFailsWith
 
-class UnpackerSpec: Spek() {{
+class UnpackerSpec: Spek() { init {
     given("A SpriteSheet Unpacker") {
         on("a missing file") {
             it("throws an IllegalArgumentException") {
-                failsWith(javaClass<IllegalArgumentException>()) {
+                assertFailsWith<IllegalArgumentException> {
                     unpack(Paths.get("missing")!!)
                 }
             }
         }
 
         on("an empty file") {
-            val emptyFileUrl = javaClass<UnpackerSpec>().getClassLoader()!!.getResource("unpacker/Empty.txt")!!
+            val emptyFileUrl = this.javaClass.classLoader.getResource("unpacker/Empty.txt")!!
 
             it("throws an ImageReadException") {
-                failsWith(javaClass<ImageReadException>()) {
+                assertFailsWith<ImageReadException> {
                     unpack(Paths.get(emptyFileUrl.toURI())!!)
                 }
             }
         }
 
         on("a file without sprites") {
-            val emptyPngUrl = javaClass<UnpackerSpec>().getClassLoader()!!.getResource("unpacker/Empty.png")!!
+            val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")!!
 
             it("returns an empty list") {
                 val sprites = unpack(Paths.get(emptyPngUrl.toURI())!!)
@@ -42,19 +40,19 @@ class UnpackerSpec: Spek() {{
         }
 
         on("a file with one sprite") {
-            val singleSpriteUrl = javaClass<UnpackerSpec>().getClassLoader()!!.getResource("unpacker/SingleSprite.png")!!
+            val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
             it("returns a list of one sprite image") {
                 val sprites = unpack(Paths.get(singleSpriteUrl.toURI())!!)
 
-                assertEquals(1, sprites.size(),
+                assertEquals(1, sprites.size,
                              "Expected to have found exactly one sprite")
 
                 val expectedBounds = Rectangle(0, 0, 107, 128)
                 val actualBounds = Rectangle(0,
                                              0,
-                                             sprites.first!!.getWidth(null),
-                                             sprites.first!!.getHeight(null))
+                                             sprites.first().getWidth(null),
+                                             sprites.first().getHeight(null))
 
                 assertEquals(expectedBounds, actualBounds,
                              "Size of image not as expected. Expected $expectedBounds but was $actualBounds")
@@ -62,19 +60,19 @@ class UnpackerSpec: Spek() {{
         }
 
         on("a file with an already cropped sprite") {
-            val alreadyCroppedUrl = javaClass<UnpackerSpec>().getClassLoader()!!.getResource("unpacker/AlreadyCropped.png")!!
+            val alreadyCroppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")!!
 
             it("returns a list of the sprite unaltered") {
                 val sprites = unpack(Paths.get(alreadyCroppedUrl.toURI())!!)
 
-                assertEquals(1, sprites.size(),
+                assertEquals(1, sprites.size,
                              "Expected to have found exactly one sprite")
 
                 val expectedBounds = Rectangle(0, 0, 107, 128)
                 val actualBounds = Rectangle(0,
                                              0,
-                                             sprites.first!!.getWidth(null),
-                                             sprites.first!!.getHeight(null))
+                                             sprites.first().getWidth(null),
+                                             sprites.first().getHeight(null))
 
                 assertEquals(expectedBounds, actualBounds,
                              "Size of image not as expected. Expected $expectedBounds but was $actualBounds")
@@ -82,12 +80,12 @@ class UnpackerSpec: Spek() {{
         }
 
         on("a file with many sprites") {
-            val manySpritesUrl = javaClass<UnpackerSpec>().getClassLoader()!!.getResource("unpacker/ManySprites.gif")!!
+            val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.gif")!!
 
             it("returns a list of multiple sprite images") {
                 val sprites = unpack(Paths.get(manySpritesUrl.toURI())!!)
 
-                assertEquals(14, sprites.size())
+                assertEquals(14, sprites.size)
             }
         }
 

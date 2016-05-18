@@ -1,16 +1,15 @@
 package com.sbg.rpg.util
 
-import org.spek.Spek
+import org.jetbrains.spek.api.Spek
 import java.nio.file.Paths
 import kotlin.test.assertFalse
 import kotlin.test.assertEquals
-import java.awt.Image
 import java.awt.Color
 import java.awt.Dimension
 
-class ImageUtilsSpec: Spek() {{
+class ImageUtilsSpec: Spek() { init {
     given("An image") {
-        val imageUrl = javaClass<ImageUtilsSpec>().getClassLoader()!!.getResource("unpacker/SingleSprite.png")!!
+        val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
         on("that is a BufferedImage") {
             val image = readImage(Paths.get(imageUrl.toURI())!!)
@@ -24,7 +23,7 @@ class ImageUtilsSpec: Spek() {{
     }
 
     given("An image") {
-        val imageUrl = javaClass<ImageUtilsSpec>().getClassLoader()!!.getResource("unpacker/SingleSprite.png")!!
+        val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
         on("that needs to have a copy made") {
             val original = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
@@ -56,7 +55,7 @@ class ImageUtilsSpec: Spek() {{
     }
 
     given("A 200x200 image") {
-        val imageUrl = javaClass<ImageUtilsSpec>().getClassLoader()!!.getResource("unpacker/200x200.png")!!
+        val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("looping through it") {
             val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
@@ -73,7 +72,7 @@ class ImageUtilsSpec: Spek() {{
     }
 
     given("A 200x200 image") {
-        val imageUrl = javaClass<ImageUtilsSpec>().getClassLoader()!!.getResource("unpacker/200x200.png")!!
+        val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("creating a simple copy") {
             val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()

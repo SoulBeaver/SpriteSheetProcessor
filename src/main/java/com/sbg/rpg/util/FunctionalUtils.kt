@@ -1,13 +1,13 @@
 package com.sbg.rpg.util
 
 fun <T1, T2, R> Function2<T1, T2, R>.bindFirst(arg: T1): (T2) -> R {
-    return { (bindSecond: T2) -> this(arg, bindSecond) }
+    return { bindSecond -> this(arg, bindSecond) }
 }
 
 fun <T1, T2, R> Function2<T1, T2, R>.bindSecond(arg: T2): (T1) -> R {
-    return { (bindFirst: T1) -> this(bindFirst, arg) }
+    return { bindFirst -> this(bindFirst, arg) }
 }
 
-fun compose<A, B, C>(f: (B) -> C, g: (A) -> B): (A) -> C {
+fun <T1, T2, R> compose(f: (T2) -> R, g: (T1) -> T2): (T1) -> R {
     return { x -> f(g(x)) }
 }

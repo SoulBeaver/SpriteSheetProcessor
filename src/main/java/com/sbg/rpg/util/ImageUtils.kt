@@ -7,21 +7,12 @@ import javax.imageio.ImageIO
 import java.awt.Color
 import java.awt.Point
 import java.util.HashMap
-import com.google.common.base.Preconditions
 import java.awt.Rectangle
 import java.awt.Dimension
 
 data class Pixel(val point: Point, val color: Color)
 
-fun BufferedImage.iterable(): Iterable<Pixel> {
-    return object: Iterable<Pixel> {
-        override fun iterator(): Iterator<Pixel> {
-            return iterator()
-        }
-    }
-}
-
-fun BufferedImage.iterator(): Iterator<Pixel> {
+operator fun BufferedImage.iterator(): Iterator<Pixel> {
     return object : Iterator<Pixel> {
         var currentX = 0
         var currentY = 0
@@ -56,10 +47,8 @@ fun copy(image: BufferedImage): BufferedImage {
 }
 
 fun copySubImage(original: BufferedImage, area: Rectangle): BufferedImage {
-    Preconditions.checkArgument(area.x >= 0 && area.y >= 0,
-                                "Rectangle outside of image bounds; x=${area.x}, y=${area.y}")
-    Preconditions.checkArgument(area.width > 0 && area.height > 0,
-                                "Rectangle must have positive, non-zero width and height; width=${area.width}, height=${area.height}")
+    require(area.x >= 0 && area.y >= 0) { "Rectangle outside of image bounds; x=${area.x}, y=${area.y}" }
+    require(area.width > 0 && area.height > 0) { "Rectangle must have positive, non-zero width and height; width=${area.width}, height=${area.height}" }
 
     val subImage = original.getSubimage(area.x, area.y, area.width, area.height)
     val target = BufferedImage(subImage.getWidth(), subImage.getHeight(), subImage.getType())
@@ -71,10 +60,8 @@ fun copySubImage(original: BufferedImage, area: Rectangle): BufferedImage {
 }
 
 fun copyWithBorder(sprite: BufferedImage, dimensions: Dimension, borderColor: Color): BufferedImage {
-    Preconditions.checkArgument(dimensions.width > sprite.getWidth(),
-                                "Expected a width larger than current image to be copied; width=${dimensions.width}")
-    Preconditions.checkArgument(dimensions.height > sprite.getHeight(),
-                                "Expected a height larger than current image to be copied; height=${dimensions.height}")
+    require(dimensions.width > sprite.width) { "Expected a width larger than current image to be copied; width=${dimensions.width}" }
+    require(dimensions.height > sprite.height) { "Expected a height larger than current image to be copied; height=${dimensions.height}" }
 
     val target = BufferedImage(dimensions.width,
                                dimensions.height,
