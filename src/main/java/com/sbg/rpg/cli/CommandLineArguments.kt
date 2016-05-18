@@ -31,7 +31,9 @@ data class CommandLineArguments(
                validateWith = FolderExistsValidator::class)
     val exportFolder: String = "",
 
-    @Parameter(names = arrayOf("-help", "-h"), help = true)
+    @Parameter(names = arrayOf("-help", "-h"),
+               description = "This help message.",
+               help = true)
     val help: Boolean = false
 )
 

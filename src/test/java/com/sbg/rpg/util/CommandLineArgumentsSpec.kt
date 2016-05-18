@@ -14,10 +14,10 @@ class CommandLineArgumentsSpec: Spek() { init {
         val cla = CommandLineArguments()
 
         on("setting parameters using the verbose names") {
-            val args: Array<String?> = arrayOf("-verbose",
-                                             "-metadata-output-format", "json",
-                                             "-export-folder", "target",
-                                             "unpack/SingleSprite.png")
+            val args = arrayOf("-verbose",
+                               "-metadata-output-format", "json",
+                               "-export-folder", "target",
+                               "unpack/SingleSprite.png")
 
             it("the parameters are correctly set") {
                 JCommander(cla, *args)
@@ -29,10 +29,10 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("setting parameters using the short names") {
-            val args: Array<String?> = arrayOf("-v",
-                                             "-mof", "json",
-                                             "-e", "target",
-                                             "unpack/SingleSprite.png")
+            val args = arrayOf("-v",
+                               "-mof", "json",
+                               "-e", "target",
+                               "unpack/SingleSprite.png")
 
             it("the parameters are correctly set") {
                 JCommander(cla, *args)
@@ -44,9 +44,9 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("using an empty metadata output format value") {
-            val args: Array<String?> = arrayOf("-mof", "",
-                                             "-e", "target",
-                                             "unpack/SingleSprite.png")
+            val args = arrayOf("-mof", "",
+                               "-e", "target",
+                               "unpack/SingleSprite.png")
 
             it("a ParameterException is thrown") {
                 assertFailsWith<ParameterException> {
@@ -56,9 +56,9 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("using an invalid metadata output format") {
-            val args: Array<String?> = arrayOf("-mof", "python",
-                                             "-e", "target",
-                                             "unpack/SingleSprite.png")
+            val args = arrayOf("-mof", "python",
+                               "-e", "target",
+                               "unpack/SingleSprite.png")
 
             it("a ParameterException is thrown") {
                 assertFailsWith<ParameterException> {
@@ -68,9 +68,9 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("using a valid, uppercased output format") {
-            val args: Array<String?> = arrayOf("-mof", "YAML",
-                                             "-e", "target",
-                                             "unpack/SingleSprite.png")
+            val args = arrayOf("-mof", "YAML",
+                               "-e", "target",
+                               "unpack/SingleSprite.png")
 
             it("ignores casing and parses argument") {
                 JCommander(cla, *args)
@@ -78,7 +78,7 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("forgetting the export folder") {
-            val args: Array<String?> = arrayOf("unpack/SingleSprite.png")
+            val args = arrayOf("unpack/SingleSprite.png")
 
             it("throws a ParameterException") {
                 assertFailsWith<ParameterException> {
@@ -88,7 +88,7 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("not including any sprite sheets") {
-            val args: Array<String?> = arrayOf("-e", "target")
+            val args = arrayOf("-e", "target")
 
             it("throws a ParameterException") {
                 assertFailsWith<ParameterException> {
@@ -98,12 +98,20 @@ class CommandLineArgumentsSpec: Spek() { init {
         }
 
         on("including a non-existent export folder") {
-            val args: Array<String?> = arrayOf("-e", "C:/Rawr/Pssshhhoooooooommmasdf")
+            val args = arrayOf("-e", "C:/Rawr/Pssshhhoooooooommmasdf")
 
             it("throws ParameterException") {
                 assertFailsWith<ParameterException> {
                     JCommander(cla, *args)
                 }
+            }
+        }
+
+        on("choosing the help option") {
+            val args = arrayOf("-help")
+
+            it("shows the help menu") {
+                JCommander(cla, *args)
             }
         }
     }

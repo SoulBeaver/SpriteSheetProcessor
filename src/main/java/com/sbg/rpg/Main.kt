@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream
 import com.beust.jcommander.Parameter
 import java.util.ArrayList
 import com.beust.jcommander.JCommander
+import com.beust.jcommander.ParameterException
 import com.sbg.rpg.cli.CommandLineArguments
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
@@ -27,15 +28,21 @@ import java.awt.image.BufferedImage
 private val logger = LogManager.getLogger("Main")!!
 
 fun main(args: Array<String>) {
-    val commandLineArguments = CommandLineArguments()
-    JCommander(commandLineArguments).parse(*args)
+    try {
+        val commandLineArguments = CommandLineArguments()
+        JCommander(commandLineArguments).parse(*args)
 
-    if (commandLineArguments.verbose || commandLineArguments.debugMode)
-        enableVerboseOutput()
-    if (!commandLineArguments.debugMode)
-        disableLoggingToFile()
+        if (commandLineArguments.verbose || commandLineArguments.debugMode)
+            enableVerboseOutput()
+        if (!commandLineArguments.debugMode)
+            disableLoggingToFile()
 
-    processSpriteSheets(commandLineArguments)
+        processSpriteSheets(commandLineArguments)
+    } catch (pe: ParameterException) {
+        JCommander(CommandLineArguments()).usage()
+    } catch (e: Exception) {
+        println("Unable to recover from an exception, terminating program; exception=$e")
+    }
 }
 
 private fun enableVerboseOutput() {
