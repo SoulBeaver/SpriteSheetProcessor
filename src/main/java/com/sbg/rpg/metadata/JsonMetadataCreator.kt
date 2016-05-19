@@ -17,8 +17,10 @@ class JsonMetadataCreator: MetadataCreator {
     private val logger = LogManager.getLogger(JsonMetadataCreator::class.simpleName)
 
     override fun create(spriteBoundsList: List<SpriteBounds>): String {
-        if (spriteBoundsList.isEmpty())
+        if (spriteBoundsList.isEmpty()) {
+            logger.warn("No spriteBounds in list, returning empty string.")
             return ""
+        }
 
         return Gson().toJson(spriteBoundsList)
     }

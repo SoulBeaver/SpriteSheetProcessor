@@ -25,8 +25,10 @@ class YamlMetadataCreator: MetadataCreator {
     private val logger = LogManager.getLogger(YamlMetadataCreator::class.simpleName)
 
     override fun create(spriteBoundsList: List<SpriteBounds>): String {
-        if (spriteBoundsList.isEmpty())
+        if (spriteBoundsList.isEmpty()) {
+            logger.warn("No spriteBounds in list, returning empty string.")
             return ""
+        }
 
         val yamlBuilder = StringBuilder()
         yamlBuilder.append("Frames:${System.lineSeparator()}")

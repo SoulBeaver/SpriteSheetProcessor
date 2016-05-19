@@ -28,8 +28,10 @@ class TextMetadataCreator: MetadataCreator {
     private val logger = LogManager.getLogger(TextMetadataCreator::class.simpleName)
 
     override fun create(spriteBoundsList: List<SpriteBounds>): String {
-        if (spriteBoundsList.isEmpty())
+        if (spriteBoundsList.isEmpty()) {
+            logger.warn("No spriteBounds in list, returning empty string.")
             return ""
+        }
 
         val entries = spriteBoundsList.map {
             "${it.frame}=${it.bounds.x} ${it.bounds.y} ${it.bounds.width} ${it.bounds.height}"
