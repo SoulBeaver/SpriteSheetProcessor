@@ -35,6 +35,12 @@ import org.apache.logging.log4j.LogManager
 class SpriteSheetUnpacker {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
+    private val spriteDrawer: SpriteDrawer
+
+    init {
+        spriteDrawer = SpriteDrawer()
+    }
+
     /**
      * Given a valid path to a sprite sheet, detects and returns every individual sprite. The method may not be perfect and
      * return individual sprites if they're not contiguous. Adjust the distance value and see if that helps.
@@ -43,21 +49,25 @@ class SpriteSheetUnpacker {
      * @return list of extracted sprite images
      * @throws IllegalArgumentException if the file could not be found
      */
-    fun unpack(spriteSheet: Path): List<Image> {
+    fun unpack(spriteSheet: Path): List<BufferedImage> {
         require(Files.exists(spriteSheet)) { "The file ${spriteSheet.fileName} does not exist" }
 
         logger.debug("Loading sprite sheet.")
-        val spriteSheetImage = readImage(spriteSheet).toBufferedImage()
+        val spriteSheetImage = readImage(spriteSheet)
 
         logger.debug("Determining most probable background color.")
         val backgroundColor  = spriteSheetImage.determineProbableBackgroundColor()
         logger.debug("The most probable background color is $backgroundColor")
 
-        return findSprites(spriteSheetImage, backgroundColor).map { subImage -> spriteSheetImage.copySubImage(subImage) }
+        val spriteDimensions = findSpriteDimensions(spriteSheetImage, backgroundColor)
+        logger.info("Found ${spriteDimensions.size} sprites.")
+
+        logger.debug("Drawing individual sprites.")
+        return spriteDimensions.map { spriteDrawer.draw(spriteSheetImage, it, backgroundColor) }
     }
 
-    private fun findSprites(image: BufferedImage,
-                            backgroundColor: Color): List<Rectangle> {
+    private fun findSpriteDimensions(image: BufferedImage,
+                                     backgroundColor: Color): List<Rectangle> {
         val workingImage = image.copy()
 
         val spriteDimensions = ArrayList<Rectangle>()
@@ -76,13 +86,12 @@ class SpriteSheetUnpacker {
             }
         }
 
-        logger.info("Found ${spriteDimensions.size} sprites.")
         return spriteDimensions
     }
 
     private fun findContiguous(image: BufferedImage, point: Point, predicate: (Color) -> Boolean): List<Point> {
         val unvisited = LinkedList<Point>()
-        val visited   = HashSet<Point>()
+        val visited   = ArrayList<Point>()
 
         unvisited.addAll(neighbors(point, image).filter { predicate(Color(image.getRGB(it.x, it.y))) })
 
@@ -100,7 +109,7 @@ class SpriteSheetUnpacker {
             }
         }
 
-        return visited.toList()
+        return visited.distinct()
     }
 
     private fun neighbors(point: Point, image: Image): List<Point> {

@@ -21,7 +21,11 @@ import javax.imageio.ImageIO
 
 fun readImage(path: Path): BufferedImage {
     try {
-        return ImageIO.read(path.toFile())
+        /*
+         * An image is not guaranteed to contain an alpha channel.
+         * Therefore we explicitly convert any loaded image to type ARGB for further processing.
+         */
+        return ImageIO.read(path.toFile()).toBufferedImage(BufferedImage.TYPE_INT_ARGB)
     } catch (e: Exception) {
         throw ImageReadException("Could not convert file to an image! Is this really an image?", e)
     }

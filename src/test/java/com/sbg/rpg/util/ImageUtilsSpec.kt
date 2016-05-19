@@ -18,21 +18,21 @@ class ImageUtilsSpec: Spek() { init {
             val original = readImage(Paths.get(imageUrl.toURI()))
 
             it("does not perform a conversion if the image is already of type BufferedImage and has the same color type") {
-                val expected = original.toBufferedImage(BufferedImage.TYPE_3BYTE_BGR)
+                val expected = original.toBufferedImage()
 
                 assertEquals(original.type, expected.type, "Expected original and expected to be identical.")
             }
 
-            it("converts the image type from RGB to [something]") {
-                val expected = original.toBufferedImage()
+            it("converts the image type from ARGB to [something]") {
+                val expected = original.toBufferedImage(BufferedImage.TYPE_3BYTE_BGR)
 
                 assertNotEquals(expected.type, original.type, "Expected converted BufferedImage to have a different type than original.")
-                assertEquals(BufferedImage.TYPE_INT_ARGB, expected.type)
+                assertEquals(BufferedImage.TYPE_3BYTE_BGR, expected.type)
             }
         }
 
         on("that needs to have a copy made") {
-            val original = readImage(Paths.get(imageUrl.toURI())).toBufferedImage()
+            val original = readImage(Paths.get(imageUrl.toURI()))
 
             it("should create a deep copy") {
                 val copy = original.copy()
@@ -64,7 +64,7 @@ class ImageUtilsSpec: Spek() { init {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("looping through it") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val image = readImage(Paths.get(imageUrl.toURI())!!)
 
             it("should loop fourty-thousand times") {
                 var counter = 0
@@ -81,7 +81,7 @@ class ImageUtilsSpec: Spek() { init {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("creating a simple copy") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val image = readImage(Paths.get(imageUrl.toURI())!!)
             val copy = image.copy()
 
             it("should be distinct") {
@@ -95,7 +95,7 @@ class ImageUtilsSpec: Spek() { init {
         }
 
         on("creating a larger copy with black border") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val image = readImage(Paths.get(imageUrl.toURI())!!)
             val copyWithBorder = image.copyWithBorder(
                     Dimension(image.width + 10,
                               image.height + 10),
@@ -137,7 +137,7 @@ class ImageUtilsSpec: Spek() { init {
         }
 
         on("creating 50x50 sub-image copy") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val image = readImage(Paths.get(imageUrl.toURI())!!)
             val subImage = image.copySubImage(java.awt.Rectangle(0, 0, 50, 50))
 
             it("should be exactly 50x50") {

@@ -118,13 +118,12 @@ class UnpackerSpec: Spek() { init {
                             expectedDimensionsList.contains(actualDimensions),
                             "Did not find a sprite of size (${actualDimensions.width}, ${actualDimensions.height}) in list of expected dimensions."
                     )
-
                 }
             }
         }
 
         on("a file with a non-white background and one image") {
-            val coloredBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/ColoredBackground.png")!!
+            val coloredBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/ColoredBackground.png")
             val sprites = spriteSheetUnpacker.unpack(Paths.get(coloredBackgroundUrl.toURI()))
 
             it("returns a list of one sprite image") {
@@ -142,6 +141,32 @@ class UnpackerSpec: Spek() { init {
                         actualDimensions,
                         "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
                 )
+            }
+        }
+
+        on("a file with a transparent background") {
+            val transparentBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/MultipleSprites_TransparentBackground.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(transparentBackgroundUrl.toURI()))
+
+            it("returns a list of four sprites") {
+                assertEquals(4, sprites.size, "Expected to have found exactly four sprite")
+            }
+
+            it("returns the correct dimensions") {
+                val expectedDimensionsList = arrayOf(
+                            Rectangle(0, 0, 30, 40),
+                            Rectangle(0, 0, 31, 39),
+                            Rectangle(0, 0, 40, 42),
+                            Rectangle(0, 0, 36, 38)
+                )
+
+                sprites.forEach {
+                    val actualDimensions = Rectangle(0, 0, it.getWidth(null), it.getHeight(null))
+                    assertTrue(
+                            expectedDimensionsList.contains(actualDimensions),
+                            "Did not find a sprite of size (${actualDimensions.width}, ${actualDimensions.height}) in list of expected dimensions."
+                    )
+                }
             }
         }
     }

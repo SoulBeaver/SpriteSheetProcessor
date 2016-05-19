@@ -74,9 +74,6 @@ fun BufferedImage.copySubImage(area: Rectangle): BufferedImage {
     val target = BufferedImage(subImage.width, subImage.height, subImage.type)
 
     for (pixel in subImage)
-        target.setRGB(pixel.point.x, pixel.point.y, Color(0, 0, 0, 255).rgb)
-
-    for (pixel in subImage)
         target.setRGB(pixel.point.x, pixel.point.y, pixel.color.rgb)
 
     return target

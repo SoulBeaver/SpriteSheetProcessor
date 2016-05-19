@@ -57,8 +57,8 @@ class SpriteSheetProcessor() {
             logger.trace("Unpacking sprites")
             val sprites = spriteSheetUnpacker.unpack(spriteSheetPath)
 
-            sprites.forEach { sprite ->
-                ImageIO.write(sprite.toBufferedImage(), "png", Paths.get(commandLineArguments.exportFolder, "out.png").toFile())
+            sprites.forEachIndexed { idx, sprite ->
+                ImageIO.write(sprite, "png", Paths.get(commandLineArguments.exportFolder, "out_$idx.png").toFile())
             }
 
             logger.trace("Packing sprites")
