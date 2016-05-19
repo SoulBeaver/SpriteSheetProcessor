@@ -34,6 +34,7 @@ fun main(args: Array<String>) {
 
         SpriteSheetProcessor().processSpriteSheets(commandLineArguments)
     } catch (pe: ParameterException) {
+        println("Unable to start because of invalid input:\n\t${pe.message}")
         JCommander(CommandLineArguments()).usage()
     } catch (e: Exception) {
         println("Unable to recover from an exception, terminating program; exception=$e")
