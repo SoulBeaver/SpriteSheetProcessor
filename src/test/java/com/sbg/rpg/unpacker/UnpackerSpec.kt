@@ -10,10 +10,12 @@ import kotlin.test.assertFailsWith
 
 class UnpackerSpec: Spek() { init {
     given("A SpriteSheet Unpacker") {
+        val spriteSheetUnpacker = SpriteSheetUnpacker()
+
         on("a missing file") {
             it("throws an IllegalArgumentException") {
                 assertFailsWith<IllegalArgumentException> {
-                    unpack(Paths.get("missing")!!)
+                    spriteSheetUnpacker.unpack(Paths.get("missing")!!)
                 }
             }
         }
@@ -23,7 +25,7 @@ class UnpackerSpec: Spek() { init {
 
             it("throws an ImageReadException") {
                 assertFailsWith<ImageReadException> {
-                    unpack(Paths.get(emptyFileUrl.toURI())!!)
+                    spriteSheetUnpacker.unpack(Paths.get(emptyFileUrl.toURI())!!)
                 }
             }
         }
@@ -32,7 +34,7 @@ class UnpackerSpec: Spek() { init {
             val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")!!
 
             it("returns an empty list") {
-                val sprites = unpack(Paths.get(emptyPngUrl.toURI())!!)
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(emptyPngUrl.toURI())!!)
 
                 assertTrue(sprites.isEmpty(),
                            "Loading an empty file should produce an empty list of Sprites")
@@ -43,7 +45,7 @@ class UnpackerSpec: Spek() { init {
             val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
             it("returns a list of one sprite image") {
-                val sprites = unpack(Paths.get(singleSpriteUrl.toURI())!!)
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(singleSpriteUrl.toURI())!!)
 
                 assertEquals(1, sprites.size,
                              "Expected to have found exactly one sprite")
@@ -63,7 +65,7 @@ class UnpackerSpec: Spek() { init {
             val alreadyCroppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")!!
 
             it("returns a list of the sprite unaltered") {
-                val sprites = unpack(Paths.get(alreadyCroppedUrl.toURI())!!)
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(alreadyCroppedUrl.toURI())!!)
 
                 assertEquals(1, sprites.size,
                              "Expected to have found exactly one sprite")
@@ -83,7 +85,7 @@ class UnpackerSpec: Spek() { init {
             val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.gif")!!
 
             it("returns a list of multiple sprite images") {
-                val sprites = unpack(Paths.get(manySpritesUrl.toURI())!!)
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(manySpritesUrl.toURI())!!)
 
                 assertEquals(14, sprites.size)
             }

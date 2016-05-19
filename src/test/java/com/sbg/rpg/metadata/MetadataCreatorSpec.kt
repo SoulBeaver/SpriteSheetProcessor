@@ -7,12 +7,14 @@ import java.awt.Rectangle
 import kotlin.test.assertEquals
 
 class MetadataCreatorSpec: Spek() { init {
+    val metadataCreator = MetadataCreator()
+
     given("An empty list of SpriteBounds") {
         val spriteBoundsList = listOf<SpriteBounds>()
 
         on("converting to yaml") {
             it("returns an empty string") {
-                val result = createYamlMetadata(spriteBoundsList)
+                val result = metadataCreator.createYamlMetadata(spriteBoundsList)
 
                 assertTrue(result.isEmpty(),
                            "Expected an empty yaml string, but was $result")
@@ -21,7 +23,7 @@ class MetadataCreatorSpec: Spek() { init {
 
         on("converting to json") {
             it("returns an empty string") {
-                val result = createJsonMetadata(spriteBoundsList)
+                val result = metadataCreator.createJsonMetadata(spriteBoundsList)
 
                 assertTrue(result.isEmpty(),
                            "Expected an empty json string, but was $result")
@@ -30,7 +32,7 @@ class MetadataCreatorSpec: Spek() { init {
 
         on("converting to text") {
             it("returns an empty string") {
-                val result = createTextMetadata(spriteBoundsList)
+                val result = metadataCreator.createTextMetadata(spriteBoundsList)
 
                 assertTrue(result.isEmpty(),
                            "Expected an empty text string, but was $result")
@@ -47,7 +49,7 @@ class MetadataCreatorSpec: Spek() { init {
                                "  - Index: 0" +System.lineSeparator() +
                                "    Bounds: [0, 0, 50, 50]" +System.lineSeparator()
 
-                val result = createYamlMetadata(spriteBoundsList)
+                val result = metadataCreator.createYamlMetadata(spriteBoundsList)
 
                 assertTrue(result.isNotEmpty(),
                            "Expected a proper yaml string for single SpriteBounds entry")
@@ -60,7 +62,7 @@ class MetadataCreatorSpec: Spek() { init {
             it("returns a valid json string") {
                 val expected = "[{\"frame\":0,\"bounds\":{\"x\":0,\"y\":0,\"width\":50,\"height\":50}}]"
 
-                val result = createJsonMetadata(spriteBoundsList)
+                val result = metadataCreator.createJsonMetadata(spriteBoundsList)
 
                 assertTrue(result.isNotEmpty(),
                            "Expected a proper json string for single SpriteBounds entry")
@@ -73,7 +75,7 @@ class MetadataCreatorSpec: Spek() { init {
             it("returns a plain text string") {
                 val expected = "0=0 0 50 50"
 
-                val result = createTextMetadata(spriteBoundsList)
+                val result = metadataCreator.createTextMetadata(spriteBoundsList)
 
                 assertTrue(result.isNotEmpty(),
                            "Expected a plan text string for single SpriteBounds entry")
@@ -94,7 +96,7 @@ class MetadataCreatorSpec: Spek() { init {
                     "  - Index: 1" +System.lineSeparator() +
                     "    Bounds: [51, 51, 50, 50]"
 
-                    val result = createYamlMetadata(spriteBoundsList)
+                    val result = metadataCreator.createYamlMetadata(spriteBoundsList)
 
                     assertTrue(result.isNotEmpty(),
                             "Expected a valid yaml 1.1 String")
@@ -107,7 +109,7 @@ class MetadataCreatorSpec: Spek() { init {
                 it("returns a valid json string") {
                     val expected = "[{\"frame\":0,\"bounds\":{\"x\":0,\"y\":0,\"width\":50,\"height\":50},{\"frame\":1,\"bounds\":{\"x\":51,\"y\":51,\"width\":50,\"height\":50}}]"
 
-                    val result = createJsonMetadata(spriteBoundsList)
+                    val result = metadataCreator.createJsonMetadata(spriteBoundsList)
 
                     assertTrue(result.isNotEmpty(),
                                "Expected a non-empty json string")
@@ -121,7 +123,7 @@ class MetadataCreatorSpec: Spek() { init {
                     val expected = "0=0 0 50 50" +System.lineSeparator() +
                                    "1=51 51 50 50"
 
-                    val result = createTextMetadata(spriteBoundsList)
+                    val result = metadataCreator.createTextMetadata(spriteBoundsList)
 
                     assertTrue(result.isNotEmpty(),
                                "Exepcted a non-empty plain text string")

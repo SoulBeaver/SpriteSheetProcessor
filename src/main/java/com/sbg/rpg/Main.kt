@@ -1,31 +1,11 @@
 package com.sbg.rpg
 
-import java.nio.file.Paths
-import java.nio.file.Path
-import java.nio.file.Files
-import java.io.InputStream
-import java.nio.charset.StandardCharsets
-import java.io.ByteArrayInputStream
-import com.beust.jcommander.Parameter
-import java.util.ArrayList
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
 import com.sbg.rpg.cli.CommandLineArguments
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.appender.FileAppender
-import com.sbg.rpg.unpacker.unpack
-import com.sbg.rpg.metadata.createJsonMetadata
-import com.sbg.rpg.metadata.createYamlMetadata
-import com.sbg.rpg.metadata.createTextMetadata
-import com.sbg.rpg.packer.packSprites
-import java.awt.Image
-import java.util.UUID
-import javax.imageio.ImageIO
-import java.awt.image.BufferedImage
-
-private val logger = LogManager.getLogger("Main")!!
 
 fun main(args: Array<String>) {
     try {
@@ -37,7 +17,7 @@ fun main(args: Array<String>) {
         if (!commandLineArguments.debugMode)
             disableLoggingToFile()
 
-        processSpriteSheets(commandLineArguments)
+        SpriteSheetProcessor().processSpriteSheets(commandLineArguments)
     } catch (pe: ParameterException) {
         JCommander(CommandLineArguments()).usage()
     } catch (e: Exception) {
@@ -47,41 +27,14 @@ fun main(args: Array<String>) {
 
 private fun enableVerboseOutput() {
     val loggerContext = LogManager.getContext(false) as LoggerContext
-    val configuration = loggerContext.getConfiguration()!!
-    configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.setLevel(Level.DEBUG)
+    val configuration = loggerContext.configuration
+    configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME).level = Level.DEBUG
 
     loggerContext.updateLoggers(configuration)
 }
 
 private fun disableLoggingToFile() {
     val loggerContext = LogManager.getContext(false) as LoggerContext
-    val configuration = loggerContext.getConfiguration()!!
+    val configuration = loggerContext.configuration
     configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.removeAppender("LogFile")
-}
-
-data class SpriteSheetWithMetadata(val spriteSheet: Image, val metadata: String)
-
-private fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
-    val spriteSheetsWithMetadata = ArrayList<SpriteSheetWithMetadata>()
-
-    for (rawSpriteSheetPath in commandLineArguments.spriteSheetPaths) {
-        logger.info("Working on $rawSpriteSheetPath")
-        val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
-
-        logger.debug("Unpacking sprites")
-        val sprites = unpack(spriteSheetPath)
-
-        logger.debug("Packing sprites")
-        val (packedSpriteSheet, spritesBounds) = packSprites(sprites)
-
-        logger.debug("Creating ${commandLineArguments.metadataOutputFormat} metadata")
-        val metadata = when(commandLineArguments.metadataOutputFormat) {
-            "json" -> createJsonMetadata(spritesBounds)
-            "yaml" -> createYamlMetadata(spritesBounds)
-            "txt"  -> createTextMetadata(spritesBounds)
-            else   -> throw IllegalArgumentException("Metadata Output Format must be one of {yaml, json, txt}")
-        }
-
-        spriteSheetsWithMetadata.add(SpriteSheetWithMetadata(packedSpriteSheet, metadata))
-    }
 }

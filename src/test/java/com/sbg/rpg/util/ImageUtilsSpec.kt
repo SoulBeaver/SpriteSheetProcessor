@@ -37,11 +37,11 @@ class ImageUtilsSpec: Spek() { init {
             it("should be an exact replica of the original") {
                 val copy = copy(original)
 
-                assertEquals(original.getWidth(), copy.getWidth())
-                assertEquals(original.getHeight(), copy.getHeight())
+                assertEquals(original.width, copy.width)
+                assertEquals(original.height, copy.height)
 
-                for (y in 0..copy.getHeight() - 1) {
-                    for (x in 0..copy.getWidth() - 1) {
+                for (y in 0..copy.height - 1) {
+                    for (x in 0..copy.width - 1) {
                         val originalAtXY = original.getRGB(x, y)
                         val copyAtXY = copy.getRGB(x, y)
 
@@ -91,38 +91,38 @@ class ImageUtilsSpec: Spek() { init {
         on("creating a larger copy with black border") {
             val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
             val copyWithBorder = copyWithBorder(image,
-                                                Dimension(image.getWidth() + 10,
-                                                          image.getHeight() + 10),
+                                                Dimension(image.width + 10,
+                                                          image.height + 10),
                                                 Color.BLACK)
 
             it("should be 210x210 large") {
-                assertEquals(210, copyWithBorder.getWidth(),
-                             "Expected width of border copy to be 210, but was ${copyWithBorder.getWidth()}")
-                assertEquals(210, copyWithBorder.getHeight(),
-                             "Expected width of border copy to be 210, but was ${copyWithBorder.getHeight()}")
+                assertEquals(210, copyWithBorder.width,
+                             "Expected width of border copy to be 210, but was ${copyWithBorder.width}")
+                assertEquals(210, copyWithBorder.height,
+                             "Expected width of border copy to be 210, but was ${copyWithBorder.height}")
             }
 
             it("should have a 5 pixel wide border on all sides") {
                 for (y in 0..4) {
-                    for (x in 0..copyWithBorder.getWidth() - 1) {
+                    for (x in 0..copyWithBorder.width - 1) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
 
                 for (y in 205..209) {
-                    for (x in 0..copyWithBorder.getWidth() - 1) {
+                    for (x in 0..copyWithBorder.width - 1) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
 
                 for (x in 0..4) {
-                    for (y in 0..copyWithBorder.getHeight() - 1) {
+                    for (y in 0..copyWithBorder.height - 1) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
 
                 for (x in 205..209) {
-                    for (y in 0..copyWithBorder.getHeight() - 1) {
+                    for (y in 0..copyWithBorder.height - 1) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
@@ -134,10 +134,10 @@ class ImageUtilsSpec: Spek() { init {
             val subImage = copySubImage(image, java.awt.Rectangle(0, 0, 50, 50))
 
             it("should be exactly 50x50") {
-                assertEquals(50, subImage.getWidth(),
-                             "Expected sub-image width of 50, but was ${subImage.getWidth()}")
-                assertEquals(50, subImage.getHeight(),
-                             "Expected sub-image height of 50, but was ${subImage.getHeight()}")
+                assertEquals(50, subImage.width,
+                             "Expected sub-image width of 50, but was ${subImage.width}")
+                assertEquals(50, subImage.height,
+                             "Expected sub-image height of 50, but was ${subImage.height}")
             }
         }
     }

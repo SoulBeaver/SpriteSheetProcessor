@@ -2,10 +2,6 @@ package com.sbg.rpg.cli
 
 import com.beust.jcommander.Parameter
 import java.util.ArrayList
-import com.beust.jcommander.IParameterValidator
-import com.beust.jcommander.ParameterException
-import java.nio.file.Paths
-import java.nio.file.Files
 
 data class CommandLineArguments(
     @Parameter(description = "Sprite sheets to (un)pack",
@@ -36,27 +32,3 @@ data class CommandLineArguments(
                help = true)
     val help: Boolean = false
 )
-
-class MetadataOutputFormatValidator: IParameterValidator {
-    val acceptedOutputFormats = listOf("json", "yaml", "txt")
-
-    override fun validate(name: String?, value: String?) {
-        if (name == null || value == null)
-            throw ParameterException("Metadata output format may not be null.")
-
-        val trimmedValue = value.trim().toLowerCase()
-        if (!acceptedOutputFormats.contains(trimmedValue))
-            throw ParameterException("Accepted metadata output formats:  {json, yaml, txt}, received:  $value")
-    }
-}
-
-class FolderExistsValidator: IParameterValidator {
-    override fun validate(name: String?, value: String?) {
-        if (value == null || value.isEmpty())
-            throw ParameterException("export-folder value may not be empty")
-
-        val path = Paths.get(value)!!.toAbsolutePath()!!
-        if (!Files.exists(path))
-            throw ParameterException("Path $path does not exist.")
-    }
-}

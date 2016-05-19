@@ -77,6 +77,18 @@ class CommandLineArgumentsSpec: Spek() { init {
             }
         }
 
+        on("using the alternative yml name") {
+            val args = arrayOf("-mof", "yml",
+                                "-e", "target",
+                                "unpack/SingleSprite.png")
+
+            it("correctly parses the command as yml") {
+                JCommander(cla, *args)
+
+                assertEquals(cla.metadataOutputFormat, "yml")
+            }
+        }
+
         on("forgetting the export folder") {
             val args = arrayOf("unpack/SingleSprite.png")
 
