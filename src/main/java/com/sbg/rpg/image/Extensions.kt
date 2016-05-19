@@ -55,30 +55,6 @@ fun BufferedImage.copy(): BufferedImage {
             null)
 }
 
-fun BufferedImage.copySubImage(area: Rectangle): BufferedImage {
-    require(area.x >= 0 && area.y >= 0) { "Rectangle outside of image bounds; x=${area.x}, y=${area.y}" }
-    require(area.width > 0 && area.height > 0) { "Rectangle must have positive, non-zero width and height; width=${area.width}, height=${area.height}" }
-
-    /*
-     * It can happen that the spritesheet is only one sprite. This could be because a user
-     * expected to pack a spritesheet but goofed up the commands. In this case the sprite will request
-     * a subimage exactly one pixel larger than the image. I don't want to handle this as an exception because
-     * it is not an exceptional case. Instead, clamp to the image dimensions and send it off on its way.
-     */
-    if (area.width > width || area.height > height) {
-        area.width = Math.min(width, area.width)
-        area.height = Math.min(height, area.height)
-    }
-
-    val subImage = getSubimage(area.x, area.y, area.width, area.height)
-    val target = BufferedImage(subImage.width, subImage.height, subImage.type)
-
-    for (pixel in subImage)
-        target.setRGB(pixel.point.x, pixel.point.y, pixel.color.rgb)
-
-    return target
-}
-
 fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): BufferedImage {
     require(dimensions.width > width) { "Expected a width larger than current image to be copied; width=${dimensions.width}" }
     require(dimensions.height > height) { "Expected a height larger than current image to be copied; height=${dimensions.height}" }

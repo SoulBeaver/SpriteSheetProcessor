@@ -135,17 +135,5 @@ class ImageUtilsSpec: Spek() { init {
                 }
             }
         }
-
-        on("creating 50x50 sub-image copy") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!)
-            val subImage = image.copySubImage(java.awt.Rectangle(0, 0, 50, 50))
-
-            it("should be exactly 50x50") {
-                assertEquals(50, subImage.width,
-                             "Expected sub-image width of 50, but was ${subImage.width}")
-                assertEquals(50, subImage.height,
-                             "Expected sub-image height of 50, but was ${subImage.height}")
-            }
-        }
     }
 }}
