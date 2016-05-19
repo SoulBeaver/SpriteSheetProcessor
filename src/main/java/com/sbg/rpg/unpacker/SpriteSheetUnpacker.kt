@@ -69,7 +69,7 @@ class SpriteSheetUnpacker {
         logger.info("Found ${spriteDimensions.size} sprites.")
 
         logger.debug("Drawing individual sprites.")
-        return spriteDimensions.map { spriteDrawer.draw(spriteSheetImage, it, backgroundColor) }
+        return spriteDimensions.filter { it.width > 0 && it.height > 0 }.map { spriteDrawer.draw(spriteSheetImage, it, backgroundColor) }
     }
 
     private fun findSpriteDimensions(image: BufferedImage,
@@ -83,9 +83,14 @@ class SpriteSheetUnpacker {
             if (color != backgroundColor) {
                 logger.debug("Found a sprite starting at (${point.x}, ${point.y})")
                 val spritePlot = findContiguous(workingImage, point) { it != backgroundColor }
-                val spriteRectangle = spanRectangleFrom(spritePlot, image)
+                val spriteRectangle = spanRectangleFrom(spritePlot)
 
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
+
+                if (spriteRectangle.width > 500) {
+                    logger.debug("Whoops!")
+                    spanRectangleFrom(spritePlot)
+                }
 
                 spriteDimensions.add(spriteRectangle)
                 workingImage.eraseSprite(backgroundColor, spritePlot)

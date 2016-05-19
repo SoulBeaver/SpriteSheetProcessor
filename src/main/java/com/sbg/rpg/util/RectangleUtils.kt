@@ -19,7 +19,7 @@ import java.awt.Rectangle
 import java.awt.Image
 import java.awt.Point
 
-fun spanRectangleFrom(points: List<Point>, image: Image): Rectangle {
+fun spanRectangleFrom(points: List<Point>): Rectangle {
     if (points.isEmpty())
         return Rectangle(0, 0, 0, 0)
 
@@ -36,30 +36,8 @@ fun spanRectangleFrom(points: List<Point>, image: Image): Rectangle {
         current, next -> if (current.y < next.y) next else current
     }
 
-    val imageWidth = image.getWidth(null)
-    val imageHeight = image.getHeight(null)
+    return Rectangle(left.x, top.y,
+                     right.x - left.x + 1,
+                     bottom.y - top.y + 1)
 
-    /*
-     * All width, height values are given one because we want the frame to be the width and height
-     * that encloses the sprite. If we were to not add the extra border around the sprite we would lose
-     * one layer of pixels every time we call this function.
-     */
-    return when {
-        atBottomEdge(bottom, imageHeight) && atRightEdge(right, imageWidth) ->
-            Rectangle(left.x, top.y, imageWidth + 1, imageHeight + 1)
-        atBottomEdge(bottom, imageHeight) ->
-            Rectangle(left.x, top.y, right.x - left.x + 1, imageHeight + 1)
-        atRightEdge(right, imageWidth) ->
-            Rectangle(left.x, top.y, imageWidth + 1, bottom.y - top.y + 1)
-        else ->
-            Rectangle(left.x, top.y, right.x - left.x + 1, bottom.y - top.y + 1)
-    }
-}
-
-private fun atBottomEdge(candidate: Point, imageHeight: Int): Boolean {
-    return (candidate.y == imageHeight - 1)
-}
-
-private fun atRightEdge(candidate: Point, imageWidth: Int): Boolean {
-    return (candidate.x == imageWidth - 1)
 }
