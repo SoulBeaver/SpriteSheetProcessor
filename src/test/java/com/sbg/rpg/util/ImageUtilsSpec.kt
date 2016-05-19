@@ -7,27 +7,32 @@ import kotlin.test.assertFalse
 import kotlin.test.assertEquals
 import java.awt.Color
 import java.awt.Dimension
+import java.awt.image.BufferedImage
+import kotlin.test.assertNotEquals
 
 class ImageUtilsSpec: Spek() { init {
     given("An image") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
-        on("that is a BufferedImage") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!)
+        on("converting to a BufferedImage") {
+            val original = readImage(Paths.get(imageUrl.toURI()))
 
-            it("should preserve identity") {
-                val actual = image.toBufferedImage()
+            it("does not perform a conversion if the image is already of type BufferedImage and has the same color type") {
+                val expected = original.toBufferedImage(BufferedImage.TYPE_3BYTE_BGR)
 
-                assertEquals(image, actual)
+                assertEquals(original.type, expected.type, "Expected original and expected to be identical.")
+            }
+
+            it("converts the image type from RGB to [something]") {
+                val expected = original.toBufferedImage()
+
+                assertNotEquals(expected.type, original.type, "Expected converted BufferedImage to have a different type than original.")
+                assertEquals(BufferedImage.TYPE_INT_ARGB, expected.type)
             }
         }
-    }
-
-    given("An image") {
-        val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
         on("that needs to have a copy made") {
-            val original = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
+            val original = readImage(Paths.get(imageUrl.toURI())).toBufferedImage()
 
             it("should create a deep copy") {
                 val copy = original.copy()

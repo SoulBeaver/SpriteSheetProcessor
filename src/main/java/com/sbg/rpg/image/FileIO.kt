@@ -15,11 +15,11 @@
  */
 package com.sbg.rpg.image
 
-import java.awt.Image
+import java.awt.image.BufferedImage
 import java.nio.file.Path
 import javax.imageio.ImageIO
 
-fun readImage(path: Path): Image {
+fun readImage(path: Path): BufferedImage {
     try {
         return ImageIO.read(path.toFile())
     } catch (e: Exception) {

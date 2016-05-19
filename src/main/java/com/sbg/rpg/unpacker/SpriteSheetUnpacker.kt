@@ -47,7 +47,6 @@ class SpriteSheetUnpacker {
         require(Files.exists(spriteSheet)) { "The file ${spriteSheet.fileName} does not exist" }
 
         logger.debug("Loading sprite sheet.")
-        // TODO: Convert to png so we have an alpha layer to work with
         val spriteSheetImage = readImage(spriteSheet).toBufferedImage()
 
         logger.debug("Determining most probable background color.")

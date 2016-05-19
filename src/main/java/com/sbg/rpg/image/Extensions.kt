@@ -18,6 +18,7 @@ package com.sbg.rpg.image
 import com.sbg.rpg.map.max
 import java.awt.*
 import java.awt.image.BufferedImage
+import java.awt.image.IndexColorModel
 import java.util.*
 
 operator fun BufferedImage.iterator(): Iterator<Pixel> {
@@ -71,6 +72,9 @@ fun BufferedImage.copySubImage(area: Rectangle): BufferedImage {
 
     val subImage = getSubimage(area.x, area.y, area.width, area.height)
     val target = BufferedImage(subImage.width, subImage.height, subImage.type)
+
+    for (pixel in subImage)
+        target.setRGB(pixel.point.x, pixel.point.y, Color(0, 0, 0, 255).rgb)
 
     for (pixel in subImage)
         target.setRGB(pixel.point.x, pixel.point.y, pixel.color.rgb)
@@ -130,13 +134,16 @@ fun BufferedImage.determineProbableBackgroundColor(): Color {
     return colorMap.max()!!.first
 }
 
-fun Image.toBufferedImage(imageType: Int = BufferedImage.TYPE_INT_RGB): BufferedImage {
-    if (this is BufferedImage)
+fun Image.toBufferedImage(imageType: Int = BufferedImage.TYPE_INT_ARGB): BufferedImage {
+    if (this is BufferedImage && this.type == imageType)
         return this
 
-    val bufferedImage = BufferedImage(getWidth(null),
+    val bufferedImage = BufferedImage(
+            getWidth(null),
             getHeight(null),
-            imageType)
+            imageType
+    )
+
     val graphics = bufferedImage.createGraphics()
     graphics.drawImage(this, 0, 0, null)
     graphics.dispose()

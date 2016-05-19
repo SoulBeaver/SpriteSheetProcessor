@@ -15,9 +15,12 @@
  */
 package com.sbg.rpg.packer
 
+import com.sbg.rpg.image.toBufferedImage
 import org.apache.logging.log4j.LogManager
 import java.awt.Image
 import java.awt.image.BufferedImage
+import com.sbg.rpg.image.iterator
+import java.awt.Rectangle
 
 /**
  * TODO: Write me
@@ -36,10 +39,14 @@ class SpriteSheetPacker {
                 BufferedImage.TYPE_INT_ARGB)
 
         for (sprite in sprites) {
-            // TODO
+            val bufferedImage = sprite.toBufferedImage()
+
+            for (pixel in bufferedImage) {
+                spriteSheet.setRGB(pixel.point.x, pixel.point.y, pixel.color.rgb)
+            }
         }
 
-        return PackedSpriteSheet(sprites.first()!!, listOf())
+        return PackedSpriteSheet(spriteSheet, listOf())
     }
 }
 
