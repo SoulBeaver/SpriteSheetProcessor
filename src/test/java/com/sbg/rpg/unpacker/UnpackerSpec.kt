@@ -82,7 +82,7 @@ class UnpackerSpec: Spek() { init {
         }
 
         on("a file with many sprites") {
-            val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.gif")!!
+            val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.png")!!
 
             it("returns a list of multiple sprite images") {
                 val sprites = spriteSheetUnpacker.unpack(Paths.get(manySpritesUrl.toURI())!!)
