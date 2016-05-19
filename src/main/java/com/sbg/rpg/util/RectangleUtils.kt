@@ -4,7 +4,7 @@ import java.awt.Rectangle
 import java.awt.Image
 import java.awt.Point
 
-fun Rectangle(points: List<Point>, image: Image): Rectangle {
+fun spanRectangleFrom(points: List<Point>, image: Image): Rectangle {
     if (points.isEmpty())
         return Rectangle(0, 0, 0, 0)
 

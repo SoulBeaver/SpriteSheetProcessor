@@ -1,6 +1,6 @@
  package com.sbg.rpg.unpacker
 
-import com.sbg.rpg.util.readImage
+import com.sbg.rpg.image.*
 import java.nio.file.Path
 import java.nio.file.Files
 import java.awt.image.BufferedImage
@@ -11,13 +11,7 @@ import java.awt.Rectangle
 import java.awt.Point
 import java.util.LinkedList
 import java.util.HashSet
-import com.sbg.rpg.util.toBufferedImage
-import com.sbg.rpg.util.copy
-import com.sbg.rpg.util.eraseSprite
-import com.sbg.rpg.util.Rectangle
-import com.sbg.rpg.util.determineProbableBackgroundColor
-import com.sbg.rpg.util.copySubImage
-import com.sbg.rpg.util.iterator
+import com.sbg.rpg.util.spanRectangleFrom
 import org.apache.logging.log4j.LogManager
 
 class SpriteSheetUnpacker {
@@ -28,7 +22,6 @@ class SpriteSheetUnpacker {
      * return individual sprites if they're not contiguous. Adjust the distance value and see if that helps.
      *
      * @param spriteSheet path to sprite sheet
-     * @param distance distance between non-contiguous sprites which are considered part of the same sprite
      * @return list of extracted sprite images
      * @throws IllegalArgumentException if the file could not be found
      */
@@ -40,15 +33,15 @@ class SpriteSheetUnpacker {
         val spriteSheetImage = readImage(spriteSheet).toBufferedImage()
 
         logger.debug("Determining most probable background color.")
-        val backgroundColor  = determineProbableBackgroundColor(spriteSheetImage)
+        val backgroundColor  = spriteSheetImage.determineProbableBackgroundColor()
         logger.debug("The most probable background color is $backgroundColor")
 
-        return findSprites(spriteSheetImage, backgroundColor).map { subImage -> copySubImage(spriteSheetImage, subImage) }
+        return findSprites(spriteSheetImage, backgroundColor).map { subImage -> spriteSheetImage.copySubImage(subImage) }
     }
 
     private fun findSprites(image: BufferedImage,
                             backgroundColor: Color): List<Rectangle> {
-        val workingImage = copy(image)
+        val workingImage = image.copy()
 
         val spriteRectangles = ArrayList<Rectangle>()
         for (pixel in workingImage) {
@@ -57,12 +50,12 @@ class SpriteSheetUnpacker {
             if (color != backgroundColor) {
                 logger.debug("Found a sprite starting at (${point.x}, ${point.y})")
                 val spritePlot = findContiguous(workingImage, point) { it != backgroundColor }
-                val spriteRectangle = Rectangle(spritePlot, image)
+                val spriteRectangle = spanRectangleFrom(spritePlot, image)
 
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
                 spriteRectangles.add(spriteRectangle)
-                eraseSprite(workingImage, backgroundColor, spritePlot)
+                workingImage.eraseSprite(backgroundColor, spritePlot)
             }
         }
 

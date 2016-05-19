@@ -1,5 +1,6 @@
 package com.sbg.rpg.util
 
+import com.sbg.rpg.map.max
 import org.jetbrains.spek.api.Spek
 import java.util.HashMap
 import kotlin.test.assertTrue

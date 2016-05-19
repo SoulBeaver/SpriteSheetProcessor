@@ -1,4 +1,4 @@
-package com.sbg.rpg.util
+package com.sbg.rpg.map
 
 fun <K, V : Comparable<V>> Map<K, V>.max(): Pair<K, V>? {
     if (isEmpty()) return null

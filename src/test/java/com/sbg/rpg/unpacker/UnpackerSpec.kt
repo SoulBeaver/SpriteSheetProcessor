@@ -1,6 +1,6 @@
 package com.sbg.rpg.unpacker
 
-import com.sbg.rpg.util.ImageReadException
+import com.sbg.rpg.image.ImageReadException
 import java.nio.file.Paths
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals

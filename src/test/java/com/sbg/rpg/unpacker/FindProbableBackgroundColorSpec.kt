@@ -1,11 +1,11 @@
 package com.sbg.rpg.unpacker
 
+import com.sbg.rpg.image.determineProbableBackgroundColor
+import com.sbg.rpg.image.readImage
+import com.sbg.rpg.image.toBufferedImage
 import java.nio.file.Paths
 import java.awt.Color
 import kotlin.test.assertEquals
-import com.sbg.rpg.util.readImage
-import com.sbg.rpg.util.toBufferedImage
-import com.sbg.rpg.util.determineProbableBackgroundColor
 import org.jetbrains.spek.api.Spek
 
 class FindProbableBackgroundColorSpec: Spek() { init {
@@ -17,7 +17,7 @@ class FindProbableBackgroundColorSpec: Spek() { init {
                 val image = readImage(Paths.get(emptyUrl.toURI())!!).toBufferedImage()
                 val expected = Color(255, 255, 255)
 
-                val probableBackgroundColor = determineProbableBackgroundColor(image)
+                val probableBackgroundColor = image.determineProbableBackgroundColor()
 
                 assertEquals(expected, probableBackgroundColor,
                              "Expected $expected as background color, but was $probableBackgroundColor")
@@ -31,7 +31,7 @@ class FindProbableBackgroundColorSpec: Spek() { init {
                 val image = readImage(Paths.get(singleSpriteUrl.toURI())!!).toBufferedImage()
                 val expected = Color(255, 255, 255)
 
-                val probableBackgroundColor = determineProbableBackgroundColor(image)
+                val probableBackgroundColor = image.determineProbableBackgroundColor()
 
                 assertEquals(expected, probableBackgroundColor,
                              "Expected $expected as background color, but was $probableBackgroundColor")
@@ -45,7 +45,7 @@ class FindProbableBackgroundColorSpec: Spek() { init {
                 val image = readImage(Paths.get(manySpritesUrl.toURI())!!).toBufferedImage()
                 val expected = Color(109, 73, 138)
 
-                val probableBackgroundColor = determineProbableBackgroundColor(image)
+                val probableBackgroundColor = image.determineProbableBackgroundColor()
 
                 assertEquals(expected, probableBackgroundColor,
                              "Expected $expected as background color, but was $probableBackgroundColor")

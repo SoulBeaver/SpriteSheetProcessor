@@ -1,5 +1,6 @@
 package com.sbg.rpg.util
 
+import com.sbg.rpg.image.*
 import org.jetbrains.spek.api.Spek
 import java.nio.file.Paths
 import kotlin.test.assertFalse
@@ -29,13 +30,13 @@ class ImageUtilsSpec: Spek() { init {
             val original = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
 
             it("should create a deep copy") {
-                val copy = copy(original)
+                val copy = original.copy()
 
                 assertFalse(original == copy)
             }
 
             it("should be an exact replica of the original") {
-                val copy = copy(original)
+                val copy = original.copy()
 
                 assertEquals(original.width, copy.width)
                 assertEquals(original.height, copy.height)
@@ -76,7 +77,7 @@ class ImageUtilsSpec: Spek() { init {
 
         on("creating a simple copy") {
             val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
-            val copy = copy(image)
+            val copy = image.copy()
 
             it("should be distinct") {
                 assertFalse(copy == image)
@@ -90,10 +91,11 @@ class ImageUtilsSpec: Spek() { init {
 
         on("creating a larger copy with black border") {
             val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
-            val copyWithBorder = copyWithBorder(image,
-                                                Dimension(image.width + 10,
-                                                          image.height + 10),
-                                                Color.BLACK)
+            val copyWithBorder = image.copyWithBorder(
+                    Dimension(image.width + 10,
+                              image.height + 10),
+                    Color.BLACK
+            )
 
             it("should be 210x210 large") {
                 assertEquals(210, copyWithBorder.width,
@@ -131,7 +133,7 @@ class ImageUtilsSpec: Spek() { init {
 
         on("creating 50x50 sub-image copy") {
             val image = readImage(Paths.get(imageUrl.toURI())!!).toBufferedImage()
-            val subImage = copySubImage(image, java.awt.Rectangle(0, 0, 50, 50))
+            val subImage = image.copySubImage(java.awt.Rectangle(0, 0, 50, 50))
 
             it("should be exactly 50x50") {
                 assertEquals(50, subImage.width,
