@@ -14,6 +14,9 @@ import java.util.HashSet
 import com.sbg.rpg.util.spanRectangleFrom
 import org.apache.logging.log4j.LogManager
 
+/**
+* TODO: Write me
+*/
 class SpriteSheetUnpacker {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 

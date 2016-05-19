@@ -4,6 +4,9 @@ import org.apache.logging.log4j.LogManager
 import java.awt.Image
 import java.awt.image.BufferedImage
 
+/**
+ * TODO: Write me
+ */
 class SpriteSheetPacker {
     private val logger = LogManager.getLogger(SpriteSheetPacker::class.simpleName)
 

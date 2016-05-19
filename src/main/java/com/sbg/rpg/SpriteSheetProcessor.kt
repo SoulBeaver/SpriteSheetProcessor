@@ -1,22 +1,28 @@
 package com.sbg.rpg
 
 import com.sbg.rpg.cli.CommandLineArguments
+import com.sbg.rpg.metadata.JsonMetadataCreator
 import com.sbg.rpg.metadata.MetadataCreator
+import com.sbg.rpg.metadata.TextMetadataCreator
+import com.sbg.rpg.metadata.YamlMetadataCreator
 import com.sbg.rpg.packer.SpriteSheetPacker
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import java.nio.file.Paths
 import java.util.*
+import kotlin.properties.Delegates
 
-class SpriteSheetProcessor {
+/**
+ * TODO: Write me
+ */
+class SpriteSheetProcessor() {
     private val logger = LogManager.getLogger(SpriteSheetProcessor::class.simpleName)
 
-    private val metadataCreator: MetadataCreator
+    private var metadataCreator: MetadataCreator by Delegates.notNull()
     private val spriteSheetUnpacker: SpriteSheetUnpacker
     private val spriteSheetPacker: SpriteSheetPacker
 
     init {
-        metadataCreator = MetadataCreator()
         spriteSheetUnpacker = SpriteSheetUnpacker()
         spriteSheetPacker = SpriteSheetPacker()
     }
@@ -28,23 +34,24 @@ class SpriteSheetProcessor {
         val spriteSheetsWithMetadata = ArrayList<ProcessedSpriteSheet>()
 
         for (rawSpriteSheetPath in commandLineArguments.spriteSheetPaths) {
-            logger.info("Working on $rawSpriteSheetPath")
+            logger.debug("Working on $rawSpriteSheetPath")
             val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
 
-            logger.debug("Unpacking sprites")
+            logger.trace("Unpacking sprites")
             val sprites = spriteSheetUnpacker.unpack(spriteSheetPath)
 
-            logger.debug("Packing sprites")
-            val (packedSpriteSheet, spritesBounds) = spriteSheetPacker.packSprites(sprites)
+            logger.trace("Packing sprites")
+            val (packedSpriteSheet, spriteBoundsList) = spriteSheetPacker.packSprites(sprites)
 
             logger.debug("Creating ${commandLineArguments.metadataOutputFormat} metadata")
-            val metadata = when(commandLineArguments.metadataOutputFormat) {
-                "json"                    -> metadataCreator.createJsonMetadata(spritesBounds)
-                in arrayOf("yaml", "yml") -> metadataCreator.createYamlMetadata(spritesBounds)
-                "txt"                     -> metadataCreator.createTextMetadata(spritesBounds)
+            metadataCreator = when(commandLineArguments.metadataOutputFormat) {
+                "json"                    -> JsonMetadataCreator()
+                in arrayOf("yaml", "yml") -> YamlMetadataCreator()
+                "txt"                     -> TextMetadataCreator()
                 else                      -> throw IllegalArgumentException("Metadata Output Format must be one of {yaml, json, txt}")
             }
 
+            val metadata = metadataCreator.create(spriteBoundsList)
             spriteSheetsWithMetadata.add(ProcessedSpriteSheet(packedSpriteSheet, metadata))
         }
     }
