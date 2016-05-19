@@ -17,8 +17,4 @@ How much of it is done? Not much. You can convert a text metadata file from [Spr
         -export-folder (-e) REQUIRED
             - Where to export the new files
 
-#### Dependencies
-
-Please note that the [Spek testing framework](http://jetbrains.github.io/spek/download.html) isn't on maven yet and must be downloaded and added manually.
-
 *Licensed under Apache 2.0*
