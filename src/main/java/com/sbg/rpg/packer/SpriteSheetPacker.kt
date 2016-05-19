@@ -20,7 +20,6 @@ import org.apache.logging.log4j.LogManager
 import java.awt.Image
 import java.awt.image.BufferedImage
 import com.sbg.rpg.image.iterator
-import java.awt.Rectangle
 
 /**
  * TODO: Write me

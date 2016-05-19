@@ -30,7 +30,7 @@ import javax.imageio.ImageIO
 import kotlin.properties.Delegates
 
 /**
- * TODO: Write me
+ * Controller class that processes sprites or spritesheets as necessary.
  */
 class SpriteSheetProcessor() {
     private val logger = LogManager.getLogger(SpriteSheetProcessor::class.simpleName)
@@ -45,7 +45,10 @@ class SpriteSheetProcessor() {
     }
 
     /**
-     * TODO: Write me
+     * Reads and processes a list of sprite sheets.
+     *
+     * @param commandLineArguments input as to how and what to process. Determines which file will be processed
+     *  as well as the output type of the resultant Metadata or Atlas file.
      */
     fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
         val spriteSheetsWithMetadata = ArrayList<ProcessedSpriteSheet>()
@@ -54,11 +57,12 @@ class SpriteSheetProcessor() {
             logger.debug("Working on $rawSpriteSheetPath")
             val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
 
-            logger.trace("Unpacking sprites")
+            logger.debug("Unpacking sprites")
             val sprites = spriteSheetUnpacker.unpack(spriteSheetPath)
 
+            logger.debug("Writing individual sprites to file in directory ${commandLineArguments.exportFolder}")
             sprites.forEachIndexed { idx, sprite ->
-                ImageIO.write(sprite, "png", Paths.get(commandLineArguments.exportFolder, "out_$idx.png").toFile())
+                ImageIO.write(sprite, "png", Paths.get(commandLineArguments.exportFolder, "sprite_$idx.png").toFile())
             }
 
             logger.trace("Packing sprites")
