@@ -15,13 +15,13 @@ class UnpackerSpec: Spek() { init {
         on("a missing file") {
             it("throws an IllegalArgumentException") {
                 assertFailsWith<IllegalArgumentException> {
-                    spriteSheetUnpacker.unpack(Paths.get("missing")!!)
+                    spriteSheetUnpacker.unpack(Paths.get("missing"))
                 }
             }
         }
 
         on("an empty file") {
-            val emptyFileUrl = this.javaClass.classLoader.getResource("unpacker/Empty.txt")!!
+            val emptyFileUrl = this.javaClass.classLoader.getResource("unpacker/Empty.txt")
 
             it("throws an ImageReadException") {
                 assertFailsWith<ImageReadException> {
@@ -31,10 +31,10 @@ class UnpackerSpec: Spek() { init {
         }
 
         on("a file without sprites") {
-            val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")!!
+            val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
 
             it("returns an empty list") {
-                val sprites = spriteSheetUnpacker.unpack(Paths.get(emptyPngUrl.toURI())!!)
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(emptyPngUrl.toURI()))
 
                 assertTrue(sprites.isEmpty(),
                            "Loading an empty file should produce an empty list of Sprites")
@@ -42,97 +42,106 @@ class UnpackerSpec: Spek() { init {
         }
 
         on("a file with one sprite") {
-            val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
+            val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(singleSpriteUrl.toURI()))
 
             it("returns a list of one sprite image") {
-                val sprites = spriteSheetUnpacker.unpack(Paths.get(singleSpriteUrl.toURI())!!)
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
 
-                assertEquals(1, sprites.size,
-                             "Expected to have found exactly one sprite")
+            it("returns a list of one sprite image with the correct dimensions") {
+                val expectedDimensions = Rectangle(0, 0, 108, 129)
+                val actualDimensions = Rectangle(0,
+                        0,
+                        sprites.first().getWidth(null),
+                        sprites.first().getHeight(null))
 
-                val expectedBounds = Rectangle(0, 0, 107, 128)
-                val actualBounds = Rectangle(0,
-                                             0,
-                                             sprites.first().getWidth(null),
-                                             sprites.first().getHeight(null))
-
-                assertEquals(expectedBounds, actualBounds,
-                             "Size of image not as expected. Expected $expectedBounds but was $actualBounds")
+                assertEquals(
+                        expectedDimensions,
+                        actualDimensions,
+                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
+                )
             }
         }
 
         on("a file with an already cropped sprite") {
-            val alreadyCroppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")!!
+            val alreadyCroppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(alreadyCroppedUrl.toURI()))
 
             it("returns a list of the sprite unaltered") {
-                val sprites = spriteSheetUnpacker.unpack(Paths.get(alreadyCroppedUrl.toURI())!!)
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
 
-                assertEquals(1, sprites.size,
-                             "Expected to have found exactly one sprite")
+            it("returns a list of sprites with correct dimensions") {
+                val expectedDimensions = Rectangle(0, 0, 107, 128)
+                val actualDimensions = Rectangle(0, 0,
+                        sprites.first().getWidth(null),
+                        sprites.first().getHeight(null))
 
-                val expectedBounds = Rectangle(0, 0, 107, 128)
-                val actualBounds = Rectangle(0,
-                                             0,
-                                             sprites.first().getWidth(null),
-                                             sprites.first().getHeight(null))
-
-                assertEquals(expectedBounds, actualBounds,
-                             "Size of image not as expected. Expected $expectedBounds but was $actualBounds")
+                assertEquals(
+                        expectedDimensions,
+                        actualDimensions,
+                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
+                )
             }
         }
 
         on("a file with many sprites") {
-            val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.png")!!
+            val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(manySpritesUrl.toURI())!!)
 
             it("returns a list of multiple sprite images") {
-                val sprites = spriteSheetUnpacker.unpack(Paths.get(manySpritesUrl.toURI())!!)
+                assertEquals(14, sprites.size, "Expected to have found exactly 14 sprites.")
+            }
 
-                assertEquals(14, sprites.size)
+            it("returns a list of sprites with correct dimensions") {
+                val expectedDimensionsList = arrayOf(
+                        Rectangle(0, 0, 123, 189),
+                        Rectangle(0, 0, 177, 183),
+                        Rectangle(0, 0, 111, 180),
+                        Rectangle(0, 0, 105, 189),
+                        Rectangle(0, 0, 102, 171),
+                        Rectangle(0, 0, 108, 129),
+                        Rectangle(0, 0, 129, 135),
+                        Rectangle(0, 0, 186, 132),
+                        Rectangle(0, 0, 87, 186),
+                        Rectangle(0, 0, 156, 186),
+                        Rectangle(0, 0, 93, 183),
+                        Rectangle(0, 0, 120, 183),
+                        Rectangle(0, 0, 135, 186),
+                        Rectangle(0, 0, 102, 189)
+                )
+
+                sprites.forEach {
+                    val actualDimensions = Rectangle(0, 0, it.getWidth(null), it.getHeight(null))
+                    assertTrue(
+                            expectedDimensionsList.contains(actualDimensions),
+                            "Did not find a sprite of size (${actualDimensions.width}, ${actualDimensions.height}) in list of expected dimensions."
+                    )
+
+                }
             }
         }
 
-        /*
         on("a file with a non-white background and one image") {
-            val coloredBackgroundUrl = javaClass<UnpackerSpec>().getClassLoader()!!.getResource("unpacker/ColoredBackground.png")!!
+            val coloredBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/ColoredBackground.png")!!
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(coloredBackgroundUrl.toURI()))
 
-            it("returns a list of one sprite image whose background is transparent") {
-                val sprites = unpack(Paths.get(coloredBackgroundUrl.toURI())!!)
-
-                assertEquals(1, sprites.size())
-
-                val sprite = sprites.first
-                assertEquals(Color(0, 0, 0, 0), Color((sprite as BufferedImage).getRGB(0, 0)))
-            }
-        }
-        */
-
-        on("a file with non-white background and multiple images") {
-            it("returns a list of multiple sprite images whose backgrounds are transparent") {
-
-            }
-        }
-
-        on("a file with a non-contiguous sprite") {
             it("returns a list of one sprite image") {
-
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
             }
-        }
 
-        on("a file with many non-contiguous sprites") {
-            it("returns a list of many sprite images") {
+            it("returns the correct dimensions") {
+                val expectedDimensions = Rectangle(0, 0, 186, 132)
+                val actualDimensions = Rectangle(0, 0,
+                        sprites.first().getWidth(null),
+                        sprites.first().getHeight(null))
 
-            }
-        }
-
-        on("a file with a sprite containing a color similar to the background") {
-            it("returns a list of one sprite whose colors are not modified") {
-
-            }
-        }
-
-        on("a file with non-white background whose sprite also contains the background color") {
-            it("returns a list of one sprite whose colors are not modified") {
-
+                assertEquals(
+                        expectedDimensions,
+                        actualDimensions,
+                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
+                )
             }
         }
     }

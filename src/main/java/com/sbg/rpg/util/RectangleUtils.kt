@@ -39,15 +39,20 @@ fun spanRectangleFrom(points: List<Point>, image: Image): Rectangle {
     val imageWidth = image.getWidth(null)
     val imageHeight = image.getHeight(null)
 
+    /*
+     * All width, height values are given one because we want the frame to be the width and height
+     * that encloses the sprite. If we were to not add the extra border around the sprite we would lose
+     * one layer of pixels every time we call this function.
+     */
     return when {
         atBottomEdge(bottom, imageHeight) && atRightEdge(right, imageWidth) ->
-            Rectangle(left.x, top.y, imageWidth, imageHeight)
+            Rectangle(left.x, top.y, imageWidth + 1, imageHeight + 1)
         atBottomEdge(bottom, imageHeight) ->
-            Rectangle(left.x, top.y, right.x - left.x, imageHeight)
+            Rectangle(left.x, top.y, right.x - left.x + 1, imageHeight + 1)
         atRightEdge(right, imageWidth) ->
-            Rectangle(left.x, top.y, imageWidth, bottom.y - top.y)
+            Rectangle(left.x, top.y, imageWidth + 1, bottom.y - top.y + 1)
         else ->
-            Rectangle(left.x, top.y, right.x - left.x, bottom.y - top.y)
+            Rectangle(left.x, top.y, right.x - left.x + 1, bottom.y - top.y + 1)
     }
 }
 

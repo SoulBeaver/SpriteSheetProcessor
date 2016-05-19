@@ -61,7 +61,7 @@ class SpriteSheetUnpacker {
                             backgroundColor: Color): List<Rectangle> {
         val workingImage = image.copy()
 
-        val spriteRectangles = ArrayList<Rectangle>()
+        val spriteDimensions = ArrayList<Rectangle>()
         for (pixel in workingImage) {
             val (point, color) = pixel
 
@@ -72,13 +72,13 @@ class SpriteSheetUnpacker {
 
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
-                spriteRectangles.add(spriteRectangle)
+                spriteDimensions.add(spriteRectangle)
                 workingImage.eraseSprite(backgroundColor, spritePlot)
             }
         }
 
-        logger.info("Found ${spriteRectangles.size} sprites.")
-        return spriteRectangles
+        logger.info("Found ${spriteDimensions.size} sprites.")
+        return spriteDimensions
     }
 
     private fun findContiguous(image: BufferedImage, point: Point, predicate: (Color) -> Boolean): List<Point> {
