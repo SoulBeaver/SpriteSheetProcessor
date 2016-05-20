@@ -17,4 +17,12 @@ How much of it is done? Not much. You can convert a text metadata file from [Spr
         -export-folder (-e) REQUIRED
             - Where to export the new files
 
+#### Example
+
+**Note:** Please ensure that the output directory exists before running the application.
+
+    java -jar SpriteSheetProcessor -e out/ UI.png
+    java -jar SpriteSheetProcessor -e C:/out/ FX.png -v
+
+
 *Licensed under Apache 2.0*
