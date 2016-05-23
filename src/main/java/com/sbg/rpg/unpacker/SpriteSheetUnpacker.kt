@@ -125,16 +125,40 @@ class SpriteSheetUnpacker {
 
     private fun neighbors(point: Point, image: Image): List<Point> {
         val points = ArrayList<Point>()
+        val imageWidth = image.getWidth(null) - 1
+        val imageHeight = image.getHeight(null) - 1
 
+        // Left neighbor
         if (point.x > 0)
             points.add(Point(point.x - 1, point.y))
-        if (point.x < image.getWidth(null) - 1)
+
+        // Right neighbor
+        if (point.x < imageWidth)
             points.add(Point(point.x + 1, point.y))
 
+        // Top neighbor
         if (point.y > 0)
             points.add(Point(point.x, point.y - 1))
-        if (point.y < image.getHeight(null) - 1)
+
+        // Bottom neighbor
+        if (point.y < imageHeight)
             points.add(Point(point.x, point.y + 1))
+
+        // Top-left neighbor
+        if (point.x > 0 && point.y > 0)
+            points.add(Point(point.x, point.y - 1))
+
+        // Top-right neighbor
+        if (point.x < imageWidth && point.y > 0)
+            points.add(Point(point.x, point.y - 1))
+
+        // Bottom-left neighbor
+        if (point.x > 0 && point.y < imageHeight - 1)
+            points.add(Point(point.x, point.y + 1))
+
+        // Bottom-right neighbor
+        if (point.x < imageWidth && point.y < imageHeight)
+            points.add(Point(point.x + 1, point.y + 1))
 
         return points
     }
