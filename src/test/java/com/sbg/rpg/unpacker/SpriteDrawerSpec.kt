@@ -82,14 +82,12 @@ class SpriteDrawerSpec: Spek() { init {
                         multipleSpritesTransparentBackgroundImage,
                         listOf(
                                 Rectangle(7, 0, 30, 40),
-                                Rectangle(48, 0, 31, 39),
-                                Rectangle(85, 0, 40, 42),
-                                Rectangle(133, 0, 36, 38)
+                                Rectangle(48, 0, 31, 39)
                         ),
                         Color(0, 0, 0, 0)
                 )
 
-                assertEquals(4, sprites.size, "Expected three sprites from SpriteDrawer.drawMultiple")
+                assertEquals(2, sprites.size, "Expected two sprites from SpriteDrawer.drawMultiple")
             }
         }
     }

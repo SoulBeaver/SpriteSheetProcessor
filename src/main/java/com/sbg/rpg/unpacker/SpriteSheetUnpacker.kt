@@ -87,11 +87,6 @@ class SpriteSheetUnpacker {
 
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
-                if (spriteRectangle.width > 500) {
-                    logger.debug("Whoops!")
-                    spanRectangleFrom(spritePlot)
-                }
-
                 spriteDimensions.add(spriteRectangle)
                 workingImage.eraseSprite(backgroundColor, spritePlot)
             }
@@ -102,7 +97,7 @@ class SpriteSheetUnpacker {
 
     private fun findContiguous(image: BufferedImage, point: Point, predicate: (Color) -> Boolean): List<Point> {
         val unvisited = LinkedList<Point>()
-        val visited   = ArrayList<Point>()
+        val visited   = arrayListOf(point)
 
         unvisited.addAll(neighbors(point, image).filter { predicate(Color(image.getRGB(it.x, it.y))) })
 

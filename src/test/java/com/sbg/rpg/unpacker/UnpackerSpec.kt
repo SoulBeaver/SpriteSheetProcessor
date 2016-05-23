@@ -114,15 +114,13 @@ class UnpackerSpec: Spek() { init {
             val sprites = spriteSheetUnpacker.unpack(Paths.get(transparentBackgroundUrl.toURI()))
 
             it("returns a list of four sprites") {
-                assertEquals(4, sprites.size, "Expected to have found exactly four sprite")
+                assertEquals(2, sprites.size, "Expected to have found exactly four sprite")
             }
 
             it("returns the correct dimensions") {
                 val expectedDimensionsList = arrayOf(
                             Rectangle(0, 0, 30, 40),
-                            Rectangle(0, 0, 31, 39),
-                            Rectangle(0, 0, 40, 42),
-                            Rectangle(0, 0, 36, 38)
+                            Rectangle(0, 0, 31, 39)
                 )
 
                 sprites.forEach {
@@ -144,7 +142,28 @@ class UnpackerSpec: Spek() { init {
             }
 
             it("returns the correct dimensions") {
-                val expectedDimensions = Rectangle(0, 0, 4, 4)
+                val expectedDimensions = Rectangle(0, 0, 5, 5)
+                val actualDimensions = Rectangle(0, 0,
+                        sprites.first().getWidth(null),
+                        sprites.first().getHeight(null))
+
+                assertEquals(
+                        expectedDimensions,
+                        actualDimensions,
+                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
+            }
+        }
+
+        on("a file with a single pixel") {
+            val pixelUrl = this.javaClass.classLoader.getResource("unpacker/Pixel.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(pixelUrl.toURI()))
+
+            it("returns a list of exactly one sprite") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+
+            it("returns the correct dimensions") {
+                val expectedDimensions = Rectangle(0, 0, 1, 1)
                 val actualDimensions = Rectangle(0, 0,
                         sprites.first().getWidth(null),
                         sprites.first().getHeight(null))
