@@ -141,15 +141,15 @@ class SpriteSheetUnpacker {
 
         // Top-left neighbor
         if (point.x > 0 && point.y > 0)
-            points.add(Point(point.x, point.y - 1))
+            points.add(Point(point.x - 1, point.y - 1))
 
         // Top-right neighbor
         if (point.x < imageWidth && point.y > 0)
-            points.add(Point(point.x, point.y - 1))
+            points.add(Point(point.x + 1, point.y - 1))
 
         // Bottom-left neighbor
         if (point.x > 0 && point.y < imageHeight - 1)
-            points.add(Point(point.x, point.y + 1))
+            points.add(Point(point.x - 1, point.y + 1))
 
         // Bottom-right neighbor
         if (point.x < imageWidth && point.y < imageHeight)

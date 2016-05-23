@@ -174,5 +174,26 @@ class UnpackerSpec: Spek() { init {
                         "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
             }
         }
+
+        on("a rectangle with a width of one pixel and no corners") {
+            val rectangleNoCornersUrl = this.javaClass.classLoader.getResource("unpacker/Rectangle_NoCorners.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(rectangleNoCornersUrl.toURI()))
+
+            it("returns a list of exactly one sprite") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+
+            it("returns the correct dimensions") {
+                val expectedDimensions = Rectangle(0, 0, 10, 16)
+                val actualDimensions = Rectangle(0, 0,
+                        sprites.first().getWidth(null),
+                        sprites.first().getHeight(null))
+
+                assertEquals(
+                        expectedDimensions,
+                        actualDimensions,
+                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
+            }
+        }
     }
 }}
