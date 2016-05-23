@@ -15,6 +15,7 @@
         <jcommander.version>1.30</jcommander.version>
         <log4j2.version>2.5</log4j2.version>
         <gson.version>2.6.2</gson.version>
+        <tornadofx.version>1.4.8</tornadofx.version>
     </properties>
 
     <repositories>
@@ -64,6 +65,11 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.tornado</groupId>
+            <artifactId>tornadofx</artifactId>
+            <version>${tornadofx.version}</version>
         </dependency>
 
         <dependency>

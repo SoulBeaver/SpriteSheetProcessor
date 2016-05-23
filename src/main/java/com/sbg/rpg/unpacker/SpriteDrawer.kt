@@ -7,13 +7,25 @@ import java.awt.Rectangle
 import java.awt.image.BufferedImage
 
 /**
- * TODO: Write me.
+ * Draws Images from other Images.
+ *
+ * When unpacking a SpriteSheet, it becomes necessary to re-draw each sprite onto a separate image for later
+ * merging and packing.
  */
 class SpriteDrawer {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
     /**
-     * TODO: Write me.
+     * Each sprite is drawn directly out of a parent image and into a new BufferedImage.
+     *
+     * If the suggested area is larger than the source image, the entire image is drawn instead. This is a workaround
+     * for the case that a spritesheet contains no or only a single sprite that has the width and height of the source
+     * image.
+     *
+     * @param from the source image to extract an image from
+     * @param area the (x,y) and widthxheight area which to copy onto a new image
+     * @param colorToClear the backgroundColor that will be ignored (drawn transparent) while copying
+     * @return A copy of the area in the source image with all backgroundColor pixels removed.
      */
     fun draw(from: BufferedImage, area: Rectangle, colorToClear: Color): BufferedImage {
         if (area.width > from.width || area.height > from.height) {
@@ -30,6 +42,14 @@ class SpriteDrawer {
         return drawSprite(subImage, colorToClear)
     }
 
+    /**
+     * Draws multiple sprites into a list of new images.
+     *
+     * @param from the source image to extract an image from
+     * @param areas a list of (x,y) and widthxheight areas which will be copied to a new image
+     * @param colorToClear the backgroundColor that will be ignored (drawn transparent) while copying
+     * @return A list of images that were drawn from the areas specified.
+     */
     fun drawMultiple(from: BufferedImage, areas: List<Rectangle>, colorToClear: Color) = areas.map { draw(from, it, colorToClear) }
 
     private fun drawSprite(source: BufferedImage, colorToClear: Color): BufferedImage {
