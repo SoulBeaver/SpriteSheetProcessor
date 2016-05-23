@@ -23,6 +23,9 @@ import org.apache.logging.log4j.LogManager
 import tornadofx.App
 import tornadofx.View
 
+/**
+ * Launches a user-friendly GUI for further sprite sheet processing.
+ */
 class SpriteSheetProcessorApp : App() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorApp::class.simpleName)
 
