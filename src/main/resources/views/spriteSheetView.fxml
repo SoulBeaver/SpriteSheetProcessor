@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sbg.rpg.ui.SpriteSheetProcessorController">
+   <center>
+      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <content>
+            <Canvas fx:id="canvas" height="313.0" width="378.0" />
+         </content>
+      </ScrollPane>
+   </center>
+   <top>
+      <AnchorPane prefHeight="20.0" prefWidth="600.0" style="-fx-background-color: #dddddd;" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="menu" layoutY="2.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="25.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </AnchorPane>
+   </top>
+   <right>
+      <VBox fx:id="helpPanel" prefHeight="307.0" prefWidth="220.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextArea fx:id="tutorialTextArea" editable="false" maxHeight="1.7976931348623157E308" prefHeight="263.0" prefWidth="220.0" text="HOWTO:&#10;&#10;1. Drag and Drop (or load) one or more spritesheets into the canvas to the left of this tutorial.&#10;&#10;2. Ensure that the Sprites have been cut to your liking, or combine/separate until you are satisfied.&#10;&#10;3. Once finished, click &quot;Pack Spritesheet&quot; to complete the process.&#10;" wrapText="true" VBox.vgrow="ALWAYS" />
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="42.0" prefWidth="220.0" VBox.vgrow="NEVER">
+               <children>
+                  <Button fx:id="tutorialButton" layoutX="60.0" layoutY="12.0" minWidth="100.0" mnemonicParsing="false" onAction="#onTutorialCompleted" text="Got it!" />
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </right>
+   <bottom>
+      <AnchorPane prefHeight="58.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="combineButton" layoutX="14.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCombineSelected" text="Combine" />
+            <Button fx:id="separateButton" layoutX="124.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onSeparateSelected" text="Separate" />
+            <Button fx:id="packButton" layoutX="440.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onPackSpriteSheet" text="Pack" AnchorPane.rightAnchor="60.0" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>
