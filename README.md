@@ -21,8 +21,22 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites. 
 
 **Note:** Please ensure that the output directory exists before running the application.
 
-    java -jar SpriteSheetProcessor -e out/ UI.png
-    java -jar SpriteSheetProcessor -e C:/out/ FX.png -v
+    # Using relative path
+    java -jar SpriteSheetProcessor.jar -e out/ UI.png
 
+    # Using absolute path
+    java -jar SpriteSheetProcessor.jar -e C:/out/ FX.png -v
+
+    # Extract to directory currently in
+    java -jar SpriteSheetProcessor.jar -e . Heroes.gif
+
+
+#### Updates
+
+**2016-05-24**
+
+* Experimental JavaFX integration. Includes basic UI with no functionality. Checkout the project and run the
+  main method in *com.sbg.rpg.ui.SpriteSheetProcessorApp*.
+* Small sprites, especially those operating in single-pixel dimensions, should now be accurately detected and extracted.
 
 *Licensed under Apache 2.0*
