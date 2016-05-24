@@ -15,47 +15,41 @@
  */
 package com.sbg.rpg.ui
 
-import javafx.event.ActionEvent
-import javafx.fxml.FXML
+import com.sbg.rpg.image.probableBackgroundColor
+import com.sbg.rpg.image.readImage
+import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
+import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
+import java.io.File
+import java.nio.file.Paths
 
 class SpriteSheetProcessorController: Controller() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorController::class.simpleName)
 
+    private val view: SpriteSheetProcessorView by inject()
+
+    private val spriteSheetUnpacker: SpriteSheetUnpacker
+
     init {
-
+        spriteSheetUnpacker = SpriteSheetUnpacker()
     }
 
-    /**
-     * OnClick event that's triggered when the user wants to combine one or more sprites into one.
-     */
-    @FXML
-    fun onCombineSelected(e: ActionEvent) {
-        logger.debug("onCombineSelected")
-    }
+    fun unpackSpriteSheets(spriteSheets: List<File>): List<AnnotatedSpriteSheet> {
+        logger.debug("Loading files $spriteSheets")
 
-    /**
-     * OnClick event that's triggered when the user wants to separate one or more sprites into one.
-     */
-    @FXML
-    fun onSeparateSelected(e: ActionEvent) {
-        logger.debug("onSeparateSelected")
-    }
+        val annotatedSpriteSheets = spriteSheets.map { spriteSheet ->
+            logger.info("Unpacking ${spriteSheet.name}")
 
-    /**
-     * OnClick event that's triggered when the user wishes to hide the tutorial panel.
-     */
-    @FXML
-    fun onTutorialCompleted(e: ActionEvent) {
-        logger.debug("onTutorialCompleted")
-    }
+            val spriteSheet = readImage(Paths.get(spriteSheet.absolutePath))
+            val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
 
-    /**
-     * OnClick event that's triggered when the user wants to pack the sprites into a sprite sheet.
-     */
-    @FXML
-    fun onPackSpriteSheet(e: ActionEvent) {
-        logger.debug("onPackSpriteSheet")
+            AnnotatedSpriteSheet(
+                    spriteSheet,
+                    spriteBoundsList
+            )
+        }
+
+        return annotatedSpriteSheets
     }
 }

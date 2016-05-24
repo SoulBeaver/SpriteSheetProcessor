@@ -36,7 +36,7 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites. 
 **2016-05-24**
 
 * Experimental JavaFX integration. Includes basic UI with no functionality. Checkout the project and run the
-  main method in *com.sbg.rpg.ui.SpriteSheetProcessorApp*.
+  main method in *SpriteSheetProcessorApp*.
 * Small sprites, especially those operating in single-pixel dimensions, should now be accurately detected and extracted.
 
 *Licensed under Apache 2.0*

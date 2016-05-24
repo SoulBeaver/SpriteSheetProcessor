@@ -30,7 +30,7 @@ import com.sbg.rpg.util.spanRectangleFrom
 import org.apache.logging.log4j.LogManager
 
 /**
-* Motivation:  oftentimes a SpriteSheet is given without any further information. For example,
+ * Motivation:  oftentimes a SpriteSheet is given without any further information. For example,
  * a spritesheet with twenty sprites from the famous Megaman series. How do you integrate this into your game?
  * Do you calculate the position and size of each sprite by hand? Of course not, apps like TexturePacker do a wonderful
  * job of taking individual sprites, packing them, and handing you an atlas with all necessary information.
@@ -55,21 +55,20 @@ class SpriteSheetUnpacker {
      * @return list of extracted sprite images
      * @throws IllegalArgumentException if the file could not be found
      */
-    fun unpack(spriteSheet: Path): List<BufferedImage> {
-        require(Files.exists(spriteSheet)) { "The file ${spriteSheet.fileName} does not exist" }
+    fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
+        return calculateSpriteBounds(spriteSheet).map {
+            spriteDrawer.draw(spriteSheet, it, spriteSheet.probableBackgroundColor())
+        }
+    }
 
-        logger.debug("Loading sprite sheet.")
-        val spriteSheetImage = readImage(spriteSheet)
-
-        logger.debug("Determining most probable background color.")
-        val backgroundColor  = spriteSheetImage.determineProbableBackgroundColor()
-        logger.debug("The most probable background color is $backgroundColor")
-
-        val spriteDimensions = findSpriteDimensions(spriteSheetImage, backgroundColor)
+    /**
+     * TODO: Write me.
+     */
+    fun calculateSpriteBounds(spriteSheet: BufferedImage): List<Rectangle> {
+        val spriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
         logger.info("Found ${spriteDimensions.size} sprites.")
 
-        logger.debug("Drawing individual sprites.")
-        return spriteDimensions.filter { it.width > 0 && it.height > 0 }.map { spriteDrawer.draw(spriteSheetImage, it, backgroundColor) }
+        return spriteDimensions
     }
 
     private fun findSpriteDimensions(image: BufferedImage,
@@ -88,7 +87,7 @@ class SpriteSheetUnpacker {
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
                 spriteDimensions.add(spriteRectangle)
-                workingImage.eraseSprite(backgroundColor, spritePlot)
+                workingImage.erasePoints(spritePlot, backgroundColor)
             }
         }
 

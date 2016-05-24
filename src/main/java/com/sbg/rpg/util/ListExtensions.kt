@@ -13,15 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.map
+package com.sbg.rpg.util
 
-fun <K, V : Comparable<V>> Map<K, V>.max(): Pair<K, V>? {
-    if (isEmpty()) return null
+fun <T> List<T>.collate(batchSize: Int): List<List<T>> {
+    if (batchSize <= 0)
+        return emptyList()
 
-    val max = entries.reduce {
-        current, next -> if (current.value < next.value) next
-                         else current
+    var remainder = this
+    val collatedList = mutableListOf<List<T>>()
+
+    while (remainder.isNotEmpty()) {
+        val partition = remainder.take(batchSize)
+
+        collatedList.add(partition)
+
+        remainder = remainder.drop(batchSize)
     }
 
-    return Pair(max.key, max.value)
+    return collatedList
 }
