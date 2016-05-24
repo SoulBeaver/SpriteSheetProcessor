@@ -91,7 +91,7 @@ fun BufferedImage.eraseSprite(withColor: Color, points: List<Point>) {
     points.forEach { setRGB(it.x, it.y, withColor.rgb) }
 }
 
-fun BufferedImage.determineProbableBackgroundColor(): Color {
+fun BufferedImage.probableBackgroundColor(): Color {
     require(width > 0 && height > 0) { "Image must have positive, non-zero width and height; width=${width}, height=${height}" }
 
     val colorMap = HashMap<Color, Int>()

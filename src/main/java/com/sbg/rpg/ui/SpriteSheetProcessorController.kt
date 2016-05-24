@@ -15,11 +15,12 @@
  */
 package com.sbg.rpg.ui
 
+import com.sbg.rpg.image.probableBackgroundColor
+import com.sbg.rpg.image.readImage
+import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
-import com.sbg.rpg.util.collate
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
-import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Paths
 
@@ -34,13 +35,19 @@ class SpriteSheetProcessorController: Controller() {
         spriteSheetUnpacker = SpriteSheetUnpacker()
     }
 
-    fun unpackSpriteSheets(spriteSheets: List<File>): List<List<BufferedImage>> {
+    fun unpackSpriteSheets(spriteSheets: List<File>): List<AnnotatedSpriteSheet> {
         logger.debug("Loading files $spriteSheets")
 
-        val sprites = spriteSheets.map { spriteSheet ->
-            spriteSheetUnpacker.unpack(Paths.get(spriteSheet.absolutePath))
-        }.flatten()
+        val annotatedSpriteSheets = spriteSheets.map { spriteSheet ->
+            val spriteSheet = readImage(Paths.get(spriteSheet.absolutePath))
+            val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
 
-        return sprites.collate(30)
+            AnnotatedSpriteSheet(
+                    spriteSheet,
+                    spriteBoundsList
+            )
+        }
+
+        return annotatedSpriteSheets
     }
 }

@@ -15,11 +15,13 @@
  */
 package com.sbg.rpg.ui
 
+import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.Button
+import javafx.scene.image.Image
 import javafx.scene.image.WritableImage
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
@@ -102,7 +104,7 @@ class SpriteSheetProcessorView: View() {
             runAsync {
                 controller.unpackSpriteSheets(files)
             } ui {
-                drawSprites(it)
+                drawAnnotatedSpriteSheets(it)
             }
         }
     }
@@ -112,19 +114,20 @@ class SpriteSheetProcessorView: View() {
         throw NotImplementedError()
     }
 
-    fun drawSprites(spriteSequence: List<List<BufferedImage>>) {
+    fun drawAnnotatedSpriteSheets(annotatedSpriteSheets: List<AnnotatedSpriteSheet>) {
         val graphics = canvas.graphicsContext2D
 
-        spriteSequence.forEachIndexed { y, sprites ->
-            sprites.forEachIndexed { x, sprite ->
-                val writableImage = WritableImage(sprite.width, sprite.height)
-                SwingFXUtils.toFXImage(sprite, writableImage)
+        annotatedSpriteSheets.forEach { annotatedSpriteSheet ->
+            val (spriteSheet, spriteBoundsList) = annotatedSpriteSheet
 
-                graphics.drawImage(
-                        writableImage,
-                        (x * 30.0 + sprite.width),
-                        y * 50.0)
-            }
+            // TODO: Refactor to method `toJavaFXImage(image: BufferedImage) -> WritableImage`
+            val writableImage = WritableImage(spriteSheet.width, spriteSheet.height)
+            SwingFXUtils.toFXImage(spriteSheet, writableImage)
+
+            graphics.drawImage(
+                    writableImage,
+                    0.0,
+                    0.0)
         }
     }
 }
