@@ -112,7 +112,7 @@ class SpriteSheetProcessorView: View() {
         throw NotImplementedError()
     }
 
-    fun drawSprites(spriteSequence: Sequence<List<BufferedImage>>) {
+    fun drawSprites(spriteSequence: List<List<BufferedImage>>) {
         val graphics = canvas.graphicsContext2D
 
         spriteSequence.forEachIndexed { y, sprites ->

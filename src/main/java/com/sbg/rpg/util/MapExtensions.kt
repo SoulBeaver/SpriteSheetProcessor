@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.map
+package com.sbg.rpg.util
 
 fun <K, V : Comparable<V>> Map<K, V>.max(): Pair<K, V>? {
     if (isEmpty()) return null

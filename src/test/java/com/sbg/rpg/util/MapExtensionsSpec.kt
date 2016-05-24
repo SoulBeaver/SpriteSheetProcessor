@@ -1,12 +1,12 @@
 package com.sbg.rpg.util
 
-import com.sbg.rpg.map.max
+import com.sbg.rpg.util.max
 import org.jetbrains.spek.api.Spek
 import java.util.HashMap
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 
-class MapUtilsSpec: Spek() { init {
+class MapExtensionsSpec : Spek() { init {
     given("A map") {
         val map = HashMap<Int, Int>()
 

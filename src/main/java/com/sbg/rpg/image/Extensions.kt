@@ -15,7 +15,7 @@
  */
 package com.sbg.rpg.image
 
-import com.sbg.rpg.map.max
+import com.sbg.rpg.util.max
 import java.awt.*
 import java.awt.image.BufferedImage
 import java.awt.image.IndexColorModel
