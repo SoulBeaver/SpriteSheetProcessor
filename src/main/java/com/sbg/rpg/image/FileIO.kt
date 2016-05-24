@@ -15,6 +15,8 @@
  */
 package com.sbg.rpg.image
 
+import javafx.embed.swing.SwingFXUtils
+import javafx.scene.image.WritableImage
 import java.awt.image.BufferedImage
 import java.nio.file.Path
 import javax.imageio.ImageIO
@@ -29,4 +31,11 @@ fun readImage(path: Path): BufferedImage {
     } catch (e: Exception) {
         throw ImageReadException("Could not convert file to an image! Is this really an image?", e)
     }
+}
+
+fun toJavaFXImage(image: BufferedImage): WritableImage {
+    val writableImage = WritableImage(image.width, image.height)
+    SwingFXUtils.toFXImage(image, writableImage)
+
+    return writableImage
 }

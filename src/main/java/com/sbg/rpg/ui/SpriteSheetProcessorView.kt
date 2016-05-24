@@ -15,6 +15,7 @@
  */
 package com.sbg.rpg.ui
 
+import com.sbg.rpg.image.toJavaFXImage
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
@@ -120,14 +121,23 @@ class SpriteSheetProcessorView: View() {
         annotatedSpriteSheets.forEach { annotatedSpriteSheet ->
             val (spriteSheet, spriteBoundsList) = annotatedSpriteSheet
 
-            // TODO: Refactor to method `toJavaFXImage(image: BufferedImage) -> WritableImage`
-            val writableImage = WritableImage(spriteSheet.width, spriteSheet.height)
-            SwingFXUtils.toFXImage(spriteSheet, writableImage)
+            with (graphics) {
+                drawImage(
+                        toJavaFXImage(spriteSheet),
+                        0.0,
+                        0.0
+                )
 
-            graphics.drawImage(
-                    writableImage,
-                    0.0,
-                    0.0)
+                spriteBoundsList.forEach { spriteBounds ->
+                    strokeRect(
+                            spriteBounds.getX(),
+                            spriteBounds.getY(),
+                            spriteBounds.getWidth(),
+                            spriteBounds.getHeight()
+                    )
+                }
+            }
+
         }
     }
 }
