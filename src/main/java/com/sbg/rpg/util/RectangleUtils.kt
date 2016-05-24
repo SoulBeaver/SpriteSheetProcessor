@@ -21,7 +21,7 @@ import java.awt.Point
 
 fun spanRectangleFrom(points: List<Point>): Rectangle {
     if (points.isEmpty())
-        return Rectangle(0, 0, 0, 0)
+        throw IllegalArgumentException("No points to span Rectangle from.")
 
     val left = points.reduce {
         current, next -> if (current.x > next.x) next else current
