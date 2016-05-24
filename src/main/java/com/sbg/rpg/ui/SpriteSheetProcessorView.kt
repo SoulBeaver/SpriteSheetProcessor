@@ -16,14 +16,16 @@
 package com.sbg.rpg.ui
 
 import com.sbg.rpg.image.toJavaFXImage
+import com.sbg.rpg.ui.canvas.ResizableCanvas
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.canvas.Canvas
 import javafx.scene.control.Button
+import javafx.scene.control.ScrollPane
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
+import javafx.scene.paint.Color
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
 
@@ -40,7 +42,19 @@ class SpriteSheetProcessorView: View() {
     val packButton: Button by fxid()
     val tutorialButton: Button by fxid()
 
-    val canvas: Canvas by fxid()
+    val canvasScrollPane: ScrollPane by fxid()
+    val canvas: ResizableCanvas
+
+    init {
+        canvas = ResizableCanvas()
+        canvas.width = 10000.0
+        canvas.height = 10000.0
+
+        canvasScrollPane.content = canvas
+
+        canvas.setOnDragOver { onCanvasDragging(it) }
+        canvas.setOnDragDropped { onCanvasDropped(it) }
+    }
 
     /**
      * OnClick event that's triggered when the user wants to combine one or more sprites into one.
@@ -109,26 +123,33 @@ class SpriteSheetProcessorView: View() {
     fun drawAnnotatedSpriteSheets(annotatedSpriteSheets: List<AnnotatedSpriteSheet>) {
         val graphics = canvas.graphicsContext2D
 
+        var nextDrawHeight = 0.0
+
         annotatedSpriteSheets.forEach { annotatedSpriteSheet ->
             val (spriteSheet, spriteBoundsList) = annotatedSpriteSheet
 
             with (graphics) {
+                fill = Color.ANTIQUEWHITE
+                fillRect(0.0, 0.0, canvas.width, canvas.height)
+                fill = Color.TRANSPARENT
+
                 drawImage(
                         toJavaFXImage(spriteSheet),
                         0.0,
-                        0.0
+                        nextDrawHeight
                 )
 
                 spriteBoundsList.forEach { spriteBounds ->
                     strokeRect(
                             spriteBounds.getX(),
-                            spriteBounds.getY(),
+                            spriteBounds.getY() + nextDrawHeight,
                             spriteBounds.getWidth(),
                             spriteBounds.getHeight()
                     )
                 }
             }
 
+            nextDrawHeight += spriteSheet.height
         }
     }
 }

@@ -39,6 +39,8 @@ class SpriteSheetProcessorController: Controller() {
         logger.debug("Loading files $spriteSheets")
 
         val annotatedSpriteSheets = spriteSheets.map { spriteSheet ->
+            logger.info("Unpacking ${spriteSheet.name}")
+
             val spriteSheet = readImage(Paths.get(spriteSheet.absolutePath))
             val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
 
