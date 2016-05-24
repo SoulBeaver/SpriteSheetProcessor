@@ -29,7 +29,7 @@ class ResizableCanvas: Canvas() {
     private fun draw() {
         val gc = graphicsContext2D
         gc.clearRect(0.0, 0.0, width, height)
-        gc.fill = Color.ANTIQUEWHITE//(255.0, 250.0, 240.0, 255.0)
+        gc.fill = Color.ANTIQUEWHITE
         gc.fillRect(0.0, 0.0, width, height)
         gc.fill = Color.TRANSPARENT
     }

@@ -12,7 +12,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <ScrollPane fx:id="canvasScrollPane" hbarPolicy="ALWAYS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER" />
+      <ScrollPane fx:id="canvasScrollPane" hbarPolicy="ALWAYS" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER" />
    </center>
    <top>
       <AnchorPane prefHeight="20.0" prefWidth="600.0" style="-fx-background-color: #dddddd;" BorderPane.alignment="CENTER">
