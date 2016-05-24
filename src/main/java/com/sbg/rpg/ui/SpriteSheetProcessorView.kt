@@ -20,6 +20,7 @@ import com.sbg.rpg.ui.canvas.ResizableCanvas
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.input.DragEvent
@@ -122,16 +123,13 @@ class SpriteSheetProcessorView: View() {
 
     fun drawAnnotatedSpriteSheets(annotatedSpriteSheets: List<AnnotatedSpriteSheet>) {
         val graphics = canvas.graphicsContext2D
+        clearCanvas(graphics)
 
         var nextDrawHeight = 0.0
-
         annotatedSpriteSheets.forEach { annotatedSpriteSheet ->
             val (spriteSheet, spriteBoundsList) = annotatedSpriteSheet
 
             with (graphics) {
-                fill = Color.ANTIQUEWHITE
-                fillRect(0.0, 0.0, canvas.width, canvas.height)
-                fill = Color.TRANSPARENT
 
                 drawImage(
                         toJavaFXImage(spriteSheet),
@@ -151,5 +149,11 @@ class SpriteSheetProcessorView: View() {
 
             nextDrawHeight += spriteSheet.height
         }
+    }
+
+    private fun clearCanvas(graphics: GraphicsContext) {
+        graphics.fill = Color.ANTIQUEWHITE
+        graphics.fillRect(0.0, 0.0, canvas.width, canvas.height)
+        graphics.fill = Color.TRANSPARENT
     }
 }
