@@ -17,19 +17,15 @@ package com.sbg.rpg.ui
 
 import com.sbg.rpg.image.toJavaFXImage
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
-import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.Button
-import javafx.scene.image.Image
-import javafx.scene.image.WritableImage
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
-import java.awt.image.BufferedImage
 
 class SpriteSheetProcessorView: View() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorView::class.simpleName)
@@ -108,11 +104,6 @@ class SpriteSheetProcessorView: View() {
                 drawAnnotatedSpriteSheets(it)
             }
         }
-    }
-
-    fun onResize() {
-        // TODO: Redraw everything on resize
-        throw NotImplementedError()
     }
 
     fun drawAnnotatedSpriteSheets(annotatedSpriteSheets: List<AnnotatedSpriteSheet>) {
