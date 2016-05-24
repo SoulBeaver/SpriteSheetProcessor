@@ -46,14 +46,12 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
     }
 }
 
-fun BufferedImage.copy(): BufferedImage {
-    val colorMode = colorModel
-
-    return BufferedImage(colorMode,
-            copyData(null),
-            colorMode.isAlphaPremultiplied,
-            null)
-}
+fun BufferedImage.copy() = BufferedImage(
+        colorModel,
+        copyData(null),
+        colorModel.isAlphaPremultiplied,
+        null
+)
 
 fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): BufferedImage {
     require(dimensions.width > width) { "Expected a width larger than current image to be copied; width=${dimensions.width}" }
@@ -87,7 +85,7 @@ fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): Buf
     return target
 }
 
-fun BufferedImage.eraseSprite(withColor: Color, points: List<Point>) {
+fun BufferedImage.erasePoints(points: List<Point>, withColor: Color) {
     points.forEach { setRGB(it.x, it.y, withColor.rgb) }
 }
 

@@ -87,7 +87,7 @@ class SpriteSheetUnpacker {
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
                 spriteDimensions.add(spriteRectangle)
-                workingImage.eraseSprite(backgroundColor, spritePlot)
+                workingImage.erasePoints(spritePlot, backgroundColor)
             }
         }
 
