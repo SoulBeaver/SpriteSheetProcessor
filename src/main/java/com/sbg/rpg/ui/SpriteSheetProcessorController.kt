@@ -19,6 +19,7 @@ import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import com.sbg.rpg.util.batch
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
+import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Paths
 
@@ -33,13 +34,13 @@ class SpriteSheetProcessorController: Controller() {
         spriteSheetUnpacker = SpriteSheetUnpacker()
     }
 
-    fun onSpriteSheetsDropped(spriteSheets: List<File>) {
+    fun unpackSpriteSheets(spriteSheets: List<File>): Sequence<List<BufferedImage>> {
         logger.debug("Loading files $spriteSheets")
 
         val sprites = spriteSheets.map { spriteSheet ->
             spriteSheetUnpacker.unpack(Paths.get(spriteSheet.absolutePath))
         }.flatten()
 
-        view.drawSprites(sprites.asSequence().batch(30))
+        return sprites.asSequence().batch(30)
     }
 }

@@ -97,7 +97,13 @@ class SpriteSheetProcessorView: View() {
         val dragboard = e.dragboard
 
         if (dragboard.hasFiles()) {
-            controller.onSpriteSheetsDropped(dragboard.files)
+            val files = dragboard.files
+
+            runAsync {
+                controller.unpackSpriteSheets(files)
+            } ui {
+                drawSprites(it)
+            }
         }
     }
 
@@ -107,8 +113,6 @@ class SpriteSheetProcessorView: View() {
     }
 
     fun drawSprites(spriteSequence: Sequence<List<BufferedImage>>) {
-        // canvas.width = (sprites.size * 200).toDouble()
-
         val graphics = canvas.graphicsContext2D
 
         spriteSequence.forEachIndexed { y, sprites ->
