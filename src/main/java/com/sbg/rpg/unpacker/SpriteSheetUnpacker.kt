@@ -16,18 +16,15 @@
 package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.*
-import java.nio.file.Path
-import java.nio.file.Files
+import com.sbg.rpg.util.pmap
 import java.awt.image.BufferedImage
 import java.awt.Image
-import java.util.ArrayList
 import java.awt.Color
 import java.awt.Rectangle
 import java.awt.Point
-import java.util.LinkedList
-import java.util.HashSet
 import com.sbg.rpg.util.spanRectangleFrom
 import org.apache.logging.log4j.LogManager
+import java.util.*
 
 /**
  * Motivation:  oftentimes a SpriteSheet is given without any further information. For example,
@@ -55,8 +52,10 @@ class SpriteSheetUnpacker {
      * @return list of extracted sprite images
      */
     fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
-        return calculateSpriteBounds(spriteSheet).map {
-            spriteDrawer.draw(spriteSheet, it, spriteSheet.probableBackgroundColor())
+        val backgroundColor = spriteSheet.probableBackgroundColor()
+
+        return calculateSpriteBounds(spriteSheet).pmap {
+            spriteDrawer.draw(spriteSheet, it, backgroundColor)
         }
     }
 
