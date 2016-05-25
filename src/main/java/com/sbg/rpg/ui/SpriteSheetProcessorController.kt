@@ -15,14 +15,16 @@
  */
 package com.sbg.rpg.ui
 
-import com.sbg.rpg.image.probableBackgroundColor
 import com.sbg.rpg.image.readImage
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
+import com.sbg.rpg.util.pmap
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
 import java.io.File
+import java.nio.file.Path
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 
 class SpriteSheetProcessorController: Controller() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorController::class.simpleName)
@@ -31,17 +33,21 @@ class SpriteSheetProcessorController: Controller() {
 
     private val spriteSheetUnpacker: SpriteSheetUnpacker
 
+    private var spriteSheetPaths: List<Path>
+
     init {
         spriteSheetUnpacker = SpriteSheetUnpacker()
+        spriteSheetPaths = emptyList()
     }
 
-    fun unpackSpriteSheets(spriteSheets: List<File>): List<AnnotatedSpriteSheet> {
-        logger.debug("Loading files $spriteSheets")
+    fun unpackSpriteSheets(spriteSheetFiles: List<File>): List<AnnotatedSpriteSheet> {
+        logger.debug("Loading files $spriteSheetFiles")
+        this.spriteSheetPaths = spriteSheetFiles.map { Paths.get(it.absolutePath) }
 
-        val annotatedSpriteSheets = spriteSheets.map { spriteSheet ->
-            logger.info("Unpacking ${spriteSheet.name}")
+        val annotatedSpriteSheets = spriteSheetPaths.pmap { spriteSheet ->
+            logger.info("Unpacking ${spriteSheet.fileName}")
 
-            val spriteSheet = readImage(Paths.get(spriteSheet.absolutePath))
+            val spriteSheet = readImage(spriteSheet)
             val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
 
             AnnotatedSpriteSheet(
@@ -51,5 +57,23 @@ class SpriteSheetProcessorController: Controller() {
         }
 
         return annotatedSpriteSheets
+    }
+
+    fun saveSprites(directory: File) {
+        val spritesPerFile = spriteSheetPaths.pmap { spriteSheetPath ->
+            spriteSheetPath.fileName to spriteSheetUnpacker.unpack(readImage(spriteSheetPath))
+        }
+
+        logger.info("Writing individual sprites to file.")
+        for ((fileName, sprites) in spritesPerFile) {
+            sprites.forEachIndexed { idx, sprite ->
+                ImageIO.write(
+                        sprite,
+                        "png",
+                        Paths.get(directory.absolutePath, "${fileName}_sprite_$idx.png").toFile())
+            }
+        }
+
+        logger.info("Finished writing sprites to file.")
     }
 }
