@@ -27,6 +27,8 @@ import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
+import javafx.stage.DirectoryChooser
+import javafx.stage.FileChooser
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
 
@@ -40,7 +42,7 @@ class SpriteSheetProcessorView: View() {
     val combineButton: Button by fxid()
     val separateButton: Button by fxid()
     val excludeButton: Button by fxid()
-    val packButton: Button by fxid()
+    val exportButton: Button by fxid()
     val tutorialButton: Button by fxid()
 
     val canvasScrollPane: ScrollPane by fxid()
@@ -93,8 +95,13 @@ class SpriteSheetProcessorView: View() {
      * OnClick event that's triggered when the user wants to pack the sprites into a sprite sheet.
      */
     @FXML
-    fun onPackSpriteSheet(e: ActionEvent) {
-        logger.debug("onPackSpriteSheet")
+    fun onExportSprites(e: ActionEvent) {
+        val directoryChooser = DirectoryChooser()
+
+        val selectedDirectory = directoryChooser.showDialog(primaryStage)
+        if (selectedDirectory != null) {
+            controller.saveSprites(selectedDirectory)
+        }
     }
 
     @FXML

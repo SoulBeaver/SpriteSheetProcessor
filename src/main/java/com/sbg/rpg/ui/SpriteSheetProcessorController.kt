@@ -22,7 +22,9 @@ import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
 import java.io.File
+import java.nio.file.Path
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 
 class SpriteSheetProcessorController: Controller() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorController::class.simpleName)
@@ -31,17 +33,21 @@ class SpriteSheetProcessorController: Controller() {
 
     private val spriteSheetUnpacker: SpriteSheetUnpacker
 
+    private var spriteSheetPaths: List<Path>
+
     init {
         spriteSheetUnpacker = SpriteSheetUnpacker()
+        spriteSheetPaths = emptyList()
     }
 
-    fun unpackSpriteSheets(spriteSheets: List<File>): List<AnnotatedSpriteSheet> {
-        logger.debug("Loading files $spriteSheets")
+    fun unpackSpriteSheets(spriteSheetFiles: List<File>): List<AnnotatedSpriteSheet> {
+        logger.debug("Loading files $spriteSheetFiles")
+        this.spriteSheetPaths = spriteSheetFiles.map { Paths.get(it.absolutePath) }
 
-        val annotatedSpriteSheets = spriteSheets.map { spriteSheet ->
-            logger.info("Unpacking ${spriteSheet.name}")
+        val annotatedSpriteSheets = spriteSheetPaths.map { spriteSheet ->
+            logger.info("Unpacking ${spriteSheet.fileName}")
 
-            val spriteSheet = readImage(Paths.get(spriteSheet.absolutePath))
+            val spriteSheet = readImage(spriteSheet)
             val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
 
             AnnotatedSpriteSheet(
@@ -51,5 +57,20 @@ class SpriteSheetProcessorController: Controller() {
         }
 
         return annotatedSpriteSheets
+    }
+
+    fun saveSprites(directory: File) {
+        for (spriteSheetPath in spriteSheetPaths) {
+            val sprites = spriteSheetUnpacker.unpack(readImage(spriteSheetPath))
+
+            logger.info("Writing individual sprites to file.")
+            sprites.forEachIndexed { idx, sprite ->
+                ImageIO.write(
+                        sprite,
+                        "png",
+                        Paths.get(directory.absolutePath, "${spriteSheetPath.fileName}_sprite_$idx.png").toFile())
+            }
+        }
+
     }
 }

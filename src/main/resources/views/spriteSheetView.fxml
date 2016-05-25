@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <ScrollPane fx:id="canvasScrollPane" hbarPolicy="ALWAYS" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER" />
    </center>
@@ -56,7 +56,7 @@
          <children>
             <Button fx:id="combineButton" layoutX="14.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCombineSelected" text="Combine" />
             <Button fx:id="separateButton" layoutX="124.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onSeparateSelected" text="Separate" />
-            <Button fx:id="packButton" layoutX="440.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onPackSpriteSheet" text="Pack" AnchorPane.rightAnchor="60.0" />
+            <Button fx:id="exportButton" layoutX="440.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onExportSprites" text="Export" AnchorPane.rightAnchor="60.0" />
             <Button fx:id="excludeButton" layoutX="234.0" layoutY="17.0" minWidth="100.0" mnemonicParsing="false" onAction="#onExcludeSelected" text="Exclude" />
          </children>
       </AnchorPane>
