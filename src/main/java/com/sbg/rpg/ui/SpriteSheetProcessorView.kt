@@ -22,6 +22,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
@@ -44,6 +45,8 @@ class SpriteSheetProcessorView: View() {
     val excludeButton: Button by fxid()
     val exportButton: Button by fxid()
     val tutorialButton: Button by fxid()
+
+    val statusLabel: Label by fxid()
 
     val canvasScrollPane: ScrollPane by fxid()
     val canvas: ResizableCanvas
@@ -100,7 +103,16 @@ class SpriteSheetProcessorView: View() {
 
         val selectedDirectory = directoryChooser.showDialog(primaryStage)
         if (selectedDirectory != null) {
-            controller.saveSprites(selectedDirectory)
+            disableUI()
+
+            displayStatus("Writing sprites to file, this might take a few seconds...")
+
+            runAsync {
+                controller.saveSprites(selectedDirectory)
+            } ui {
+                displayStatus("Finished writing sprites to file!")
+                enableUI()
+            }
         }
     }
 
@@ -162,5 +174,25 @@ class SpriteSheetProcessorView: View() {
         graphics.fill = Color.ANTIQUEWHITE
         graphics.fillRect(0.0, 0.0, canvas.width, canvas.height)
         graphics.fill = Color.TRANSPARENT
+    }
+
+    fun disableUI() {
+        combineButton.setDisable(true)
+        separateButton.setDisable(true)
+        excludeButton.setDisable(true)
+        exportButton.setDisable(true)
+        tutorialButton.setDisable(true)
+    }
+
+    fun enableUI() {
+        combineButton.setDisable(false)
+        separateButton.setDisable(false)
+        excludeButton.setDisable(false)
+        exportButton.setDisable(false)
+        tutorialButton.setDisable(false)
+    }
+
+    fun displayStatus(message: String) {
+        statusLabel.text = message
     }
 }

@@ -71,6 +71,5 @@ class SpriteSheetProcessorController: Controller() {
                         Paths.get(directory.absolutePath, "${spriteSheetPath.fileName}_sprite_$idx.png").toFile())
             }
         }
-
     }
 }
