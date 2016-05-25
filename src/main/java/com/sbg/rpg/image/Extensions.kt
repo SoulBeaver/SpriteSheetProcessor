@@ -18,6 +18,7 @@ package com.sbg.rpg.image
 import com.sbg.rpg.util.max
 import java.awt.*
 import java.awt.image.BufferedImage
+import java.awt.image.DataBufferByte
 import java.awt.image.IndexColorModel
 import java.util.*
 
@@ -32,7 +33,7 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
 
         override fun next(): Pixel {
             val point = Point(currentX, currentY)
-            val color = Color(getRGB(currentX, currentY))
+            val color = Color(getRGB(currentX, currentY), true)
 
             if (currentX == width - 1) {
                 currentX = 0
@@ -96,7 +97,7 @@ fun BufferedImage.probableBackgroundColor(): Color {
 
     for (x in 0..(width - 1)) {
         for (y in 0..(height - 1)) {
-            val colorAtXY = Color(getRGB(x, y))
+            val colorAtXY = Color(getRGB(x, y), true)
 
             colorMap[colorAtXY] = colorMap.getOrDefault(colorAtXY, 0) + 1
         }

@@ -1,6 +1,5 @@
 package com.sbg.rpg.unpacker
 
-import com.sbg.rpg.image.ImageReadException
 import com.sbg.rpg.image.readImage
 import java.nio.file.Paths
 import kotlin.test.assertTrue
@@ -8,7 +7,6 @@ import kotlin.test.assertEquals
 import java.awt.Rectangle
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.skip
-import kotlin.test.assertFailsWith
 
 class UnpackerSpec: Spek() { init {
     given("A SpriteSheet Unpacker") {
@@ -96,8 +94,8 @@ class UnpackerSpec: Spek() { init {
             val transparentBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/MultipleSprites_TransparentBackground.png")
             val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(transparentBackgroundUrl.toURI())))
 
-            it("returns a list of four sprites") {
-                assertEquals(2, sprites.size, "Expected to have found exactly four sprite")
+            it("returns a list of two sprites") {
+                assertEquals(2, sprites.size, "Expected to have found exactly two sprites")
             }
 
             it("returns the correct dimensions") {
@@ -176,6 +174,20 @@ class UnpackerSpec: Spek() { init {
                         expectedDimensions,
                         actualDimensions,
                         "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
+            }
+        }
+
+        on("a large png with transparent background") {
+            val rectangleNoCornersUrl = this.javaClass.classLoader.getResource("unpacker/Slow.png")
+
+            it("returns a list of 10 sprites in a timely manner") {
+                /*
+                 * Spek does not have support for timeouts just yet. We have to manually interrupt the tests
+                 * in case this function is taking too long.
+                 */
+                val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(rectangleNoCornersUrl.toURI())))
+
+                assertEquals(10, sprites.size)
             }
         }
     }

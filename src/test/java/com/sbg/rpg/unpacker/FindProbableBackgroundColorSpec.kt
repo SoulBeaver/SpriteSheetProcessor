@@ -19,8 +19,7 @@ class FindProbableBackgroundColorSpec: Spek() { init {
 
                 val probableBackgroundColor = image.probableBackgroundColor()
 
-                assertEquals(expected, probableBackgroundColor,
-                        "Expected $expected as background color, but was $probableBackgroundColor")
+                assertEquals(expected, probableBackgroundColor)
             }
         }
     }
@@ -35,8 +34,7 @@ class FindProbableBackgroundColorSpec: Spek() { init {
 
                 val probableBackgroundColor = image.probableBackgroundColor()
 
-                assertEquals(expected, probableBackgroundColor,
-                        "Expected $expected as background color, but was $probableBackgroundColor")
+                assertEquals(expected, probableBackgroundColor)
             }
         }
     }
@@ -51,8 +49,7 @@ class FindProbableBackgroundColorSpec: Spek() { init {
 
                 val probableBackgroundColor = image.probableBackgroundColor()
 
-                assertEquals(expected, probableBackgroundColor,
-                        "Expected $expected as background color, but was $probableBackgroundColor")
+                assertEquals(expected, probableBackgroundColor)
             }
         }
     }
@@ -67,24 +64,22 @@ class FindProbableBackgroundColorSpec: Spek() { init {
 
                 val probableBackgroundColor = image.probableBackgroundColor()
 
-                assertEquals(expected, probableBackgroundColor,
-                        "Expected $expected as background color, but was $probableBackgroundColor")
+                assertEquals(expected, probableBackgroundColor)
             }
         }
     }
 
     given ("An image with many sprites and a transparent background") {
-        val transparentUrl = this.javaClass.classLoader.getResource("unpacker/Transparent.png")
+        val transparentUrl = this.javaClass.classLoader.getResource("unpacker/Pixel.png")
 
         on("finding the probably background color") {
             it("finds the color transparent") {
                 val image = readImage(Paths.get(transparentUrl.toURI()))
-                val expected = Color(0, 0, 0, 255)
+                val expected = Color(0, 0, 0, 0)
 
                 val probableBackgroundColor = image.probableBackgroundColor()
 
-                assertEquals(expected, probableBackgroundColor,
-                        "Expected $expected as background color, but was $probableBackgroundColor")
+                assertEquals(expected, probableBackgroundColor)
             }
         }
     }
