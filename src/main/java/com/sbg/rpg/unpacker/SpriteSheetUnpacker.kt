@@ -48,12 +48,11 @@ class SpriteSheetUnpacker {
     }
 
     /**
-     * Given a valid path to a sprite sheet, detects and returns every individual sprite. The method may not be perfect and
-     * return individual sprites if they're not contiguous. Adjust the distance value and see if that helps.
+     * Given a valid sprite sheet, detects and returns every individual sprite. The method may not be perfect and
+     * return grouped sprites if they're not contiguous.
      *
-     * @param spriteSheet path to sprite sheet
+     * @param spriteSheet the sprite sheet to unpack
      * @return list of extracted sprite images
-     * @throws IllegalArgumentException if the file could not be found
      */
     fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
         return calculateSpriteBounds(spriteSheet).map {
@@ -62,7 +61,11 @@ class SpriteSheetUnpacker {
     }
 
     /**
-     * TODO: Write me.
+     * Given a valid sprite sheet, detects and returns the bounding rectangle of every individual sprite. The method may not be perfect and
+     * return grouped sprites if they're not contiguous.
+     *
+     * @param spriteSheet the sprite sheet to unpack
+     * @return list of extracted sprite bounds
      */
     fun calculateSpriteBounds(spriteSheet: BufferedImage): List<Rectangle> {
         val spriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
