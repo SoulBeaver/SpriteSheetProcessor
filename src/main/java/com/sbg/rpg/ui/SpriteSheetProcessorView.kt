@@ -22,11 +22,14 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
+import javafx.stage.DirectoryChooser
+import javafx.stage.FileChooser
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
 
@@ -40,8 +43,10 @@ class SpriteSheetProcessorView: View() {
     val combineButton: Button by fxid()
     val separateButton: Button by fxid()
     val excludeButton: Button by fxid()
-    val packButton: Button by fxid()
+    val exportButton: Button by fxid()
     val tutorialButton: Button by fxid()
+
+    val statusLabel: Label by fxid()
 
     val canvasScrollPane: ScrollPane by fxid()
     val canvas: ResizableCanvas
@@ -93,8 +98,22 @@ class SpriteSheetProcessorView: View() {
      * OnClick event that's triggered when the user wants to pack the sprites into a sprite sheet.
      */
     @FXML
-    fun onPackSpriteSheet(e: ActionEvent) {
-        logger.debug("onPackSpriteSheet")
+    fun onExportSprites(e: ActionEvent) {
+        val directoryChooser = DirectoryChooser()
+
+        val selectedDirectory = directoryChooser.showDialog(primaryStage)
+        if (selectedDirectory != null) {
+            disableUI()
+
+            displayStatus("Writing sprites to file, this might take a few seconds...")
+
+            runAsync {
+                controller.saveSprites(selectedDirectory)
+            } ui {
+                displayStatus("Finished writing sprites to file!")
+                enableUI()
+            }
+        }
     }
 
     @FXML
@@ -113,11 +132,17 @@ class SpriteSheetProcessorView: View() {
         if (dragboard.hasFiles()) {
             val files = dragboard.files
 
+            disableUI()
+            displayStatus("Loading sprite sheets,this should only take a moment...")
+
             runAsync {
                 controller.unpackSpriteSheets(files)
             } ui {
                 drawAnnotatedSpriteSheets(it)
+                displayStatus("Finished loading sprite sheets!")
             }
+
+            enableUI()
         }
     }
 
@@ -155,5 +180,25 @@ class SpriteSheetProcessorView: View() {
         graphics.fill = Color.ANTIQUEWHITE
         graphics.fillRect(0.0, 0.0, canvas.width, canvas.height)
         graphics.fill = Color.TRANSPARENT
+    }
+
+    fun disableUI() {
+        combineButton.setDisable(true)
+        separateButton.setDisable(true)
+        excludeButton.setDisable(true)
+        exportButton.setDisable(true)
+        tutorialButton.setDisable(true)
+    }
+
+    fun enableUI() {
+        combineButton.setDisable(false)
+        separateButton.setDisable(false)
+        excludeButton.setDisable(false)
+        exportButton.setDisable(false)
+        tutorialButton.setDisable(false)
+    }
+
+    fun displayStatus(message: String) {
+        statusLabel.text = message
     }
 }

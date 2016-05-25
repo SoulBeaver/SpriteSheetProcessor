@@ -42,6 +42,10 @@ over the coming weeks.
 
 #### Updates
 
+**2016-05-26**
+
+* Export of individual sprites to file via JavaFX app.
+
 **2016-05-25**
 
 * Drag'n'Drop functionality now included in JavaFX app.
