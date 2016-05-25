@@ -132,11 +132,17 @@ class SpriteSheetProcessorView: View() {
         if (dragboard.hasFiles()) {
             val files = dragboard.files
 
+            disableUI()
+            displayStatus("Loading sprite sheets,this should only take a moment...")
+
             runAsync {
                 controller.unpackSpriteSheets(files)
             } ui {
                 drawAnnotatedSpriteSheets(it)
+                displayStatus("Finished loading sprite sheets!")
             }
+
+            enableUI()
         }
     }
 
