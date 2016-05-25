@@ -30,7 +30,7 @@ import com.sbg.rpg.util.spanRectangleFrom
 import org.apache.logging.log4j.LogManager
 
 /**
-* Motivation:  oftentimes a SpriteSheet is given without any further information. For example,
+ * Motivation:  oftentimes a SpriteSheet is given without any further information. For example,
  * a spritesheet with twenty sprites from the famous Megaman series. How do you integrate this into your game?
  * Do you calculate the position and size of each sprite by hand? Of course not, apps like TexturePacker do a wonderful
  * job of taking individual sprites, packing them, and handing you an atlas with all necessary information.
@@ -48,28 +48,30 @@ class SpriteSheetUnpacker {
     }
 
     /**
-     * Given a valid path to a sprite sheet, detects and returns every individual sprite. The method may not be perfect and
-     * return individual sprites if they're not contiguous. Adjust the distance value and see if that helps.
+     * Given a valid sprite sheet, detects and returns every individual sprite. The method may not be perfect and
+     * return grouped sprites if they're not contiguous. Does not alter the source image in any way.
      *
-     * @param spriteSheet path to sprite sheet
+     * @param spriteSheet the sprite sheet to unpack
      * @return list of extracted sprite images
-     * @throws IllegalArgumentException if the file could not be found
      */
-    fun unpack(spriteSheet: Path): List<BufferedImage> {
-        require(Files.exists(spriteSheet)) { "The file ${spriteSheet.fileName} does not exist" }
+    fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
+        return calculateSpriteBounds(spriteSheet).map {
+            spriteDrawer.draw(spriteSheet, it, spriteSheet.probableBackgroundColor())
+        }
+    }
 
-        logger.debug("Loading sprite sheet.")
-        val spriteSheetImage = readImage(spriteSheet)
-
-        logger.debug("Determining most probable background color.")
-        val backgroundColor  = spriteSheetImage.determineProbableBackgroundColor()
-        logger.debug("The most probable background color is $backgroundColor")
-
-        val spriteDimensions = findSpriteDimensions(spriteSheetImage, backgroundColor)
+    /**
+     * Given a valid sprite sheet, detects and returns the bounding rectangle of every individual sprite. The method may not be perfect and
+     * return grouped sprites if they're not contiguous. Does not alter the source image in any way.
+     *
+     * @param spriteSheet the sprite sheet to unpack
+     * @return list of extracted sprite bounds
+     */
+    fun calculateSpriteBounds(spriteSheet: BufferedImage): List<Rectangle> {
+        val spriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
         logger.info("Found ${spriteDimensions.size} sprites.")
 
-        logger.debug("Drawing individual sprites.")
-        return spriteDimensions.filter { it.width > 0 && it.height > 0 }.map { spriteDrawer.draw(spriteSheetImage, it, backgroundColor) }
+        return spriteDimensions
     }
 
     private fun findSpriteDimensions(image: BufferedImage,
@@ -82,79 +84,80 @@ class SpriteSheetUnpacker {
 
             if (color != backgroundColor) {
                 logger.debug("Found a sprite starting at (${point.x}, ${point.y})")
-                val spritePlot = findContiguous(workingImage, point) { it != backgroundColor }
+                val spritePlot = findContiguousSprite(workingImage, point, backgroundColor)
                 val spriteRectangle = spanRectangleFrom(spritePlot)
 
                 logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
                 spriteDimensions.add(spriteRectangle)
-                workingImage.eraseSprite(backgroundColor, spritePlot)
+                workingImage.erasePoints(spritePlot, backgroundColor)
             }
         }
 
         return spriteDimensions
     }
 
-    private fun findContiguous(image: BufferedImage, point: Point, predicate: (Color) -> Boolean): List<Point> {
+    private fun findContiguousSprite(image: BufferedImage, point: Point, backgroundColor: Color): List<Point> {
         val unvisited = LinkedList<Point>()
-        val visited   = arrayListOf(point)
+        val visited   = hashSetOf(point)
 
-        unvisited.addAll(neighbors(point, image).filter { predicate(Color(image.getRGB(it.x, it.y))) })
+        unvisited.addAll(neighbors(point, image).filter { image.getRGB(it.x, it.y) != backgroundColor.rgb })
 
         while (unvisited.isNotEmpty()) {
             val currentPoint = unvisited.pop()
-            val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y))
+            val currentColor = image.getRGB(currentPoint.x, currentPoint.y)
 
-            if (predicate(currentColor)) {
+            if (currentColor != backgroundColor.rgb) {
                 unvisited.addAll(neighbors(currentPoint, image).filter {
-                    !visited.contains(it) && !unvisited.contains(it) &&
-                            predicate(Color(image.getRGB(it.x, it.y)))
+                    !visited.contains(it) &&
+                    !unvisited.contains(it) &&
+                    image.getRGB(it.x, it.y) != backgroundColor.rgb
                 })
 
                 visited.add(currentPoint)
             }
         }
 
-        return visited.distinct()
+        return visited.toList()
     }
 
     private fun neighbors(point: Point, image: Image): List<Point> {
-        val points = ArrayList<Point>()
+        val neighbors = ArrayList<Point>(8)
         val imageWidth = image.getWidth(null) - 1
         val imageHeight = image.getHeight(null) - 1
 
         // Left neighbor
         if (point.x > 0)
-            points.add(Point(point.x - 1, point.y))
+            neighbors.add(Point(point.x - 1, point.y))
 
         // Right neighbor
         if (point.x < imageWidth)
-            points.add(Point(point.x + 1, point.y))
+            neighbors.add(Point(point.x + 1, point.y))
 
         // Top neighbor
         if (point.y > 0)
-            points.add(Point(point.x, point.y - 1))
+            neighbors.add(Point(point.x, point.y - 1))
 
         // Bottom neighbor
         if (point.y < imageHeight)
-            points.add(Point(point.x, point.y + 1))
+            neighbors.add(Point(point.x, point.y + 1))
 
         // Top-left neighbor
         if (point.x > 0 && point.y > 0)
-            points.add(Point(point.x - 1, point.y - 1))
+            neighbors.add(Point(point.x - 1, point.y - 1))
 
         // Top-right neighbor
         if (point.x < imageWidth && point.y > 0)
-            points.add(Point(point.x + 1, point.y - 1))
+            neighbors.add(Point(point.x + 1, point.y - 1))
 
         // Bottom-left neighbor
         if (point.x > 0 && point.y < imageHeight - 1)
-            points.add(Point(point.x - 1, point.y + 1))
+            neighbors.add(Point(point.x - 1, point.y + 1))
 
         // Bottom-right neighbor
         if (point.x < imageWidth && point.y < imageHeight)
-            points.add(Point(point.x + 1, point.y + 1))
+            neighbors.add(Point(point.x + 1, point.y + 1))
 
-        return points
+        return neighbors
     }
 }

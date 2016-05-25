@@ -15,9 +15,10 @@
  */
 package com.sbg.rpg.image
 
-import com.sbg.rpg.map.max
+import com.sbg.rpg.util.max
 import java.awt.*
 import java.awt.image.BufferedImage
+import java.awt.image.DataBufferByte
 import java.awt.image.IndexColorModel
 import java.util.*
 
@@ -32,7 +33,7 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
 
         override fun next(): Pixel {
             val point = Point(currentX, currentY)
-            val color = Color(getRGB(currentX, currentY))
+            val color = Color(getRGB(currentX, currentY), true)
 
             if (currentX == width - 1) {
                 currentX = 0
@@ -46,14 +47,12 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
     }
 }
 
-fun BufferedImage.copy(): BufferedImage {
-    val colorMode = colorModel
-
-    return BufferedImage(colorMode,
-            copyData(null),
-            colorMode.isAlphaPremultiplied,
-            null)
-}
+fun BufferedImage.copy() = BufferedImage(
+        colorModel,
+        copyData(null),
+        colorModel.isAlphaPremultiplied,
+        null
+)
 
 fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): BufferedImage {
     require(dimensions.width > width) { "Expected a width larger than current image to be copied; width=${dimensions.width}" }
@@ -87,18 +86,18 @@ fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): Buf
     return target
 }
 
-fun BufferedImage.eraseSprite(withColor: Color, points: List<Point>) {
+fun BufferedImage.erasePoints(points: List<Point>, withColor: Color) {
     points.forEach { setRGB(it.x, it.y, withColor.rgb) }
 }
 
-fun BufferedImage.determineProbableBackgroundColor(): Color {
+fun BufferedImage.probableBackgroundColor(): Color {
     require(width > 0 && height > 0) { "Image must have positive, non-zero width and height; width=${width}, height=${height}" }
 
     val colorMap = HashMap<Color, Int>()
 
     for (x in 0..(width - 1)) {
         for (y in 0..(height - 1)) {
-            val colorAtXY = Color(getRGB(x, y))
+            val colorAtXY = Color(getRGB(x, y), true)
 
             colorMap[colorAtXY] = colorMap.getOrDefault(colorAtXY, 0) + 1
         }

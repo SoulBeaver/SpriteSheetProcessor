@@ -8,7 +8,7 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites. 
 
     Usage: SpriteSheetProcessor [options] [sprite sheets]
       Options:
-        -metadata-output-format (-mof) 
+        -metadata-output-format (-mof)
             - Structure of the metadata file, any of {yaml, json, txt} (default: yaml)
         -verbose (-v)
             - Turn on debugging statements, but without logging to file (default: false)
@@ -30,13 +30,29 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites. 
     # Extract to directory currently in
     java -jar SpriteSheetProcessor.jar -e . Heroes.gif
 
+#### JavaFX (WiP)
+
+This will let you confirm and edit (to an extent) any errors encountered by the unpacking process.
+
+So far it can only do drag and drop; you still need the console version to perform the extraction. This will change
+over the coming weeks.
+
+![JavaFX App][1]
+
 
 #### Updates
+
+**2016-05-25**
+
+* Drag'n'Drop functionality now included in JavaFX app.
+* Performance improvements during unpacking for most sprite sheets.
 
 **2016-05-24**
 
 * Experimental JavaFX integration. Includes basic UI with no functionality. Checkout the project and run the
-  main method in *com.sbg.rpg.ui.SpriteSheetProcessorApp*.
+  main method in *SpriteSheetProcessorApp*.
 * Small sprites, especially those operating in single-pixel dimensions, should now be accurately detected and extracted.
 
 *Licensed under Apache 2.0*
+
+[1]: http://i.imgur.com/r0XSClG.png
