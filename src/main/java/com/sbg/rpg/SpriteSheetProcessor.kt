@@ -55,13 +55,13 @@ class SpriteSheetProcessor() {
      */
     fun processSpriteSheets(commandLineArguments: CommandLineArguments) {
         for (rawSpriteSheetPath in commandLineArguments.spriteSheetPaths) {
-            logger.debug("Working on $rawSpriteSheetPath")
+            logger.info("Working on $rawSpriteSheetPath.")
             val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
 
-            logger.debug("Unpacking sprites")
+            logger.info("Unpacking sprites.")
             val sprites = spriteSheetUnpacker.unpack(readImage(spriteSheetPath))
 
-            logger.debug("Writing individual sprites to file in directory ${commandLineArguments.exportFolder}")
+            logger.info("Writing individual sprites to file.")
             sprites.forEachIndexed { idx, sprite ->
                 ImageIO.write(sprite, "png", Paths.get(commandLineArguments.exportFolder, "${spriteSheetPath.fileName}_sprite_$idx.png").toFile())
             }
