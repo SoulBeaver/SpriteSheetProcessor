@@ -16,17 +16,11 @@
 package com.sbg.rpg
 
 import com.sbg.rpg.cli.CommandLineArguments
-import com.sbg.rpg.image.probableBackgroundColor
 import com.sbg.rpg.image.readImage
-import com.sbg.rpg.image.toBufferedImage
-import com.sbg.rpg.metadata.JsonMetadataCreator
 import com.sbg.rpg.metadata.MetadataCreator
-import com.sbg.rpg.metadata.TextMetadataCreator
-import com.sbg.rpg.metadata.YamlMetadataCreator
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import java.nio.file.Paths
-import java.util.*
 import javax.imageio.ImageIO
 import kotlin.properties.Delegates
 

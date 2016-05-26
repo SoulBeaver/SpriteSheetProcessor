@@ -15,9 +15,8 @@
  */
 package com.sbg.rpg.util
 
-import java.awt.Rectangle
-import java.awt.Image
 import java.awt.Point
+import java.awt.Rectangle
 
 fun spanRectangleFrom(points: List<Point>): Rectangle {
     if (points.isEmpty())

@@ -34,10 +34,6 @@ import org.apache.logging.log4j.LogManager
  *     1=51 51 50 50
  *     ...
  * </pre>
- *
- * @param spriteBoundsList The SpriteBounds to convert
- * @return A plain text representation of the SpriteBounds or
- *         en empty ("") string if empty
  */
 class TextMetadataCreator: MetadataCreator {
     private val logger = LogManager.getLogger(TextMetadataCreator::class.simpleName)

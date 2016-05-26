@@ -16,10 +16,11 @@
 package com.sbg.rpg.image
 
 import com.sbg.rpg.util.max
-import java.awt.*
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Image
+import java.awt.Point
 import java.awt.image.BufferedImage
-import java.awt.image.DataBufferByte
-import java.awt.image.IndexColorModel
 import java.util.*
 
 operator fun BufferedImage.iterator(): Iterator<Pixel> {
@@ -91,7 +92,7 @@ fun BufferedImage.erasePoints(points: List<Point>, withColor: Color) {
 }
 
 fun BufferedImage.probableBackgroundColor(): Color {
-    require(width > 0 && height > 0) { "Image must have positive, non-zero width and height; width=${width}, height=${height}" }
+    require(width > 0 && height > 0) { "Image must have positive, non-zero width and height; width=$width, height=$height" }
 
     val colorMap = HashMap<Color, Int>()
 

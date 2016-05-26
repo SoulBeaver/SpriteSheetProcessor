@@ -29,7 +29,6 @@ import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
 import javafx.stage.DirectoryChooser
-import javafx.stage.FileChooser
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
 
@@ -183,19 +182,19 @@ class SpriteSheetProcessorView: View() {
     }
 
     fun disableUI() {
-        combineButton.setDisable(true)
-        separateButton.setDisable(true)
-        excludeButton.setDisable(true)
-        exportButton.setDisable(true)
-        tutorialButton.setDisable(true)
+        combineButton.isDisable = true
+        separateButton.isDisable = true
+        excludeButton.isDisable = true
+        exportButton.isDisable = true
+        tutorialButton.isDisable = true
     }
 
     fun enableUI() {
-        combineButton.setDisable(false)
-        separateButton.setDisable(false)
-        excludeButton.setDisable(false)
-        exportButton.setDisable(false)
-        tutorialButton.setDisable(false)
+        combineButton.isDisable = false
+        separateButton.isDisable = false
+        excludeButton.isDisable = false
+        exportButton.isDisable = false
+        tutorialButton.isDisable = false
     }
 
     fun displayStatus(message: String) {

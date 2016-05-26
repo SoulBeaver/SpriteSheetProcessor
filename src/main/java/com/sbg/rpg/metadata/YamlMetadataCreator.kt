@@ -31,10 +31,6 @@ import org.apache.logging.log4j.LogManager
  *         Bounds: 51 51 50 50
  *       ...
  * </pre>
- *
- * @param spriteBoundsList The SpriteBounds to convert
- * @return A yaml representation of the SpriteBounds or
- *         en empty ("") string if empty
  */
 class YamlMetadataCreator: MetadataCreator {
     private val logger = LogManager.getLogger(YamlMetadataCreator::class.simpleName)

@@ -16,12 +16,9 @@
 package com.sbg.rpg.ui
 
 import javafx.application.Application
-import javafx.scene.control.Label
-import javafx.scene.layout.HBox
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import tornadofx.App
-import tornadofx.View
 
 /**
  * Launches a user-friendly GUI for further sprite sheet processing.
