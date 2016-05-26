@@ -40,10 +40,6 @@ class SpriteSheetProcessorApp : App() {
     }
 }
 
-class SpriteSheetView : View() {
-    override val root = HBox(Label("It works!"))
-}
-
 fun main(args: Array<String>) {
     Application.launch(SpriteSheetProcessorApp::class.java, *args)
 }

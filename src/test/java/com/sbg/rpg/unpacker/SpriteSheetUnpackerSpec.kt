@@ -8,7 +8,7 @@ import java.awt.Rectangle
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.skip
 
-class UnpackerSpec: Spek() { init {
+class SpriteSheetUnpackerSpec : Spek() { init {
     given("A SpriteSheet Unpacker") {
         val spriteSheetUnpacker = SpriteSheetUnpacker()
 
