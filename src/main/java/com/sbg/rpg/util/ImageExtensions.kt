@@ -104,6 +104,8 @@ fun BufferedImage.probableBackgroundColor(): Color {
     return colorMap.max()!!.first
 }
 
+fun BufferedImage.area(): Int = this.height * this.width
+
 fun Image.toBufferedImage(imageType: Int = BufferedImage.TYPE_INT_ARGB): BufferedImage {
     if (this is BufferedImage && this.type == imageType)
         return this

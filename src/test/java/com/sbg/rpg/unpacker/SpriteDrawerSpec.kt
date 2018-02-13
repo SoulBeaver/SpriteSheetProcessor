@@ -1,6 +1,6 @@
 package com.sbg.rpg.unpacker
 
-import com.sbg.rpg.image.SpriteDrawer
+import com.sbg.rpg.image.SpriteCutter
 import com.sbg.rpg.image.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
@@ -13,14 +13,14 @@ import kotlin.test.assertEquals
 
 class SpriteDrawerSpec: Spek({
     given("A sprite drawer") {
-        val spriteDrawer = SpriteDrawer()
+        val spriteDrawer = SpriteCutter()
 
         on("copying a smaller sprite from source") {
             val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
             val singleSpriteImage = readImage(Paths.get(singleSpriteUrl.toURI()))
 
             it("creates a new BufferedImage of said sprite") {
-                val sprite = spriteDrawer.draw(singleSpriteImage, Rectangle(443, 200, 108, 129), Color.WHITE)
+                val sprite = spriteDrawer.cut(singleSpriteImage, Rectangle(443, 200, 108, 129), Color.WHITE)
 
                 assertEquals(Color(0, 0, 0, 0).rgb, sprite.getRGB(0, 0), "Expected top-left corner to be transparent.")
                 assertEquals(Color(115, 66, 16).rgb, sprite.getRGB(0, 119), "Expected right foot to be brown.")
@@ -34,7 +34,7 @@ class SpriteDrawerSpec: Spek({
             val croppedImage = readImage(Paths.get(croppedUrl.toURI()))
 
             it("has identical output to the previous test") {
-                val sprite = spriteDrawer.draw(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
+                val sprite = spriteDrawer.cut(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
 
                 assertEquals(Color(0, 0, 0, 0).rgb, sprite.getRGB(0, 0), "Expected top-left corner to be transparent.")
                 assertEquals(Color(115, 66, 16).rgb, sprite.getRGB(0, 119), "Expected right foot to be brown.")
@@ -48,7 +48,7 @@ class SpriteDrawerSpec: Spek({
             val croppedImage = readImage(Paths.get(croppedUrl.toURI()))
 
             it("constrains area to source image dimensions and returns identical output") {
-                val sprite = spriteDrawer.draw(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
+                val sprite = spriteDrawer.cut(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
 
                 assertEquals(Color(0, 0, 0, 0).rgb, sprite.getRGB(0, 0), "Expected top-left corner to be transparent.")
                 assertEquals(Color(115, 66, 16).rgb, sprite.getRGB(0, 119), "Expected right foot to be brown.")
@@ -63,7 +63,7 @@ class SpriteDrawerSpec: Spek({
             val multipleSpritesImage = readImage(Paths.get(multipleSpritesUrl.toURI()))
 
             it("creates a list of three BufferedImages") {
-                val sprites = spriteDrawer.drawMultiple(
+                val sprites = spriteDrawer.cutMultiple(
                         multipleSpritesImage,
                         listOf(
                                 Rectangle(42, 20, 123, 189),
@@ -73,7 +73,7 @@ class SpriteDrawerSpec: Spek({
                         Color(109, 73, 138)
                 )
 
-                assertEquals(3, sprites.size, "Expected three sprites from SpriteDrawer.drawMultiple")
+                assertEquals(3, sprites.size, "Expected three sprites from SpriteCutter.cutMultiple")
             }
         }
 
@@ -82,7 +82,7 @@ class SpriteDrawerSpec: Spek({
             val multipleSpritesTransparentBackgroundImage = readImage(Paths.get(multipleSpritesTransparentBackgroundUrl.toURI()))
 
             it("preserves transparency for each sprite") {
-                val sprites = spriteDrawer.drawMultiple(
+                val sprites = spriteDrawer.cutMultiple(
                         multipleSpritesTransparentBackgroundImage,
                         listOf(
                                 Rectangle(7, 0, 30, 40),
@@ -91,7 +91,7 @@ class SpriteDrawerSpec: Spek({
                         Color(0, 0, 0, 0)
                 )
 
-                assertEquals(2, sprites.size, "Expected two sprites from SpriteDrawer.drawMultiple")
+                assertEquals(2, sprites.size, "Expected two sprites from SpriteCutter.cutMultiple")
             }
         }
     }

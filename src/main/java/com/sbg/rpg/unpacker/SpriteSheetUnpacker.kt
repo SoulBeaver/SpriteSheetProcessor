@@ -34,7 +34,7 @@ import java.util.*
  * However, to do that, you need the individual sprites first! This class, SpriteSheetUnpacker, cuts up a SpriteSheet
  * and delivers the individual sprites.
 */
-class SpriteSheetUnpacker(private val spriteDrawer: ISpriteDrawer) {
+class SpriteSheetUnpacker(private val spriteCutter: ISpriteCutter) {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
     /**
@@ -48,7 +48,7 @@ class SpriteSheetUnpacker(private val spriteDrawer: ISpriteDrawer) {
         val backgroundColor = spriteSheet.probableBackgroundColor()
 
         return calculateSpriteBounds(spriteSheet).pmap {
-            spriteDrawer.draw(spriteSheet, it, backgroundColor)
+            spriteCutter.cut(spriteSheet, it, backgroundColor)
         }
     }
 

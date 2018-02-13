@@ -15,7 +15,7 @@
  */
 package com.sbg.rpg.ui
 
-import com.sbg.rpg.image.SpriteDrawer
+import com.sbg.rpg.image.SpriteCutter
 import com.sbg.rpg.image.readImage
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
@@ -37,7 +37,7 @@ class SpriteSheetProcessorController: Controller() {
     private var spriteSheetPaths: List<Path>
 
     init {
-        spriteSheetUnpacker = SpriteSheetUnpacker(SpriteDrawer())
+        spriteSheetUnpacker = SpriteSheetUnpacker(SpriteCutter())
         spriteSheetPaths = emptyList()
     }
 

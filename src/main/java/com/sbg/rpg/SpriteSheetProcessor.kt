@@ -16,14 +16,12 @@
 package com.sbg.rpg
 
 import com.sbg.rpg.cli.CommandLineArguments
-import com.sbg.rpg.image.SpriteDrawer
 import com.sbg.rpg.image.readImage
 import com.sbg.rpg.metadata.MetadataCreator
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import java.nio.file.Paths
 import javax.imageio.ImageIO
-import kotlin.properties.Delegates
 
 /**
  * Controller class that processes sprites or spritesheets as necessary.

@@ -1,6 +1,6 @@
 package com.sbg.rpg.unpacker
 
-import com.sbg.rpg.image.SpriteDrawer
+import com.sbg.rpg.image.SpriteCutter
 import com.sbg.rpg.image.readImage
 import java.nio.file.Paths
 import kotlin.test.assertTrue
@@ -13,7 +13,7 @@ import org.jetbrains.spek.api.dsl.on
 
 class UnpackerSpec: Spek({
     given("A SpriteSheet Unpacker") {
-        val spriteSheetUnpacker = SpriteSheetUnpacker(SpriteDrawer())
+        val spriteSheetUnpacker = SpriteSheetUnpacker(SpriteCutter())
 
         on("a file without sprites") {
             val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
