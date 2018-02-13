@@ -1,6 +1,6 @@
 package com.sbg.rpg.unpacker
 
-import com.sbg.rpg.image.probableBackgroundColor
+import com.sbg.rpg.util.probableBackgroundColor
 import com.sbg.rpg.image.readImage
 import java.nio.file.Paths
 import java.awt.Color

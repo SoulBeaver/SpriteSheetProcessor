@@ -27,11 +27,13 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
+import tornadofx.hide
 
 class SpriteSheetProcessorView: View() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorView::class.simpleName)
@@ -44,6 +46,8 @@ class SpriteSheetProcessorView: View() {
     val separateButton: Button by fxid()
     val excludeButton: Button by fxid()
     val exportButton: Button by fxid()
+
+    val helpPanel: VBox by fxid()
     val tutorialButton: Button by fxid()
 
     val statusLabel: Label by fxid()
@@ -78,10 +82,10 @@ class SpriteSheetProcessorView: View() {
         logger.debug("onSeparateSelected")
     }
 
-    @FXML
     /**
      *
      */
+    @FXML
     fun onExcludeSelected(e: ActionEvent) {
         logger.debug("onExcludeSelected")
     }
@@ -92,6 +96,8 @@ class SpriteSheetProcessorView: View() {
     @FXML
     fun onTutorialCompleted(e: ActionEvent) {
         logger.debug("onTutorialCompleted")
+
+        helpPanel.hide()
     }
 
     /**

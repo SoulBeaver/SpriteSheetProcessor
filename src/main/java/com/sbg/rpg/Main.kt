@@ -18,6 +18,11 @@ package com.sbg.rpg
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
 import com.sbg.rpg.cli.CommandLineArguments
+import com.sbg.rpg.image.SpriteDrawer
+import com.sbg.rpg.metadata.JsonMetadataCreator
+import com.sbg.rpg.metadata.TextMetadataCreator
+import com.sbg.rpg.metadata.YamlMetadataCreator
+import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.Level
@@ -32,7 +37,7 @@ fun main(args: Array<String>) {
         if (!commandLineArguments.debugMode)
             disableLoggingToFile()
 
-        SpriteSheetProcessor().processSpriteSheets(commandLineArguments)
+        createProcessor(commandLineArguments).processSpriteSheets(commandLineArguments)
     } catch (pe: ParameterException) {
         println("Unable to start because of invalid input:\n\t${pe.message}")
         JCommander(CommandLineArguments()).usage()
@@ -53,4 +58,15 @@ private fun disableLoggingToFile() {
     val loggerContext = LogManager.getContext(false) as LoggerContext
     val configuration = loggerContext.configuration
     configuration.getLoggerConfig(LogManager.ROOT_LOGGER_NAME)!!.removeAppender("LogFile")
+}
+
+private fun createProcessor(cla: CommandLineArguments): SpriteSheetProcessor {
+    val metadataCreator = when (cla.metadataOutputFormat) {
+        "json" -> JsonMetadataCreator()
+        "yaml" -> YamlMetadataCreator()
+        "txt"  -> TextMetadataCreator()
+        else   -> throw IllegalArgumentException("Expected one of {json, yaml, txt} as metadata output, but got ${cla.metadataOutputFormat}")
+    }
+
+    return SpriteSheetProcessor(metadataCreator, SpriteSheetUnpacker(SpriteDrawer()))
 }

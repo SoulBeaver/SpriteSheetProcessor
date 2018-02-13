@@ -1,5 +1,6 @@
 package com.sbg.rpg.unpacker
 
+import com.sbg.rpg.image.SpriteDrawer
 import com.sbg.rpg.image.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given

@@ -1,10 +1,11 @@
-package com.sbg.rpg.unpacker
+package com.sbg.rpg.image
 
-import com.sbg.rpg.image.iterator
+import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import java.awt.Color
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
+import com.sbg.rpg.util.iterator
 
 /**
  * Draws Images from other Images.
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage
  * When unpacking a SpriteSheet, it becomes necessary to re-draw each sprite onto a separate image for later
  * merging and packing.
  */
-class SpriteDrawer {
+class SpriteDrawer : ISpriteDrawer {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
     /**
@@ -27,7 +28,7 @@ class SpriteDrawer {
      * @param colorToClear the backgroundColor that will be ignored (drawn transparent) while copying
      * @return A copy of the area in the source image with all backgroundColor pixels removed.
      */
-    fun draw(from: BufferedImage, area: Rectangle, colorToClear: Color): BufferedImage {
+    override fun draw(from: BufferedImage, area: Rectangle, colorToClear: Color): BufferedImage {
         if (area.width > from.width || area.height > from.height) {
             logger.info("Requested sub-image is larger than source image. Returning copy of source image instead.")
 
@@ -50,7 +51,7 @@ class SpriteDrawer {
      * @param colorToClear the backgroundColor that will be ignored (drawn transparent) while copying
      * @return A list of images that were drawn from the areas specified.
      */
-    fun drawMultiple(from: BufferedImage, areas: List<Rectangle>, colorToClear: Color) = areas.map { draw(from, it, colorToClear) }
+    override fun drawMultiple(from: BufferedImage, areas: List<Rectangle>, colorToClear: Color) = areas.map { draw(from, it, colorToClear) }
 
     private fun drawSprite(source: BufferedImage, colorToClear: Color): BufferedImage {
         val sprite = BufferedImage(source.width, source.height, BufferedImage.TYPE_INT_ARGB)

@@ -13,13 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.image
+package com.sbg.rpg.util
 
-import com.sbg.rpg.util.max
+import com.sbg.rpg.image.Pixel
 import java.awt.*
 import java.awt.image.BufferedImage
-import java.awt.image.DataBufferByte
-import java.awt.image.IndexColorModel
 import java.util.*
 
 operator fun BufferedImage.iterator(): Iterator<Pixel> {

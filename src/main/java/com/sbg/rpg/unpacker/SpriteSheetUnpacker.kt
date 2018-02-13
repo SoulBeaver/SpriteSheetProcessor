@@ -16,13 +16,12 @@
 package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.*
-import com.sbg.rpg.util.pmap
+import com.sbg.rpg.util.*
 import java.awt.image.BufferedImage
 import java.awt.Image
 import java.awt.Color
 import java.awt.Rectangle
 import java.awt.Point
-import com.sbg.rpg.util.spanRectangleFrom
 import org.apache.logging.log4j.LogManager
 import java.util.*
 
@@ -35,14 +34,8 @@ import java.util.*
  * However, to do that, you need the individual sprites first! This class, SpriteSheetUnpacker, cuts up a SpriteSheet
  * and delivers the individual sprites.
 */
-class SpriteSheetUnpacker {
+class SpriteSheetUnpacker(private val spriteDrawer: ISpriteDrawer) {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
-
-    private val spriteDrawer: SpriteDrawer
-
-    init {
-        spriteDrawer = SpriteDrawer()
-    }
 
     /**
      * Given a valid sprite sheet, detects and returns every individual sprite. The method may not be perfect and
