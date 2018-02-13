@@ -1,12 +1,15 @@
 package com.sbg.rpg.util
 
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import java.awt.Point
 import java.awt.Rectangle
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class RectangleUtilsSpec: Spek() { init {
+class RectangleUtilsSpec: Spek({
     given("a plot with no points") {
         val points = listOf<Point>()
 
@@ -97,4 +100,4 @@ class RectangleUtilsSpec: Spek() { init {
             }
         }
     }
-}}
+})

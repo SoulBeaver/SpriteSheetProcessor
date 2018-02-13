@@ -1,9 +1,12 @@
 package com.sbg.rpg.util
 
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import kotlin.test.assertEquals
 
-class ListExtensionsSpec: Spek() { init {
+class ListExtensionsSpec: Spek({
     given("a list with no elements") {
         val empty = emptyList<Int>()
 
@@ -109,4 +112,4 @@ class ListExtensionsSpec: Spek() { init {
             }
         }
     }
-}}
+})

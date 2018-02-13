@@ -9,13 +9,17 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>1.0.2</kotlin.version>
-        <spek.version>0.1.195</spek.version>
+        <kotlin.version>1.2.21</kotlin.version>
+        <spek.version>1.1.5</spek.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <jcommander.version>1.30</jcommander.version>
         <log4j2.version>2.5</log4j2.version>
         <gson.version>2.6.2</gson.version>
-        <tornadofx.version>1.4.8</tornadofx.version>
+        <tornadofx.version>1.7.14</tornadofx.version>
+        <junit.version>4.12</junit.version>
+        <junit.jupiter.version>5.0.3</junit.jupiter.version>
+        <junit.vintage.version>${junit.version}.3</junit.vintage.version>
+        <junit.platform.version>1.0.3</junit.platform.version>
     </properties>
 
     <repositories>
@@ -34,6 +38,11 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
@@ -69,8 +78,25 @@
 
         <dependency>
             <groupId>org.jetbrains.spek</groupId>
-            <artifactId>spek</artifactId>
+            <artifactId>spek-api</artifactId>
             <version>${spek.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.spek</groupId>
+            <artifactId>spek-junit-platform-engine</artifactId>
+            <version>${spek.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -147,6 +173,34 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <includes>
+                        <include>**/Test*.java</include>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
+                    <properties>
+                        <!-- <includeTags>fast</includeTags> -->
+                        <excludeTags>slow</excludeTags>
+                        <!--
+                        <configurationParameters>
+                            junit.jupiter.conditions.deactivate = *
+                        </configurationParameters>
+                        -->
+                    </properties>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit.platform.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

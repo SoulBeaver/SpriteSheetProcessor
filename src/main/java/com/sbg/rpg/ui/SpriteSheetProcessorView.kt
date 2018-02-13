@@ -36,7 +36,7 @@ import tornadofx.View
 class SpriteSheetProcessorView: View() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorView::class.simpleName)
 
-    override val root: BorderPane by fxml("/views/SpriteSheetView.fxml")
+    override val root: BorderPane by fxml("/views/spriteSheetView.fxml")
 
     val controller: SpriteSheetProcessorController by inject()
 

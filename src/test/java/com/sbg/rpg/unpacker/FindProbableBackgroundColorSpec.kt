@@ -2,13 +2,15 @@ package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.probableBackgroundColor
 import com.sbg.rpg.image.readImage
-import com.sbg.rpg.image.toBufferedImage
 import java.nio.file.Paths
 import java.awt.Color
 import kotlin.test.assertEquals
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 
-class FindProbableBackgroundColorSpec: Spek() { init {
+class FindProbableBackgroundColorSpec: Spek({
     given("An image with no sprites and a white background") {
         val emptyUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
 
@@ -83,4 +85,4 @@ class FindProbableBackgroundColorSpec: Spek() { init {
             }
         }
     }
-}}
+})

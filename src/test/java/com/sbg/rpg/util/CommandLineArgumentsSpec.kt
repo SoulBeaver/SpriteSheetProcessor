@@ -7,9 +7,12 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import com.beust.jcommander.ParameterException
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import kotlin.test.assertFailsWith
 
-class CommandLineArgumentsSpec: Spek() { init {
+class CommandLineArgumentsSpec: Spek({
     given("Command line arguments") {
         val cla = CommandLineArguments()
 
@@ -127,4 +130,4 @@ class CommandLineArgumentsSpec: Spek() { init {
             }
         }
     }
-}}
+})

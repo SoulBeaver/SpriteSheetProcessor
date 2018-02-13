@@ -2,6 +2,9 @@ package com.sbg.rpg.util
 
 import com.sbg.rpg.image.*
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import java.nio.file.Paths
 import kotlin.test.assertFalse
 import kotlin.test.assertEquals
@@ -10,7 +13,7 @@ import java.awt.Dimension
 import java.awt.image.BufferedImage
 import kotlin.test.assertNotEquals
 
-class ImageUtilsSpec: Spek() { init {
+class ImageUtilsSpec: Spek({
     given("An image") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
@@ -136,4 +139,4 @@ class ImageUtilsSpec: Spek() { init {
             }
         }
     }
-}}
+})

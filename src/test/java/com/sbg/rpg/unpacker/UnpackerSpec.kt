@@ -6,9 +6,11 @@ import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import java.awt.Rectangle
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.skip
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 
-class UnpackerSpec: Spek() { init {
+class UnpackerSpec: Spek({
     given("A SpriteSheet Unpacker") {
         val spriteSheetUnpacker = SpriteSheetUnpacker()
 
@@ -191,4 +193,4 @@ class UnpackerSpec: Spek() { init {
             }
         }
     }
-}}
+})

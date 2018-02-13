@@ -2,12 +2,15 @@ package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.readImage
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import java.awt.Color
 import java.awt.Rectangle
 import java.nio.file.Paths
 import kotlin.test.assertEquals
 
-class SpriteDrawerSpec: Spek() { init {
+class SpriteDrawerSpec: Spek({
     given("A sprite drawer") {
         val spriteDrawer = SpriteDrawer()
 
@@ -91,4 +94,4 @@ class SpriteDrawerSpec: Spek() { init {
             }
         }
     }
-}}
+})
