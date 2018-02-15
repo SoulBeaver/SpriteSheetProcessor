@@ -56,6 +56,10 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
                 strips.last().y + strips.last().height,
                 BufferedImage.TYPE_INT_ARGB)
 
+        for ((sprite, rect) in spriteRects) {
+            spriteDrawer.draw(sprite, canvas, rect)
+        }
+
         return canvas
     }
 

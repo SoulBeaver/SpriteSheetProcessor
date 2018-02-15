@@ -75,7 +75,7 @@ class ImageUtilsSpec: Spek({
                 for (pixel in image)
                     counter += 1
 
-                assertEquals(40000, counter, "Expected to loop through 40k pixels, but was $counter")
+                assertEquals(40_000, counter, "Expected to loop through 40k pixels, but was $counter")
             }
         }
     }

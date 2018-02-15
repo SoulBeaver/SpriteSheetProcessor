@@ -11,7 +11,7 @@ import java.awt.Rectangle
 import java.nio.file.Paths
 import kotlin.test.assertEquals
 
-class SpriteDrawerSpec: Spek({
+class SpriteCutterSpec : Spek({
     given("A sprite drawer") {
         val spriteDrawer = SpriteCutter()
 
