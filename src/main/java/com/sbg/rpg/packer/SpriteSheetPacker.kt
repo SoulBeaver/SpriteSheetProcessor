@@ -18,11 +18,30 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
 
         logger.info("Sprite areas:  ${sprites.sortedBy(Sprite::area).map(Sprite::area).reversed()}")
 
-        val startingRect = squareRect(spritesByAreaDesc.first())
-        val strips = mutableListOf(startingRect)
-        val positionedSprites = mutableListOf<PositionedSprite>()
+        val positionedSprites = packSprites(sprites, squareStrip(spritesByAreaDesc.first()))
 
-        logger.info("Starting startingPoint is [0, 0, ${startingRect.width}, ${startingRect.height}]")
+        logger.info("Positioned sprites:  ${positionedSprites.map { it.startingPoint }}")
+
+        val canvasDimensions = spanCanvas(positionedSprites)
+        val canvas = BufferedImage(
+                canvasDimensions.width,
+                canvasDimensions.height,
+                BufferedImage.TYPE_INT_ARGB)
+
+        logger.info("Final image has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
+
+        for ((sprite, startingPoint) in positionedSprites) {
+            spriteDrawer.drawInto(sprite, canvas, startingPoint)
+        }
+
+        return canvas
+    }
+
+    private fun packSprites(sprites: List<Sprite>, startingStrip: Strip): List<PositionedSprite> {
+        val positionedSprites = mutableListOf<PositionedSprite>()
+        var strips = mutableListOf(startingStrip)
+
+        logger.info("Starting strip has dimensions [0, 0, ${startingStrip.width}, ${startingStrip.height}]")
 
         for (sprite in sprites) {
             var fittingStrip = strips.find { fitsInStrip(sprite, it) }
@@ -30,15 +49,17 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
             if (fittingStrip == null) {
                 val latestStrip = strips.last()
 
-                val newStrip = Rectangle(
+                val newStrip = Strip(
                         0,
                         latestStrip.y + latestStrip.height,
-                        startingRect.width,
+                        startingStrip.width,
                         sprite.height)
 
                 logger.info("Unable to find a suitable strip, creating new strip [${newStrip.x}, ${newStrip.y}, ${newStrip.width}, ${newStrip.height}]")
 
+                strips = strips.growHorizontally(sprite.width).toMutableList()
                 strips.add(newStrip)
+
                 fittingStrip = newStrip
             }
 
@@ -50,45 +71,34 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
             strips[strips.indexOf(fittingStrip)] = remainingStrip
         }
 
-        logger.info("Final image has dimensions [0, 0, ${startingRect.width}, ${strips.last().y + strips.last().height}]")
-
-        val canvas = BufferedImage(
-                startingRect.width,
-                strips.last().y + strips.last().height,
-                BufferedImage.TYPE_INT_ARGB)
-
-        for ((sprite, startingPoint) in positionedSprites) {
-            spriteDrawer.drawInto(sprite, canvas, startingPoint)
-        }
-
-        return canvas
+        return positionedSprites
     }
 
-    private fun fitsInStrip(sprite: Sprite, strip: Rectangle): Boolean {
+    private fun fitsInStrip(sprite: Sprite, strip: Strip): Boolean {
         return sprite.height <= strip.height &&
                 sprite.width <= strip.width
     }
 
-    private fun placeSprite(sprite: Sprite, strip: Rectangle): Pair<PositionedSprite, Rectangle> {
+    private fun placeSprite(sprite: Sprite, strip: Strip): Pair<PositionedSprite, Strip> {
         val startingPoint = PositionedSprite(
                 sprite,
                 Point(strip.x, strip.y)
         )
 
-        val remainingStrip = Rectangle(
-                strip.x + sprite.width,
-                strip.y,
-                strip.width - sprite.width,
-                strip.height
-        )
-
-        return Pair(startingPoint, remainingStrip)
+        return Pair(startingPoint, strip.cutLeft(sprite.width))
     }
 
-    private fun squareRect(sprite: BufferedImage): Rectangle {
+    private fun squareStrip(sprite: BufferedImage): Strip {
         val len = Math.max(sprite.width, sprite.height)
 
-        return Rectangle(0, 0, len, len)
+        return Strip(0, 0, len, len)
+    }
+
+    private fun spanCanvas(positionedSprites: List<PositionedSprite>): Rectangle {
+        val maxWidth = positionedSprites.map { (sprite, point) -> point.x + sprite.width }.max()!!
+        val maxHeight = positionedSprites.map { (sprite, point) -> point.y + sprite.height }.max()!!
+
+        return Rectangle(0, 0, maxWidth, maxHeight)
     }
 
     data class PositionedSprite(val sprite: Sprite, val startingPoint: Point)

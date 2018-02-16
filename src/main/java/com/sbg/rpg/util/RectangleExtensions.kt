@@ -16,7 +16,6 @@
 package com.sbg.rpg.util
 
 import java.awt.Rectangle
-import java.awt.Image
 import java.awt.Point
 
 fun spanRectangleFrom(points: List<Point>): Rectangle {
@@ -39,5 +38,4 @@ fun spanRectangleFrom(points: List<Point>): Rectangle {
     return Rectangle(left.x, top.y,
                      right.x - left.x + 1,
                      bottom.y - top.y + 1)
-
 }
