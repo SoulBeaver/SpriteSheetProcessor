@@ -2,7 +2,7 @@
 
 Welcome to the (unfinished) Sprite Sheet Processor. This lil' tool will one day help you work more efficiently with sprite sheets by taking them apart, arranging them intelligently to conserve space and come with a metadata available in different formats (json, yaml, text). This way, all you have to do is load the sprite sheet and the metadata file and voila! You're ready to display every sprite in your sprite sheet without too much work on your part.
 
-How much of it is done? You can unpack any SpriteSheet into individual sprites. .png is supported, testing for other formats (e.g. .gif) is still underway.
+How much of it is done? You can unpack any SpriteSheet into individual sprites. Only .png is supported at the moment with support for more formats ongoing.
 
 #### Usage
 
@@ -34,13 +34,15 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites. 
 
 This will let you confirm and edit (to an extent) any errors encountered by the unpacking process.
 
-So far it can only do drag and drop; you still need the console version to perform the extraction. This will change
-over the coming weeks.
+So far only unpacking is supported- sprite packing is coming soon!
 
 ![JavaFX App][1]
 
-
 #### Updates
+
+**2017-02-16**
+
+* Sprite Sheet Packing algorithm v1 is complete.
 
 **2016-05-26**
 
