@@ -9,6 +9,7 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import java.awt.image.BufferedImage
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 import kotlin.test.assertEquals
 
 object SpriteSheetPackerSpec: Spek({
@@ -82,13 +83,13 @@ object SpriteSheetPackerSpec: Spek({
                         readImage(Paths.get(this.javaClass.classLoader.getResource("packer/result_1.png").toURI()))
 
                 it("draws an identical sprite") {
-                    val image = packer.pack(sprites)
+                    val actual = packer.pack(sprites)
 
-                    assertEquals(image.width, 39)
-                    assertEquals(image.height, 39)
+                    assertEquals(actual.width, 39)
+                    assertEquals(actual.height, 39)
 
                     for ((point, color) in expected) {
-                        assertEquals(color.rgb, image.getRGB(point.x, point.y))
+                        assertEquals(color.rgb, actual.getRGB(point.x, point.y))
                     }
                 }
             }
@@ -104,10 +105,14 @@ object SpriteSheetPackerSpec: Spek({
                         readImage(Paths.get(this.javaClass.classLoader.getResource("packer/result_2.png").toURI()))
 
                 it("packs them into a single image") {
-                    val image = packer.pack(sprites)
+                    val actual = packer.pack(sprites)
 
-                    assertEquals(image.width, 38)
-                    assertEquals(image.height, 115)
+                    assertEquals(actual.width, 38)
+                    assertEquals(actual.height, 115)
+
+                    for ((point, color) in expected) {
+                        assertEquals(color.rgb, actual.getRGB(point.x, point.y))
+                    }
                 }
             }
         }

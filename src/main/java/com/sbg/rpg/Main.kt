@@ -19,6 +19,7 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
 import com.sbg.rpg.cli.CommandLineArguments
 import com.sbg.rpg.image.SpriteCutter
+import com.sbg.rpg.image.SpriteDrawer
 import com.sbg.rpg.metadata.JsonMetadataCreator
 import com.sbg.rpg.metadata.TextMetadataCreator
 import com.sbg.rpg.metadata.YamlMetadataCreator
@@ -68,5 +69,5 @@ private fun createProcessor(cla: CommandLineArguments): SpriteSheetProcessor {
         else   -> throw IllegalArgumentException("Expected one of {json, yaml, txt} as metadata output, but got ${cla.metadataOutputFormat}")
     }
 
-    return SpriteSheetProcessor(metadataCreator, SpriteSheetUnpacker(SpriteCutter()))
+    return SpriteSheetProcessor(metadataCreator, SpriteSheetUnpacker(SpriteCutter(SpriteDrawer())))
 }

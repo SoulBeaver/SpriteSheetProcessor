@@ -4,6 +4,7 @@ import com.sbg.rpg.image.ISpriteDrawer
 import com.sbg.rpg.image.Sprite
 import com.sbg.rpg.util.area
 import org.apache.logging.log4j.LogManager
+import java.awt.Point
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
 
@@ -19,9 +20,9 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
 
         val startingRect = squareRect(spritesByAreaDesc.first())
         val strips = mutableListOf(startingRect)
-        val spriteRects = mutableListOf<SpriteRect>()
+        val positionedSprites = mutableListOf<PositionedSprite>()
 
-        logger.info("Starting rect is [0, 0, ${startingRect.width}, ${startingRect.height}]")
+        logger.info("Starting startingPoint is [0, 0, ${startingRect.width}, ${startingRect.height}]")
 
         for (sprite in sprites) {
             var fittingStrip = strips.find { fitsInStrip(sprite, it) }
@@ -45,7 +46,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
 
             val (spriteRect, remainingStrip) = placeSprite(sprite, fittingStrip)
 
-            spriteRects.add(spriteRect)
+            positionedSprites.add(spriteRect)
             strips[strips.indexOf(fittingStrip)] = remainingStrip
         }
 
@@ -56,8 +57,8 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
                 strips.last().y + strips.last().height,
                 BufferedImage.TYPE_INT_ARGB)
 
-        for ((sprite, rect) in spriteRects) {
-            spriteDrawer.draw(sprite, canvas, rect)
+        for ((sprite, startingPoint) in positionedSprites) {
+            spriteDrawer.drawInto(sprite, canvas, startingPoint)
         }
 
         return canvas
@@ -68,10 +69,10 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
                 sprite.width <= strip.width
     }
 
-    private fun placeSprite(sprite: Sprite, strip: Rectangle): Pair<SpriteRect, Rectangle> {
-        val spriteRect = SpriteRect(
+    private fun placeSprite(sprite: Sprite, strip: Rectangle): Pair<PositionedSprite, Rectangle> {
+        val startingPoint = PositionedSprite(
                 sprite,
-                Rectangle(strip.x, strip.y, sprite.width, sprite.height)
+                Point(strip.x, strip.y)
         )
 
         val remainingStrip = Rectangle(
@@ -81,7 +82,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
                 strip.height
         )
 
-        return Pair(spriteRect, remainingStrip)
+        return Pair(startingPoint, remainingStrip)
     }
 
     private fun squareRect(sprite: BufferedImage): Rectangle {
@@ -90,5 +91,5 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
         return Rectangle(0, 0, len, len)
     }
 
-    data class SpriteRect(val sprite: Sprite, val rect: Rectangle)
+    data class PositionedSprite(val sprite: Sprite, val startingPoint: Point)
 }

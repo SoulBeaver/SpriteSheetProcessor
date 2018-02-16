@@ -1,6 +1,7 @@
 package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.SpriteCutter
+import com.sbg.rpg.image.SpriteDrawer
 import com.sbg.rpg.image.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
@@ -13,7 +14,7 @@ import kotlin.test.assertEquals
 
 class SpriteCutterSpec : Spek({
     given("A sprite drawer") {
-        val spriteDrawer = SpriteCutter()
+        val spriteDrawer = SpriteCutter(SpriteDrawer())
 
         on("copying a smaller sprite from source") {
             val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
