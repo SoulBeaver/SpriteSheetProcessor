@@ -3,6 +3,8 @@ package com.sbg.rpg.packer
 import com.sbg.rpg.util.iterator
 import com.sbg.rpg.image.SpriteDrawer
 import com.sbg.rpg.image.readImage
+import com.sbg.rpg.metadata.MetadataCreator
+import com.sbg.rpg.metadata.TextMetadataCreator
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -14,16 +16,16 @@ import kotlin.test.assertEquals
 
 object SpriteSheetPackerSpec: Spek({
     given("A SpriteSheetPacker") {
-        val packer = SpriteSheetPacker(SpriteDrawer())
+        val packer = SpriteSheetPacker(SpriteDrawer(), TextMetadataCreator())
 
         on("packing a single sprite") {
             val sprites = listOf(BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB))
 
             it("creates a 100x100 large image") {
-                val image = packer.pack(sprites)
+                val (canvas, _) = packer.pack(sprites)
 
-                assertEquals(image.width, 100)
-                assertEquals(image.height, 100)
+                assertEquals(canvas.width, 100)
+                assertEquals(canvas.height, 100)
             }
         }
 
@@ -35,10 +37,10 @@ object SpriteSheetPackerSpec: Spek({
             )
 
             it ("creates a 100x300 image") {
-                val image = packer.pack(sprites)
+                val (canvas, _) = packer.pack(sprites)
 
-                assertEquals(image.width, 200)
-                assertEquals(image.height, 200)
+                assertEquals(canvas.width, 200)
+                assertEquals(canvas.height, 200)
             }
         }
 
@@ -49,10 +51,10 @@ object SpriteSheetPackerSpec: Spek({
             )
 
             it("creates a 60x60 large image") {
-                val image = packer.pack(sprites)
+                val (canvas, _) = packer.pack(sprites)
 
-                assertEquals(image.width, 60)
-                assertEquals(image.height, 60)
+                assertEquals(canvas.width, 60)
+                assertEquals(canvas.height, 60)
             }
         }
 
@@ -66,10 +68,10 @@ object SpriteSheetPackerSpec: Spek({
             )
 
             it("creates a 70x70 large image") {
-                val image = packer.pack(sprites)
+                val (canvas, _) = packer.pack(sprites)
 
-                assertEquals(image.width, 70)
-                assertEquals(image.height, 70)
+                assertEquals(canvas.width, 70)
+                assertEquals(canvas.height, 70)
             }
         }
 
@@ -83,13 +85,13 @@ object SpriteSheetPackerSpec: Spek({
                         readImage(Paths.get(this.javaClass.classLoader.getResource("packer/result_1.png").toURI()))
 
                 it("draws an identical sprite") {
-                    val actual = packer.pack(sprites)
+                    val (canvas, _) = packer.pack(sprites)
 
-                    assertEquals(actual.width, 30)
-                    assertEquals(actual.height, 39)
+                    assertEquals(canvas.width, 30)
+                    assertEquals(canvas.height, 39)
 
                     for ((point, color) in expected) {
-                        assertEquals(color.rgb, actual.getRGB(point.x, point.y))
+                        assertEquals(color.rgb, canvas.getRGB(point.x, point.y))
                     }
                 }
             }
@@ -105,13 +107,13 @@ object SpriteSheetPackerSpec: Spek({
                         readImage(Paths.get(this.javaClass.classLoader.getResource("packer/result_2.png").toURI()))
 
                 it("packs them into a single image") {
-                    val actual = packer.pack(sprites)
+                    val (canvas, _) = packer.pack(sprites)
 
-                    assertEquals(actual.width, 62)
-                    assertEquals(actual.height, 77)
+                    assertEquals(canvas.width, 62)
+                    assertEquals(canvas.height, 77)
 
                     for ((point, color) in expected) {
-                        assertEquals(color.rgb, actual.getRGB(point.x, point.y))
+                        assertEquals(color.rgb, canvas.getRGB(point.x, point.y))
                     }
                 }
             }
@@ -140,13 +142,13 @@ object SpriteSheetPackerSpec: Spek({
                         readImage(Paths.get(this.javaClass.classLoader.getResource("packer/result_3.png").toURI()))
 
                 it("packs them into a single image") {
-                    val actual = packer.pack(sprites)
+                    val (canvas, _) = packer.pack(sprites)
 
-                    assertEquals(actual.width, 143)
-                    assertEquals(actual.height, 209)
+                    assertEquals(canvas.width, 143)
+                    assertEquals(canvas.height, 209)
 
                     for ((point, color) in expected) {
-                        assertEquals(color.rgb, actual.getRGB(point.x, point.y))
+                        assertEquals(color.rgb, canvas.getRGB(point.x, point.y))
                     }
                 }
             }

@@ -19,7 +19,7 @@ import com.beust.jcommander.IParameterValidator
 import com.beust.jcommander.ParameterException
 
 class MetadataOutputFormatValidator: IParameterValidator {
-    val acceptedOutputFormats = listOf("json", "yml", "yaml", "txt")
+    private val acceptedOutputFormats = listOf("json", "yml", "yaml", "txt")
 
     override fun validate(name: String?, value: String?) {
         if (name == null || value == null)

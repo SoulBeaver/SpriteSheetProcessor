@@ -23,6 +23,7 @@ import com.sbg.rpg.image.SpriteDrawer
 import com.sbg.rpg.metadata.JsonMetadataCreator
 import com.sbg.rpg.metadata.TextMetadataCreator
 import com.sbg.rpg.metadata.YamlMetadataCreator
+import com.sbg.rpg.packer.SpriteSheetPacker
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
@@ -62,12 +63,22 @@ private fun disableLoggingToFile() {
 }
 
 private fun createProcessor(cla: CommandLineArguments): SpriteSheetProcessor {
-    val metadataCreator = when (cla.metadataOutputFormat) {
-        "json" -> JsonMetadataCreator()
-        "yaml" -> YamlMetadataCreator()
-        "txt"  -> TextMetadataCreator()
-        else   -> throw IllegalArgumentException("Expected one of {json, yaml, txt} as metadata output, but got ${cla.metadataOutputFormat}")
-    }
+    val spriteDrawer = SpriteDrawer()
 
-    return SpriteSheetProcessor(metadataCreator, SpriteSheetUnpacker(SpriteCutter(SpriteDrawer())))
+    if (cla.packSpriteSheets != null) {
+        val metadataCreator = when (cla.packSpriteSheets.toLowerCase()) {
+            "json" -> JsonMetadataCreator()
+            "yaml", "yml" -> YamlMetadataCreator()
+            "txt" -> TextMetadataCreator()
+            else -> throw IllegalArgumentException("Expected one of {json, yaml, txt} as metadata output, but got ${cla.packSpriteSheets}")
+        }
+
+        return SpriteSheetProcessor(
+                SpriteSheetUnpacker(SpriteCutter(spriteDrawer)),
+                SpriteSheetPacker(spriteDrawer, metadataCreator))
+    } else {
+        return SpriteSheetProcessor(
+                SpriteSheetUnpacker(SpriteCutter(spriteDrawer)),
+                null)
+    }
 }

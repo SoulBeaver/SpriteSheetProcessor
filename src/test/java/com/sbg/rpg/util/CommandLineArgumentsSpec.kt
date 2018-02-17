@@ -18,7 +18,7 @@ class CommandLineArgumentsSpec: Spek({
 
         on("setting parameters using the verbose names") {
             val args = arrayOf("-verbose",
-                               "-metadata-output-format", "json",
+                               "-pack", "json",
                                "-export-folder", "target",
                                "unpack/SingleSprite.png")
 
@@ -27,13 +27,13 @@ class CommandLineArgumentsSpec: Spek({
 
                 assertTrue(cla.verbose)
                 assertFalse(cla.debugMode)
-                assertEquals("json", cla.metadataOutputFormat)
+                assertEquals("json", cla.packSpriteSheets)
             }
         }
 
         on("setting parameters using the short names") {
             val args = arrayOf("-v",
-                               "-mof", "json",
+                               "-p", "json",
                                "-e", "target",
                                "unpack/SingleSprite.png")
 
@@ -42,12 +42,12 @@ class CommandLineArgumentsSpec: Spek({
 
                 assertTrue(cla.verbose)
                 assertFalse(cla.debugMode)
-                assertEquals("json", cla.metadataOutputFormat)
+                assertEquals("json", cla.packSpriteSheets)
             }
         }
 
         on("using an empty metadata output format value") {
-            val args = arrayOf("-mof", "",
+            val args = arrayOf("-p", "",
                                "-e", "target",
                                "unpack/SingleSprite.png")
 
@@ -59,7 +59,7 @@ class CommandLineArgumentsSpec: Spek({
         }
 
         on("using an invalid metadata output format") {
-            val args = arrayOf("-mof", "python",
+            val args = arrayOf("-p", "python",
                                "-e", "target",
                                "unpack/SingleSprite.png")
 
@@ -71,7 +71,7 @@ class CommandLineArgumentsSpec: Spek({
         }
 
         on("using a valid, uppercased output format") {
-            val args = arrayOf("-mof", "YAML",
+            val args = arrayOf("-p", "YAML",
                                "-e", "target",
                                "unpack/SingleSprite.png")
 
@@ -81,14 +81,27 @@ class CommandLineArgumentsSpec: Spek({
         }
 
         on("using the alternative yml name") {
-            val args = arrayOf("-mof", "yml",
+            val args = arrayOf("-p", "yml",
                                 "-e", "target",
                                 "unpack/SingleSprite.png")
 
             it("correctly parses the command as yml") {
                 JCommander(cla, *args)
 
-                assertEquals(cla.metadataOutputFormat, "yml")
+                assertEquals(cla.packSpriteSheets, "yml")
+            }
+        }
+
+        on("not wanting to pack sprites") {
+            val args = arrayOf(
+                    "-e", "target",
+                    "unpack/SingleSprite.png")
+
+            it("happily ignores packing") {
+                JCommander(cla, *args)
+
+                assertEquals(cla.exportFolder, "target")
+                assertEquals(cla.spriteSheetPaths.first(), "unpack/SingleSprite.png")
             }
         }
 

@@ -8,8 +8,8 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites. 
 
     Usage: SpriteSheetProcessor [options] [sprite sheets]
       Options:
-        -metadata-output-format (-mof)
-            - Structure of the metadata file, any of {yaml, json, txt} (default: yaml)
+        -pack (-p)
+            - Create a sprite sheet with metadata file, any of {yaml, json, txt} (default: yaml)
         -verbose (-v)
             - Turn on debugging statements, but without logging to file (default: false)
         -debug (-d)

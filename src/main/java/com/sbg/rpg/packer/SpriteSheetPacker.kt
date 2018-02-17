@@ -2,16 +2,19 @@ package com.sbg.rpg.packer
 
 import com.sbg.rpg.image.ISpriteDrawer
 import com.sbg.rpg.image.Sprite
+import com.sbg.rpg.metadata.MetadataCreator
 import com.sbg.rpg.util.area
 import org.apache.logging.log4j.LogManager
 import java.awt.Point
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
 
-class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
+data class PackedSpriteSheet(val canvas: BufferedImage, val metadata: String)
+
+class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val metadataCreator: MetadataCreator) {
     private val logger = LogManager.getLogger(SpriteSheetPacker::class.simpleName)
 
-    public fun pack(sprites: List<Sprite>): BufferedImage {
+    public fun pack(sprites: List<Sprite>): PackedSpriteSheet {
         logger.info("Packing ${sprites.size} sprites.")
 
         val spritesByAreaDesc = sprites.sortedBy(Sprite::area).reversed()
@@ -22,19 +25,13 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
 
         logger.info("Positioned sprites:  ${positionedSprites.map { it.startingPoint }}")
 
-        val canvasDimensions = spanCanvas(positionedSprites)
-        val canvas = BufferedImage(
-                canvasDimensions.width,
-                canvasDimensions.height,
-                BufferedImage.TYPE_INT_ARGB)
+        val canvas = drawCanvas(positionedSprites)
+        val metadata = createMetadata(positionedSprites)
 
-        logger.info("Final image has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
+        logger.info("Created a canvas of size (${canvas.width}, ${canvas.height})")
+        logger.info("Metadata file:  $metadata")
 
-        for ((sprite, startingPoint) in positionedSprites) {
-            spriteDrawer.drawInto(sprite, canvas, startingPoint)
-        }
-
-        return canvas
+        return PackedSpriteSheet(canvas, metadata)
     }
 
     private fun packSprites(sprites: List<Sprite>, startingStrip: Strip): List<PositionedSprite> {
@@ -94,6 +91,22 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
         return Strip(0, 0, len, len)
     }
 
+    private fun drawCanvas(positionedSprites: List<PositionedSprite>): BufferedImage {
+        val canvasDimensions = spanCanvas(positionedSprites)
+        val canvas = BufferedImage(
+                canvasDimensions.width,
+                canvasDimensions.height,
+                BufferedImage.TYPE_INT_ARGB)
+
+        logger.info("Final image has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
+
+        for ((sprite, startingPoint) in positionedSprites) {
+            spriteDrawer.drawInto(sprite, canvas, startingPoint)
+        }
+
+        return canvas
+    }
+
     private fun spanCanvas(positionedSprites: List<PositionedSprite>): Rectangle {
         val maxWidth = positionedSprites.map { (sprite, point) -> point.x + sprite.width }.max()!!
         val maxHeight = positionedSprites.map { (sprite, point) -> point.y + sprite.height }.max()!!
@@ -101,5 +114,13 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer) {
         return Rectangle(0, 0, maxWidth, maxHeight)
     }
 
-    data class PositionedSprite(val sprite: Sprite, val startingPoint: Point)
+    private fun createMetadata(positionedSprites: List<PositionedSprite>): String {
+        val spriteBounds = positionedSprites.mapIndexed { idx, (sprite, coords) ->
+            SpriteBounds(idx, Rectangle(coords.x, coords.y, coords.x + sprite.width, coords.y + sprite.height))
+        }
+
+        return metadataCreator.create(spriteBounds)
+    }
+
+    private data class PositionedSprite(val sprite: Sprite, val startingPoint: Point)
 }
