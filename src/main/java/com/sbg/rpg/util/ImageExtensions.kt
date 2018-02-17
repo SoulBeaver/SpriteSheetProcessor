@@ -16,6 +16,8 @@
 package com.sbg.rpg.util
 
 import com.sbg.rpg.image.Pixel
+import javafx.embed.swing.SwingFXUtils
+import javafx.scene.image.WritableImage
 import java.awt.*
 import java.awt.image.BufferedImage
 import java.util.*
@@ -43,6 +45,13 @@ operator fun BufferedImage.iterator(): Iterator<Pixel> {
             return Pixel(point, color)
         }
     }
+}
+
+fun BufferedImage.toJavaFXImage(): WritableImage {
+    val writableImage = WritableImage(this.width, this.height)
+    SwingFXUtils.toFXImage(this, writableImage)
+
+    return writableImage
 }
 
 fun BufferedImage.copy() = BufferedImage(

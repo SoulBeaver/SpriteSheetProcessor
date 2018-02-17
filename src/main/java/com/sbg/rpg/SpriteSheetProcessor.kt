@@ -17,11 +17,12 @@ package com.sbg.rpg
 
 import com.sbg.rpg.cli.CommandLineArguments
 import com.sbg.rpg.image.Sprite
-import com.sbg.rpg.image.readImage
 import com.sbg.rpg.packer.SpriteSheetPacker
 import com.sbg.rpg.unpacker.SpriteSheetUnpacker
 import com.sbg.rpg.util.filenameWithoutExtension
+import com.sbg.rpg.util.readImage
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import java.nio.file.Files
 import java.nio.file.Paths
 import javax.imageio.ImageIO
@@ -29,10 +30,9 @@ import javax.imageio.ImageIO
 /**
  * Controller class that processes sprites or spritesheets as necessary.
  */
-class SpriteSheetProcessor(private val spriteSheetUnpacker: SpriteSheetUnpacker,
-                           private val spriteSheetPacker: SpriteSheetPacker?) {
+abstract class SpriteSheetProcessor(private val spriteSheetUnpacker: SpriteSheetUnpacker) {
 
-    private val logger = LogManager.getLogger(SpriteSheetProcessor::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(SpriteSheetProcessor::class.simpleName)
 
     /**
      * Reads and processes a list of sprite sheets.
@@ -47,24 +47,26 @@ class SpriteSheetProcessor(private val spriteSheetUnpacker: SpriteSheetUnpacker,
             val spriteSheetName = spriteSheetPath.filenameWithoutExtension()
 
             logger.debug("Unpacking sprites.")
-            val sprites = spriteSheetUnpacker.unpack(readImage(spriteSheetPath))
+            val sprites = spriteSheetUnpacker.unpack(spriteSheetPath.readImage())
 
-            if (spriteSheetPacker != null) {
-                logger.debug("Creating a packed sprite sheet")
-
-                packSpriteSheet(cla, spriteSheetName, sprites)
-            } else {
-                logger.debug("Writing individual sprites to file.")
-
-                keepUnpacked(cla, spriteSheetName, sprites)
-            }
+            export(cla, spriteSheetName, sprites)
         }
 
         logger.info("Finished processing ${cla.spriteSheetPaths.size} sprite sheets.")
     }
 
-    private fun packSpriteSheet(cla: CommandLineArguments, spriteSheetName: String, sprites: List<Sprite>) {
-        val packedSpriteSheet = spriteSheetPacker!!.pack(sprites)
+
+    protected abstract fun export(cla: CommandLineArguments, spriteSheetName: String, sprites: List<Sprite>)
+}
+
+class SpriteSheetPackingProcessor(
+        spriteSheetUnpacker: SpriteSheetUnpacker,
+        private val spriteSheetPacker: SpriteSheetPacker): SpriteSheetProcessor(spriteSheetUnpacker) {
+
+    override fun export(cla: CommandLineArguments, spriteSheetName: String, sprites: List<Sprite>) {
+        logger.debug("Creating a packed sprite sheet")
+
+        val packedSpriteSheet = spriteSheetPacker.pack(sprites)
 
         ImageIO.write(
                 packedSpriteSheet.canvas,
@@ -74,8 +76,12 @@ class SpriteSheetProcessor(private val spriteSheetUnpacker: SpriteSheetUnpacker,
                 Paths.get(cla.exportFolder, "${spriteSheetName}_sheet.${cla.packSpriteSheets}"),
                 packedSpriteSheet.metadata.toByteArray(Charsets.UTF_8))
     }
+}
 
-    private fun keepUnpacked(cla: CommandLineArguments, spriteSheetName: String, sprites: List<Sprite>) {
+class SpriteSheetUnpackingProcessor(spriteSheetUnpacker: SpriteSheetUnpacker): SpriteSheetProcessor(spriteSheetUnpacker) {
+    override fun export(cla: CommandLineArguments, spriteSheetName: String, sprites: List<Sprite>) {
+        logger.debug("Writing individual sprites to file.")
+
         sprites.forEachIndexed { idx, sprite ->
             ImageIO.write(
                     sprite,

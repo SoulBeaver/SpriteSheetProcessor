@@ -2,7 +2,7 @@ package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.SpriteCutter
 import com.sbg.rpg.image.SpriteDrawer
-import com.sbg.rpg.image.readImage
+import com.sbg.rpg.util.readImage
 import java.nio.file.Paths
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
@@ -12,7 +12,7 @@ import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 
-class UnpackerSpec: Spek({
+class UnpackerSpec : Spek({
     given("A SpriteSheet Unpacker") {
         val spriteSheetUnpacker = SpriteSheetUnpacker(SpriteCutter(SpriteDrawer()))
 
@@ -20,16 +20,16 @@ class UnpackerSpec: Spek({
             val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
 
             it("returns an empty list") {
-                val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(emptyPngUrl.toURI())))
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(emptyPngUrl.toURI()).readImage())
 
                 assertTrue(sprites.isEmpty(),
-                           "Loading an empty file should produce an empty list of Sprites")
+                        "Loading an empty file should produce an empty list of Sprites")
             }
         }
 
         on("a file with one sprite") {
             val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(singleSpriteUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(singleSpriteUrl.toURI()).readImage())
 
             it("returns a list of one sprite image") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
@@ -52,7 +52,7 @@ class UnpackerSpec: Spek({
 
         on("a file with an already cropped sprite") {
             val alreadyCroppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(alreadyCroppedUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(alreadyCroppedUrl.toURI()).readImage())
 
             it("returns a list of the sprite unaltered") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
@@ -74,7 +74,7 @@ class UnpackerSpec: Spek({
 
         on("a file with a non-white background and one image") {
             val coloredBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/ColoredBackground.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(coloredBackgroundUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(coloredBackgroundUrl.toURI()).readImage())
 
             it("returns a list of one sprite image") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
@@ -96,7 +96,7 @@ class UnpackerSpec: Spek({
 
         on("a file with a transparent background") {
             val transparentBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/MultipleSprites_TransparentBackground.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(transparentBackgroundUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(transparentBackgroundUrl.toURI()).readImage())
 
             it("returns a list of two sprites") {
                 assertEquals(2, sprites.size, "Expected to have found exactly two sprites")
@@ -104,8 +104,8 @@ class UnpackerSpec: Spek({
 
             it("returns the correct dimensions") {
                 val expectedDimensionsList = arrayOf(
-                            Rectangle(0, 0, 30, 40),
-                            Rectangle(0, 0, 31, 39)
+                        Rectangle(0, 0, 30, 40),
+                        Rectangle(0, 0, 31, 39)
                 )
 
                 sprites.forEach {
@@ -120,7 +120,7 @@ class UnpackerSpec: Spek({
 
         on("a file with a single diagonal line of individual pixels") {
             val diagonalUrl = this.javaClass.classLoader.getResource("unpacker/Diagonal.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(diagonalUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(diagonalUrl.toURI()).readImage())
 
             it("returns a list of exactly one sprite") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
@@ -141,7 +141,7 @@ class UnpackerSpec: Spek({
 
         on("a file with a single pixel") {
             val pixelUrl = this.javaClass.classLoader.getResource("unpacker/Pixel.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(pixelUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(pixelUrl.toURI()).readImage())
 
             it("returns a list of exactly one sprite") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
@@ -162,7 +162,7 @@ class UnpackerSpec: Spek({
 
         on("a rectangle with a width of one pixel and no corners") {
             val rectangleNoCornersUrl = this.javaClass.classLoader.getResource("unpacker/Rectangle_NoCorners.png")
-            val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(rectangleNoCornersUrl.toURI())))
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(rectangleNoCornersUrl.toURI()).readImage())
 
             it("returns a list of exactly one sprite") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
@@ -189,7 +189,7 @@ class UnpackerSpec: Spek({
                  * Spek does not have support for timeouts just yet. We have to manually interrupt the tests
                  * in case this function is taking too long.
                  */
-                val sprites = spriteSheetUnpacker.unpack(readImage(Paths.get(rectangleNoCornersUrl.toURI())))
+                val sprites = spriteSheetUnpacker.unpack(Paths.get(rectangleNoCornersUrl.toURI()).readImage())
 
                 assertEquals(10, sprites.size)
             }

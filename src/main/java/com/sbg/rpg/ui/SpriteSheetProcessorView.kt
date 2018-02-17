@@ -15,9 +15,9 @@
  */
 package com.sbg.rpg.ui
 
-import com.sbg.rpg.image.toJavaFXImage
 import com.sbg.rpg.ui.canvas.ResizableCanvas
 import com.sbg.rpg.ui.model.AnnotatedSpriteSheet
+import com.sbg.rpg.util.toJavaFXImage
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.GraphicsContext
@@ -30,7 +30,6 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.stage.DirectoryChooser
-import javafx.stage.FileChooser
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
 import tornadofx.hide
@@ -163,7 +162,7 @@ class SpriteSheetProcessorView: View() {
             with (graphics) {
 
                 drawImage(
-                        toJavaFXImage(spriteSheet),
+                        spriteSheet.toJavaFXImage(),
                         0.0,
                         nextDrawHeight
                 )

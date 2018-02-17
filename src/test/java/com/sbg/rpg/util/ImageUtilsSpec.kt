@@ -1,6 +1,5 @@
 package com.sbg.rpg.util
 
-import com.sbg.rpg.image.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -13,12 +12,12 @@ import java.awt.Dimension
 import java.awt.image.BufferedImage
 import kotlin.test.assertNotEquals
 
-class ImageUtilsSpec: Spek({
+class ImageUtilsSpec : Spek({
     given("An image") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
         on("converting to a BufferedImage") {
-            val original = readImage(Paths.get(imageUrl.toURI()))
+            val original = Paths.get(imageUrl.toURI()).readImage()
 
             it("does not perform a conversion if the image is already of type BufferedImage and has the same color type") {
                 val expected = original.toBufferedImage()
@@ -35,7 +34,7 @@ class ImageUtilsSpec: Spek({
         }
 
         on("that needs to have a copy made") {
-            val original = readImage(Paths.get(imageUrl.toURI()))
+            val original = Paths.get(imageUrl.toURI()).readImage()
 
             it("should create a deep copy") {
                 val copy = original.copy()
@@ -55,7 +54,7 @@ class ImageUtilsSpec: Spek({
                         val copyAtXY = copy.getRGB(x, y)
 
                         assertEquals(originalAtXY, copyAtXY,
-                                     "The copied image is not identical to the original.")
+                                "The copied image is not identical to the original.")
                     }
                 }
 
@@ -67,7 +66,7 @@ class ImageUtilsSpec: Spek({
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("looping through it") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!)
+            val image = Paths.get(imageUrl.toURI()).readImage()
 
             it("should loop fourty-thousand times") {
                 var counter = 0
@@ -84,7 +83,7 @@ class ImageUtilsSpec: Spek({
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("creating a simple copy") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!)
+            val image = Paths.get(imageUrl.toURI()).readImage()
             val copy = image.copy()
 
             it("should be distinct") {
@@ -98,41 +97,41 @@ class ImageUtilsSpec: Spek({
         }
 
         on("creating a larger copy with black border") {
-            val image = readImage(Paths.get(imageUrl.toURI())!!)
+            val image = Paths.get(imageUrl.toURI()).readImage()
             val copyWithBorder = image.copyWithBorder(
                     Dimension(image.width + 10,
-                              image.height + 10),
+                            image.height + 10),
                     Color.BLACK
             )
 
             it("should be 210x210 large") {
                 assertEquals(210, copyWithBorder.width,
-                             "Expected width of border copy to be 210, but was ${copyWithBorder.width}")
+                        "Expected width of border copy to be 210, but was ${copyWithBorder.width}")
                 assertEquals(210, copyWithBorder.height,
-                             "Expected width of border copy to be 210, but was ${copyWithBorder.height}")
+                        "Expected width of border copy to be 210, but was ${copyWithBorder.height}")
             }
 
             it("should have a 5 pixel wide border on all sides") {
                 for (y in 0..4) {
-                    for (x in 0..copyWithBorder.width - 1) {
+                    for (x in 0 until copyWithBorder.width) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
 
                 for (y in 205..209) {
-                    for (x in 0..copyWithBorder.width - 1) {
+                    for (x in 0 until copyWithBorder.width) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
 
                 for (x in 0..4) {
-                    for (y in 0..copyWithBorder.height - 1) {
+                    for (y in 0 until copyWithBorder.height) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }
 
                 for (x in 205..209) {
-                    for (y in 0..copyWithBorder.height - 1) {
+                    for (y in 0 until copyWithBorder.height) {
                         assertEquals(Color.BLACK, Color(copyWithBorder.getRGB(x, y)))
                     }
                 }

@@ -1,7 +1,7 @@
 package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.util.probableBackgroundColor
-import com.sbg.rpg.image.readImage
+import com.sbg.rpg.util.readImage
 import java.nio.file.Paths
 import java.awt.Color
 import kotlin.test.assertEquals
@@ -16,7 +16,7 @@ class FindProbableBackgroundColorSpec: Spek({
 
         on("finding the probably background color") {
             it("finds the color white") {
-                val image = readImage(Paths.get(emptyUrl.toURI()))
+                val image = Paths.get(emptyUrl.toURI()).readImage()
                 val expected = Color(255, 255, 255, 255)
 
                 val probableBackgroundColor = image.probableBackgroundColor()
@@ -31,7 +31,7 @@ class FindProbableBackgroundColorSpec: Spek({
 
         on("finding the probably background color") {
             it("finds the color white") {
-                val image = readImage(Paths.get(singleSpriteUrl.toURI()))
+                val image = Paths.get(singleSpriteUrl.toURI()).readImage()
                 val expected = Color(255, 255, 255, 255)
 
                 val probableBackgroundColor = image.probableBackgroundColor()
@@ -46,7 +46,7 @@ class FindProbableBackgroundColorSpec: Spek({
 
         on("finding the probably background color") {
             it("finds the color purple") {
-                val image = readImage(Paths.get(manySpritesUrl.toURI()))
+                val image = Paths.get(manySpritesUrl.toURI()).readImage()
                 val expected = Color(109, 73, 138, 255)
 
                 val probableBackgroundColor = image.probableBackgroundColor()
@@ -61,7 +61,7 @@ class FindProbableBackgroundColorSpec: Spek({
 
         on("finding the probably background color") {
             it("finds the color pink") {
-                val image = readImage(Paths.get(transparentUrl.toURI()))
+                val image = Paths.get(transparentUrl.toURI()).readImage()
                 val expected = Color(255, 0, 255, 255)
 
                 val probableBackgroundColor = image.probableBackgroundColor()
@@ -76,7 +76,7 @@ class FindProbableBackgroundColorSpec: Spek({
 
         on("finding the probably background color") {
             it("finds the color transparent") {
-                val image = readImage(Paths.get(transparentUrl.toURI()))
+                val image = Paths.get(transparentUrl.toURI()).readImage()
                 val expected = Color(0, 0, 0, 0)
 
                 val probableBackgroundColor = image.probableBackgroundColor()

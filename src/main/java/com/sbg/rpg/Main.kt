@@ -64,21 +64,19 @@ private fun disableLoggingToFile() {
 
 private fun createProcessor(cla: CommandLineArguments): SpriteSheetProcessor {
     val spriteDrawer = SpriteDrawer()
+    val spriteSheetUnpacker = SpriteSheetUnpacker(SpriteCutter(spriteDrawer))
 
-    if (cla.packSpriteSheets != null) {
+    return if (cla.packSpriteSheets != "none") {
         val metadataCreator = when (cla.packSpriteSheets.toLowerCase()) {
             "json" -> JsonMetadataCreator()
             "yaml", "yml" -> YamlMetadataCreator()
             "txt" -> TextMetadataCreator()
             else -> throw IllegalArgumentException("Expected one of {json, yaml, txt} as metadata output, but got ${cla.packSpriteSheets}")
         }
+        val spriteSheetPacker = SpriteSheetPacker(spriteDrawer, metadataCreator)
 
-        return SpriteSheetProcessor(
-                SpriteSheetUnpacker(SpriteCutter(spriteDrawer)),
-                SpriteSheetPacker(spriteDrawer, metadataCreator))
+        SpriteSheetPackingProcessor(spriteSheetUnpacker, spriteSheetPacker)
     } else {
-        return SpriteSheetProcessor(
-                SpriteSheetUnpacker(SpriteCutter(spriteDrawer)),
-                null)
+        SpriteSheetUnpackingProcessor(spriteSheetUnpacker)
     }
 }

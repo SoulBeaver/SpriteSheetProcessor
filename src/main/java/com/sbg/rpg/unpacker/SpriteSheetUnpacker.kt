@@ -152,4 +152,26 @@ class SpriteSheetUnpacker(private val spriteCutter: ISpriteCutter) {
 
         return neighbors
     }
+
+    private fun spanRectangleFrom(points: List<Point>): Rectangle {
+        if (points.isEmpty())
+            throw IllegalArgumentException("No points to span Rectangle from.")
+
+        val left = points.reduce {
+            current, next -> if (current.x > next.x) next else current
+        }
+        val top = points.reduce {
+            current, next -> if (current.y > next.y) next else current
+        }
+        val right = points.reduce {
+            current, next -> if (current.x < next.x) next else current
+        }
+        val bottom = points.reduce {
+            current, next -> if (current.y < next.y) next else current
+        }
+
+        return Rectangle(left.x, top.y,
+                right.x - left.x + 1,
+                bottom.y - top.y + 1)
+    }
 }

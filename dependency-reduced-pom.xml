@@ -57,7 +57,7 @@
               <transformers>
                 <transformer />
                 <transformer>
-                  <mainClass>com.sbg.rpg.ui.SpriteSheetProcessorAppKt</mainClass>
+                  <mainClass>com.sbg.rpg.MainKt</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -77,6 +77,28 @@
           </filters>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>${junit.platform.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <includes>
+            <include>**/Test*.java</include>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+            <include>**/*TestCase.java</include>
+          </includes>
+          <properties>
+            <excludeTags>slow</excludeTags>
+          </properties>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <repositories>
@@ -90,14 +112,88 @@
       <url>http://repository.jetbrains.com/all</url>
     </repository>
   </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test-junit</artifactId>
+      <version>1.2.21</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>kotlin-test</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.spek</groupId>
+      <artifactId>spek-api</artifactId>
+      <version>1.1.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.spek</groupId>
+      <artifactId>spek-junit-platform-engine</artifactId>
+      <version>1.1.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.0.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>opentest4j</artifactId>
+          <groupId>org.opentest4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-commons</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>hamcrest-core</artifactId>
+          <groupId>org.hamcrest</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.nhaarman</groupId>
+      <artifactId>mockito-kotlin</artifactId>
+      <version>1.5.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>mockito-core</artifactId>
+          <groupId>org.mockito</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
   <properties>
-    <jcommander.version>1.30</jcommander.version>
-    <snakeyaml.version>1.17</snakeyaml.version>
+    <tornadofx.version>1.7.14</tornadofx.version>
+    <junit.jupiter.version>5.0.3</junit.jupiter.version>
+    <junit.version>4.12</junit.version>
     <gson.version>2.6.2</gson.version>
-    <spek.version>0.1.195</spek.version>
-    <tornadofx.version>1.4.8</tornadofx.version>
+    <snakeyaml.version>1.17</snakeyaml.version>
+    <spek.version>1.1.5</spek.version>
+    <jcommander.version>1.30</jcommander.version>
+    <kotlin.version>1.2.21</kotlin.version>
+    <junit.vintage.version>${junit.version}.3</junit.vintage.version>
     <log4j2.version>2.5</log4j2.version>
-    <kotlin.version>1.0.2</kotlin.version>
+    <junit.platform.version>1.0.3</junit.platform.version>
   </properties>
 </project>
 

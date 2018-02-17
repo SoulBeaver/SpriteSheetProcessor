@@ -26,7 +26,7 @@ data class CommandLineArguments(
         @Parameter(names = ["-pack", "-p"],
                 description = "Create a sprite sheet with metadata file, any of {yaml, json, txt}",
                 validateWith = MetadataOutputFormatValidator::class)
-        val packSpriteSheets: String? = null,
+        val packSpriteSheets: String = "none",
 
         @Parameter(names = ["-verbose", "-v"],
                 description = "Turn on debug statements, but without logging to file")

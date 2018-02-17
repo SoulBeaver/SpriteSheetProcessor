@@ -2,7 +2,7 @@ package com.sbg.rpg.unpacker
 
 import com.sbg.rpg.image.SpriteCutter
 import com.sbg.rpg.image.SpriteDrawer
-import com.sbg.rpg.image.readImage
+import com.sbg.rpg.util.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -18,7 +18,7 @@ class SpriteCutterSpec : Spek({
 
         on("copying a smaller sprite from source") {
             val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
-            val singleSpriteImage = readImage(Paths.get(singleSpriteUrl.toURI()))
+            val singleSpriteImage = Paths.get(singleSpriteUrl.toURI()).readImage()
 
             it("creates a new BufferedImage of said sprite") {
                 val sprite = spriteDrawer.cut(singleSpriteImage, Rectangle(443, 200, 108, 129), Color.WHITE)
@@ -32,7 +32,7 @@ class SpriteCutterSpec : Spek({
 
         on("copying a perfectly-cut sprite") {
             val croppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")
-            val croppedImage = readImage(Paths.get(croppedUrl.toURI()))
+            val croppedImage = Paths.get(croppedUrl.toURI()).readImage()
 
             it("has identical output to the previous test") {
                 val sprite = spriteDrawer.cut(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
@@ -46,7 +46,7 @@ class SpriteCutterSpec : Spek({
 
         on("trying to copy a sprite larger than the source image") {
             val croppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")
-            val croppedImage = readImage(Paths.get(croppedUrl.toURI()))
+            val croppedImage = Paths.get(croppedUrl.toURI()).readImage()
 
             it("constrains area to source image dimensions and returns identical output") {
                 val sprite = spriteDrawer.cut(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
@@ -61,7 +61,7 @@ class SpriteCutterSpec : Spek({
 
         on("copying multiple sprites from source") {
             val multipleSpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.png")
-            val multipleSpritesImage = readImage(Paths.get(multipleSpritesUrl.toURI()))
+            val multipleSpritesImage = Paths.get(multipleSpritesUrl.toURI()).readImage()
 
             it("creates a list of three BufferedImages") {
                 val sprites = spriteDrawer.cutMultiple(
@@ -80,7 +80,7 @@ class SpriteCutterSpec : Spek({
 
         on("copying a sprite with a transparent image") {
             val multipleSpritesTransparentBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/MultipleSprites_TransparentBackground.png")
-            val multipleSpritesTransparentBackgroundImage = readImage(Paths.get(multipleSpritesTransparentBackgroundUrl.toURI()))
+            val multipleSpritesTransparentBackgroundImage = Paths.get(multipleSpritesTransparentBackgroundUrl.toURI()).readImage()
 
             it("preserves transparency for each sprite") {
                 val sprites = spriteDrawer.cutMultiple(
