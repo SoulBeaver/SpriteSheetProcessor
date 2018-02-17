@@ -40,6 +40,10 @@ So far only unpacking is supported- sprite packing is coming soon!
 
 #### Updates
 
+**2017-02-17**
+
+* Sprite Sheet Packing has been added to the console version.
+
 **2017-02-16**
 
 * Sprite Sheet Packing algorithm v1 is complete.

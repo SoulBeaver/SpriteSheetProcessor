@@ -46,15 +46,15 @@ class SpriteSheetProcessor(private val spriteSheetUnpacker: SpriteSheetUnpacker,
             val spriteSheetPath = Paths.get(rawSpriteSheetPath)!!.toAbsolutePath()!!
             val spriteSheetName = spriteSheetPath.filenameWithoutExtension()
 
-            logger.info("Unpacking sprites.")
+            logger.debug("Unpacking sprites.")
             val sprites = spriteSheetUnpacker.unpack(readImage(spriteSheetPath))
 
             if (spriteSheetPacker != null) {
-                logger.info("Creating a packed sprite sheet")
+                logger.debug("Creating a packed sprite sheet")
 
                 packSpriteSheet(cla, spriteSheetName, sprites)
             } else {
-                logger.info("Writing individual sprites to file.")
+                logger.debug("Writing individual sprites to file.")
 
                 keepUnpacked(cla, spriteSheetName, sprites)
             }

@@ -21,28 +21,28 @@ import java.util.ArrayList
 data class CommandLineArguments(
         @Parameter(description = "Sprite sheets to (un)pack",
                 required = true)
-        val spriteSheetPaths: ArrayList<String> = ArrayList<String>(),
+        val spriteSheetPaths: ArrayList<String> = ArrayList(),
 
-        @Parameter(names = arrayOf("-pack", "-p"),
+        @Parameter(names = ["-pack", "-p"],
                 description = "Create a sprite sheet with metadata file, any of {yaml, json, txt}",
                 validateWith = MetadataOutputFormatValidator::class)
         val packSpriteSheets: String? = null,
 
-        @Parameter(names = arrayOf("-verbose", "-v"),
+        @Parameter(names = ["-verbose", "-v"],
                 description = "Turn on debug statements, but without logging to file")
         val verbose: Boolean = false,
 
-        @Parameter(names = arrayOf("-debug", "-d"),
+        @Parameter(names = ["-debug", "-d"],
                 description = "Turn on debug statements with logging to file")
         val debugMode: Boolean = false,
 
-        @Parameter(names = arrayOf("-export-folder", "-e"),
+        @Parameter(names = ["-export-folder", "-e"],
                 description = "Where to export the new files.",
                 required = true,
                 validateWith = FolderExistsValidator::class)
         val exportFolder: String = "",
 
-        @Parameter(names = arrayOf("-help", "-h"),
+        @Parameter(names = ["-help", "-h"],
                 description = "This help message.",
                 help = true)
         val help: Boolean = false

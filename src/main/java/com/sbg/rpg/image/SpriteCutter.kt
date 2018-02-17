@@ -11,7 +11,7 @@ class SpriteCutter(private val spriteDrawer: ISpriteDrawer) : ISpriteCutter {
 
     override fun cut(from: BufferedImage, area: Rectangle, colorToClear: Color): BufferedImage {
         if (area.width > from.width || area.height > from.height) {
-            logger.info("Requested sub-image is larger than source image. Returning copy of source image instead.")
+            logger.debug("Requested sub-image is larger than source image. Returning copy of source image instead.")
 
             area.width = Math.min(from.width, area.width)
             area.height = Math.min(from.height, area.height)

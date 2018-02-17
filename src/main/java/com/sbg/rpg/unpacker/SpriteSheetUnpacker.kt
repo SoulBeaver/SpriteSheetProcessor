@@ -61,7 +61,7 @@ class SpriteSheetUnpacker(private val spriteCutter: ISpriteCutter) {
      */
     fun calculateSpriteBounds(spriteSheet: BufferedImage): List<Rectangle> {
         val spriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
-        logger.info("Found ${spriteDimensions.size} sprites.")
+        logger.debug("Found ${spriteDimensions.size} sprites.")
 
         return spriteDimensions
     }

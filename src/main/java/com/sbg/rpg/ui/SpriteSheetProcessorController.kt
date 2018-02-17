@@ -47,7 +47,7 @@ class SpriteSheetProcessorController: Controller() {
         this.spriteSheetPaths = spriteSheetFiles.map { Paths.get(it.absolutePath) }
 
         val annotatedSpriteSheets = spriteSheetPaths.pmap { spriteSheet ->
-            logger.info("Unpacking ${spriteSheet.fileName}")
+            logger.debug("Unpacking ${spriteSheet.fileName}")
 
             val spriteSheet = readImage(spriteSheet)
             val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
@@ -66,7 +66,7 @@ class SpriteSheetProcessorController: Controller() {
             spriteSheetPath.fileName to spriteSheetUnpacker.unpack(readImage(spriteSheetPath))
         }
 
-        logger.info("Writing individual sprites to file.")
+        logger.debug("Writing individual sprites to file.")
         for ((fileName, sprites) in spritesPerFile) {
             sprites.forEachIndexed { idx, sprite ->
                 ImageIO.write(
@@ -76,6 +76,6 @@ class SpriteSheetProcessorController: Controller() {
             }
         }
 
-        logger.info("Finished writing sprites to file.")
+        logger.debug("Finished writing sprites to file.")
     }
 }

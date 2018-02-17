@@ -15,21 +15,21 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val met
     private val logger = LogManager.getLogger(SpriteSheetPacker::class.simpleName)
 
     public fun pack(sprites: List<Sprite>): PackedSpriteSheet {
-        logger.info("Packing ${sprites.size} sprites.")
+        logger.debug("Packing ${sprites.size} sprites.")
 
         val spritesByAreaDesc = sprites.sortedBy(Sprite::area).reversed()
 
-        logger.info("Sprite areas:  ${sprites.sortedBy(Sprite::area).map(Sprite::area).reversed()}")
+        logger.debug("Sprite areas:  ${sprites.sortedBy(Sprite::area).map(Sprite::area).reversed()}")
 
         val positionedSprites = packSprites(sprites, squareStrip(spritesByAreaDesc.first()))
 
-        logger.info("Positioned sprites:  ${positionedSprites.map { it.startingPoint }}")
+        logger.debug("Positioned sprites:  ${positionedSprites.map { it.startingPoint }}")
 
         val canvas = drawCanvas(positionedSprites)
         val metadata = createMetadata(positionedSprites)
 
-        logger.info("Created a canvas of size (${canvas.width}, ${canvas.height})")
-        logger.info("Metadata file:  $metadata")
+        logger.debug("Created a canvas of size (${canvas.width}, ${canvas.height})")
+        logger.debug("Metadata file:  $metadata")
 
         return PackedSpriteSheet(canvas, metadata)
     }
@@ -38,7 +38,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val met
         val positionedSprites = mutableListOf<PositionedSprite>()
         var strips = mutableListOf(startingStrip)
 
-        logger.info("Starting strip has dimensions [0, 0, ${startingStrip.width}, ${startingStrip.height}]")
+        logger.debug("Starting strip has dimensions [0, 0, ${startingStrip.width}, ${startingStrip.height}]")
 
         for (sprite in sprites) {
             var fittingStrip = strips.find { fitsInStrip(sprite, it) }
@@ -52,7 +52,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val met
                         startingStrip.width,
                         sprite.height)
 
-                logger.info("Unable to find a suitable strip, creating new strip [${newStrip.x}, ${newStrip.y}, ${newStrip.width}, ${newStrip.height}]")
+                logger.debug("Unable to find a suitable strip, creating new strip [${newStrip.x}, ${newStrip.y}, ${newStrip.width}, ${newStrip.height}]")
 
                 strips = strips.growHorizontally(sprite.width).toMutableList()
                 strips.add(newStrip)
@@ -60,7 +60,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val met
                 fittingStrip = newStrip
             }
 
-            logger.info("Attempting to place sprite in strip is [${fittingStrip.x}, ${fittingStrip.y}, ${fittingStrip.width}, ${fittingStrip.height}]")
+            logger.debug("Attempting to place sprite in strip is [${fittingStrip.x}, ${fittingStrip.y}, ${fittingStrip.width}, ${fittingStrip.height}]")
 
             val (spriteRect, remainingStrip) = placeSprite(sprite, fittingStrip)
 
@@ -98,7 +98,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val met
                 canvasDimensions.height,
                 BufferedImage.TYPE_INT_ARGB)
 
-        logger.info("Final image has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
+        logger.debug("Final image has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
 
         for ((sprite, startingPoint) in positionedSprites) {
             spriteDrawer.drawInto(sprite, canvas, startingPoint)
