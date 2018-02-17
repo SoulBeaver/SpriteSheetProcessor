@@ -1,4 +1,4 @@
-package com.sbg.rpg.packing.util
+package com.sbg.rpg.packing.common.extensions
 
 import com.sbg.rpg.console.CommandLineArguments
 import com.beust.jcommander.JCommander

@@ -17,7 +17,7 @@ package com.sbg.rpg.javafx
 
 import com.sbg.rpg.javafx.canvas.ResizableCanvas
 import com.sbg.rpg.javafx.model.AnnotatedSpriteSheet
-import com.sbg.rpg.packing.util.toJavaFXImage
+import com.sbg.rpg.packing.common.extensions.toJavaFXImage
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.GraphicsContext

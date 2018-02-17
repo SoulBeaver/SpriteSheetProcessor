@@ -1,6 +1,6 @@
-package com.sbg.rpg.packing.metadata
+package com.sbg.rpg.packing.packer.metadata
 
-import com.sbg.rpg.packing.packer.SpriteBounds
+import com.sbg.rpg.packing.packer.model.SpriteBounds
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -100,7 +100,7 @@ object MetadataCreatorSpec: Spek({
 
     given("Multiple SpriteBounds") {
         val spriteBoundsList = listOf(SpriteBounds(0, Rectangle(0, 0, 50, 50)),
-                                      SpriteBounds(1, Rectangle(51, 51, 50, 50)))
+                SpriteBounds(1, Rectangle(51, 51, 50, 50)))
 
         on("converting to yaml") {
             val metadataCreator = YamlMetadataCreator()

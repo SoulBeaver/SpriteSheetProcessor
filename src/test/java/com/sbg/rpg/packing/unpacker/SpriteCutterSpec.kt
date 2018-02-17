@@ -1,8 +1,8 @@
 package com.sbg.rpg.packing.unpacker
 
-import com.sbg.rpg.packing.image.SpriteCutter
-import com.sbg.rpg.packing.image.SpriteDrawer
-import com.sbg.rpg.packing.util.readImage
+import com.sbg.rpg.packing.common.SpriteCutter
+import com.sbg.rpg.packing.common.SpriteDrawer
+import com.sbg.rpg.packing.common.extensions.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -44,11 +44,11 @@ object SpriteCutterSpec : Spek({
             }
         }
 
-        on("trying to copy a sprite larger than the source image") {
+        on("trying to copy a sprite larger than the source common") {
             val croppedUrl = this.javaClass.classLoader.getResource("unpacker/AlreadyCropped.png")
             val croppedImage = Paths.get(croppedUrl.toURI()).readImage()
 
-            it("constrains area to source image dimensions and returns identical output") {
+            it("constrains area to source common dimensions and returns identical output") {
                 val sprite = spriteDrawer.cut(croppedImage, Rectangle(0, 0, 108, 129), Color.WHITE)
 
                 assertEquals(Color(0, 0, 0, 0).rgb, sprite.getRGB(0, 0), "Expected top-left corner to be transparent.")
@@ -78,7 +78,7 @@ object SpriteCutterSpec : Spek({
             }
         }
 
-        on("copying a sprite with a transparent image") {
+        on("copying a sprite with a transparent common") {
             val multipleSpritesTransparentBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/MultipleSprites_TransparentBackground.png")
             val multipleSpritesTransparentBackgroundImage = Paths.get(multipleSpritesTransparentBackgroundUrl.toURI()).readImage()
 

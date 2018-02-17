@@ -15,8 +15,8 @@
  */
 package com.sbg.rpg.packing.unpacker
 
-import com.sbg.rpg.packing.image.*
-import com.sbg.rpg.packing.util.*
+import com.sbg.rpg.packing.common.*
+import com.sbg.rpg.packing.common.extensions.*
 import java.awt.image.BufferedImage
 import java.awt.Image
 import java.awt.Color
@@ -34,12 +34,12 @@ import java.util.*
  * However, to do that, you need the individual sprites first! This class, SpriteSheetUnpacker, cuts up a SpriteSheet
  * and delivers the individual sprites.
 */
-class SpriteSheetUnpacker(private val spriteCutter: ISpriteCutter) {
+class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
     /**
      * Given a valid sprite sheet, detects and returns every individual sprite. The method may not be perfect and
-     * return grouped sprites if they're not contiguous. Does not alter the source image in any way.
+     * return grouped sprites if they're not contiguous. Does not alter the source common in any way.
      *
      * @param spriteSheet the sprite sheet to unpack
      * @return list of extracted sprite images
@@ -54,7 +54,7 @@ class SpriteSheetUnpacker(private val spriteCutter: ISpriteCutter) {
 
     /**
      * Given a valid sprite sheet, detects and returns the bounding rectangle of every individual sprite. The method may not be perfect and
-     * return grouped sprites if they're not contiguous. Does not alter the source image in any way.
+     * return grouped sprites if they're not contiguous. Does not alter the source common in any way.
      *
      * @param spriteSheet the sprite sheet to unpack
      * @return list of extracted sprite bounds

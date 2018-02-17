@@ -13,22 +13,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.util
+package com.sbg.rpg.packing.packer.model
 
-fun <T> List<T>.collate(batchSize: Int): List<List<T>> {
-    if (batchSize <= 0)
-        return emptyList()
+import java.awt.Rectangle
 
-    var remainder = this
-    val collatedList = mutableListOf<List<T>>()
-
-    while (remainder.isNotEmpty()) {
-        val partition = remainder.take(batchSize)
-
-        collatedList.add(partition)
-
-        remainder = remainder.drop(batchSize)
-    }
-
-    return collatedList
-}
+data class SpriteBounds(val frame: Int, val bounds: Rectangle)

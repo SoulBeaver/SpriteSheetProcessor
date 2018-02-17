@@ -15,13 +15,13 @@
  */
 package com.sbg.rpg.console
 
-import com.sbg.rpg.packing.image.ImageReadException
-import com.sbg.rpg.packing.image.Sprite
-import com.sbg.rpg.packing.image.SpriteSheetWriter
+import com.sbg.rpg.packing.common.ImageReadException
+import com.sbg.rpg.packing.common.Sprite
+import com.sbg.rpg.packing.common.SpriteSheetWriter
 import com.sbg.rpg.packing.packer.SpriteSheetPacker
 import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
-import com.sbg.rpg.packing.util.filenameWithoutExtension
-import com.sbg.rpg.packing.util.readImage
+import com.sbg.rpg.packing.common.extensions.filenameWithoutExtension
+import com.sbg.rpg.packing.common.extensions.readImage
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.nio.file.Files
@@ -73,7 +73,7 @@ abstract class SpriteSheetProcessor(
             val absolutePath = Paths.get(spriteSheetPath)!!.toAbsolutePath()!!
 
             if (!Files.exists(absolutePath) || !Files.isRegularFile(absolutePath)) {
-                throw IllegalArgumentException("Unable to find file $spriteSheetPath or it doesn't appear to be an image.")
+                throw IllegalArgumentException("Unable to find file $spriteSheetPath or it doesn't appear to be an common.")
             }
         }
     }
@@ -82,7 +82,7 @@ abstract class SpriteSheetProcessor(
         return try {
             spriteSheetUnpacker.unpack(spriteSheetPath.readImage())
         } catch (e: ImageReadException) {
-            logger.error("Skipping sprite sheet; unable to read image.", e)
+            logger.error("Skipping sprite sheet; unable to read common.", e)
             null
         } catch (e: Exception) {
             logger.error("Skipping sprite sheet; an unidentified error occurred.", e)

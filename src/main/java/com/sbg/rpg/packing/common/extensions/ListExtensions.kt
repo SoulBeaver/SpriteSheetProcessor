@@ -13,10 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.metadata
+package com.sbg.rpg.packing.common.extensions
 
-import com.sbg.rpg.packing.packer.SpriteBounds
+fun <T> List<T>.collate(batchSize: Int): List<List<T>> {
+    if (batchSize <= 0)
+        return emptyList()
 
-interface MetadataCreator {
-    fun create(spriteBoundsList: List<SpriteBounds>): String
+    var remainder = this
+    val collatedList = mutableListOf<List<T>>()
+
+    while (remainder.isNotEmpty()) {
+        val partition = remainder.take(batchSize)
+
+        collatedList.add(partition)
+
+        remainder = remainder.drop(batchSize)
+    }
+
+    return collatedList
 }

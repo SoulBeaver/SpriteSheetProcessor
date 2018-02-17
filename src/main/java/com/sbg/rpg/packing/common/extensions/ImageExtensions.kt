@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.util
+package com.sbg.rpg.packing.common.extensions
 
-import com.sbg.rpg.packing.image.Pixel
+import com.sbg.rpg.packing.common.Pixel
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.WritableImage
 import java.awt.*
@@ -62,8 +62,8 @@ fun BufferedImage.copy() = BufferedImage(
 )
 
 fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): BufferedImage {
-    require(dimensions.width > width) { "Expected a width larger than current image to be copied; width=${dimensions.width}" }
-    require(dimensions.height > height) { "Expected a height larger than current image to be copied; height=${dimensions.height}" }
+    require(dimensions.width > width) { "Expected a width larger than current common to be copied; width=${dimensions.width}" }
+    require(dimensions.height > height) { "Expected a height larger than current common to be copied; height=${dimensions.height}" }
 
     val target = BufferedImage(dimensions.width,
             dimensions.height,
@@ -80,12 +80,12 @@ fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): Buf
                 color.rgb)
     }
 
-    for (x in 0..target.width - 1) {
+    for (x in 0 until target.width) {
         target.setRGB(x, 0, borderColor.rgb)
         target.setRGB(x, target.height - 1, borderColor.rgb)
     }
 
-    for (y in 0..target.height - 1) {
+    for (y in 0 until target.height) {
         target.setRGB(0, y, borderColor.rgb)
         target.setRGB(target.width - 1, y, borderColor.rgb)
     }

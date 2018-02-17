@@ -13,15 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.util
+package com.sbg.rpg.packing.packer.metadata
 
-fun <K, V : Comparable<V>> Map<K, V>.max(): Pair<K, V>? {
-    if (isEmpty()) return null
+import com.sbg.rpg.packing.packer.model.SpriteBounds
 
-    val max = entries.reduce {
-        current, next -> if (current.value < next.value) next
-                         else current
-    }
-
-    return Pair(max.key, max.value)
+interface MetadataCreator {
+    fun create(spriteBoundsList: List<SpriteBounds>): String
 }

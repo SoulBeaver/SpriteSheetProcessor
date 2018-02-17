@@ -1,6 +1,6 @@
 package com.sbg.rpg.console
 
-import com.sbg.rpg.packing.image.SpriteSheetWriter
+import com.sbg.rpg.packing.common.SpriteSheetWriter
 import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import io.mockk.every
 import io.mockk.mockk

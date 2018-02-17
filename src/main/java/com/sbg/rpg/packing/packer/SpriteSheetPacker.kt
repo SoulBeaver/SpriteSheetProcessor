@@ -1,9 +1,12 @@
 package com.sbg.rpg.packing.packer
 
-import com.sbg.rpg.packing.image.ISpriteDrawer
-import com.sbg.rpg.packing.image.Sprite
-import com.sbg.rpg.packing.metadata.MetadataCreator
-import com.sbg.rpg.packing.util.area
+import com.sbg.rpg.packing.common.Sprite
+import com.sbg.rpg.packing.common.SpriteDrawer
+import com.sbg.rpg.packing.packer.metadata.MetadataCreator
+import com.sbg.rpg.packing.packer.model.SpriteBounds
+import com.sbg.rpg.packing.packer.model.Strip
+import com.sbg.rpg.packing.packer.model.growHorizontally
+import com.sbg.rpg.packing.common.extensions.area
 import org.apache.logging.log4j.LogManager
 import java.awt.Point
 import java.awt.Rectangle
@@ -11,7 +14,7 @@ import java.awt.image.BufferedImage
 
 data class PackedSpriteSheet(val canvas: BufferedImage, val metadata: String)
 
-class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val metadataCreator: MetadataCreator) {
+class SpriteSheetPacker(private val spriteDrawer: SpriteDrawer, private val metadataCreator: MetadataCreator) {
     private val logger = LogManager.getLogger(SpriteSheetPacker::class.simpleName)
 
     public fun pack(sprites: List<Sprite>): PackedSpriteSheet {
@@ -98,7 +101,7 @@ class SpriteSheetPacker(private val spriteDrawer: ISpriteDrawer, private val met
                 canvasDimensions.height,
                 BufferedImage.TYPE_INT_ARGB)
 
-        logger.debug("Final image has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
+        logger.debug("Final common has dimensions [0, 0, ${canvasDimensions.width}, ${canvasDimensions.height}]")
 
         for ((sprite, startingPoint) in positionedSprites) {
             spriteDrawer.drawInto(sprite, canvas, startingPoint)

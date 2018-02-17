@@ -15,13 +15,13 @@
  */
 package com.sbg.rpg.javafx
 
-import com.sbg.rpg.packing.image.SpriteCutter
-import com.sbg.rpg.packing.image.SpriteDrawer
+import com.sbg.rpg.packing.common.SpriteCutter
+import com.sbg.rpg.packing.common.SpriteDrawer
 import com.sbg.rpg.javafx.model.AnnotatedSpriteSheet
 import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
-import com.sbg.rpg.packing.util.filenameWithoutExtension
-import com.sbg.rpg.packing.util.pmap
-import com.sbg.rpg.packing.util.readImage
+import com.sbg.rpg.packing.common.extensions.filenameWithoutExtension
+import com.sbg.rpg.packing.common.extensions.pmap
+import com.sbg.rpg.packing.common.extensions.readImage
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
 import java.io.File

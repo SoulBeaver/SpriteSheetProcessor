@@ -13,8 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.packer
+package com.sbg.rpg.packing.common
 
-import java.awt.Rectangle
+import java.awt.Color
+import java.awt.Point
 
-data class SpriteBounds(val frame: Int, val bounds: Rectangle)
+data class Pixel(val point: Point, val color: Color)

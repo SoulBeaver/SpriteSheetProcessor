@@ -1,4 +1,4 @@
-package com.sbg.rpg.packing.image
+package com.sbg.rpg.packing.common
 
 import java.awt.image.BufferedImage
 

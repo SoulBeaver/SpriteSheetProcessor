@@ -13,9 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.image
+package com.sbg.rpg.packing.common
 
-import java.awt.Color
-import java.awt.Point
-
-data class Pixel(val point: Point, val color: Color)
+class ImageReadException(val errorMessage: String = "", val c: Throwable? = null): RuntimeException(errorMessage, c)

@@ -13,31 +13,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.metadata
+package com.sbg.rpg.packing.packer.metadata
 
-import com.sbg.rpg.packing.packer.SpriteBounds
+import com.google.gson.Gson
+import com.sbg.rpg.packing.packer.model.SpriteBounds
 import org.apache.logging.log4j.LogManager
 
 /**
  * Converts a list of SpriteBounds, essentially a pair of Frame Index and the location and area of the Rectangle,
- * into a yaml string representation. The string is guaranteed to have proper line breaks for each OS and a
- * readable format.
- *
- * <pre>
- *     Frames:
- *       - Index: 0
- *         Bounds: 0 0 50 50
- *       - Index: 1
- *         Bounds: 51 51 50 50
- *       ...
- * </pre>
+ * into a json string representation. The string is guaranteed to have proper line breaks for each OS, but not
+ * necessarily a human-readable format,
  *
  * @param spriteBoundsList The SpriteBounds to convert
- * @return A yaml representation of the SpriteBounds or
+ * @return A json representation of the SpriteBounds or
  *         en empty ("") string if empty
  */
-class YamlMetadataCreator: MetadataCreator {
-    private val logger = LogManager.getLogger(YamlMetadataCreator::class.simpleName)
+class JsonMetadataCreator: MetadataCreator {
+    private val logger = LogManager.getLogger(JsonMetadataCreator::class.simpleName)
 
     override fun create(spriteBoundsList: List<SpriteBounds>): String {
         if (spriteBoundsList.isEmpty()) {
@@ -45,13 +37,6 @@ class YamlMetadataCreator: MetadataCreator {
             return ""
         }
 
-        val yamlBuilder = StringBuilder()
-        yamlBuilder.append("Frames:${System.lineSeparator()}")
-        spriteBoundsList.forEach {
-            yamlBuilder.append("  - Index: ${it.frame}${System.lineSeparator()}")
-            yamlBuilder.append("    Bounds: [${it.bounds.x}, ${it.bounds.y}, ${it.bounds.width}, ${it.bounds.height}]${System.lineSeparator()}")
-        }
-
-        return yamlBuilder.toString()
+        return Gson().toJson(spriteBoundsList)
     }
 }

@@ -1,4 +1,4 @@
-package com.sbg.rpg.packing.packer
+package com.sbg.rpg.packing.packer.model
 
 data class Strip(val x: Int, val y: Int, val width: Int, val height: Int) {
     fun growHorizontally(amount: Int) = Strip(x, y, width + amount, height)

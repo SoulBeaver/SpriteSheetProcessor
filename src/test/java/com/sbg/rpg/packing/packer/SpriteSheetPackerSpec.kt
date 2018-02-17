@@ -1,9 +1,9 @@
 package com.sbg.rpg.packing.packer
 
-import com.sbg.rpg.packing.util.iterator
-import com.sbg.rpg.packing.image.SpriteDrawer
-import com.sbg.rpg.packing.metadata.TextMetadataCreator
-import com.sbg.rpg.packing.util.readImage
+import com.sbg.rpg.packing.common.extensions.iterator
+import com.sbg.rpg.packing.common.SpriteDrawer
+import com.sbg.rpg.packing.packer.metadata.TextMetadataCreator
+import com.sbg.rpg.packing.common.extensions.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -19,7 +19,7 @@ object SpriteSheetPackerSpec: Spek({
         on("packing a single sprite") {
             val sprites = listOf(BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB))
 
-            it("creates a 100x100 large image") {
+            it("creates a 100x100 large common") {
                 val (canvas, _) = packer.pack(sprites)
 
                 assertEquals(canvas.width, 100)
@@ -34,7 +34,7 @@ object SpriteSheetPackerSpec: Spek({
                     BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB)
             )
 
-            it ("creates a 100x300 image") {
+            it ("creates a 100x300 common") {
                 val (canvas, _) = packer.pack(sprites)
 
                 assertEquals(canvas.width, 200)
@@ -48,7 +48,7 @@ object SpriteSheetPackerSpec: Spek({
                     BufferedImage(20, 60, BufferedImage.TYPE_INT_ARGB)
             )
 
-            it("creates a 60x60 large image") {
+            it("creates a 60x60 large common") {
                 val (canvas, _) = packer.pack(sprites)
 
                 assertEquals(canvas.width, 60)
@@ -65,7 +65,7 @@ object SpriteSheetPackerSpec: Spek({
                     BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB)
             )
 
-            it("creates a 70x70 large image") {
+            it("creates a 70x70 large common") {
                 val (canvas, _) = packer.pack(sprites)
 
                 assertEquals(canvas.width, 70)
@@ -104,7 +104,7 @@ object SpriteSheetPackerSpec: Spek({
                 val expected: BufferedImage =
                         Paths.get(this.javaClass.classLoader.getResource("packer/result_2.png").toURI()).readImage()
 
-                it("packs them into a single image") {
+                it("packs them into a single common") {
                     val (canvas, _) = packer.pack(sprites)
 
                     assertEquals(canvas.width, 62)
@@ -139,7 +139,7 @@ object SpriteSheetPackerSpec: Spek({
                 val expected: BufferedImage =
                         Paths.get(this.javaClass.classLoader.getResource("packer/result_3.png").toURI()).readImage()
 
-                it("packs them into a single image") {
+                it("packs them into a single common") {
                     val (canvas, _) = packer.pack(sprites)
 
                     assertEquals(canvas.width, 143)

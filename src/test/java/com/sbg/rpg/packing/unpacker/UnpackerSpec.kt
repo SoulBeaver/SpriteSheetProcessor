@@ -1,8 +1,8 @@
 package com.sbg.rpg.packing.unpacker
 
-import com.sbg.rpg.packing.image.SpriteCutter
-import com.sbg.rpg.packing.image.SpriteDrawer
-import com.sbg.rpg.packing.util.readImage
+import com.sbg.rpg.packing.common.SpriteCutter
+import com.sbg.rpg.packing.common.SpriteDrawer
+import com.sbg.rpg.packing.common.extensions.readImage
 import java.nio.file.Paths
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
@@ -31,11 +31,11 @@ object UnpackerSpec : Spek({
             val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
             val sprites = spriteSheetUnpacker.unpack(Paths.get(singleSpriteUrl.toURI()).readImage())
 
-            it("returns a list of one sprite image") {
+            it("returns a list of one sprite common") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
             }
 
-            it("returns a list of one sprite image with the correct dimensions") {
+            it("returns a list of one sprite common with the correct dimensions") {
                 val expectedDimensions = Rectangle(0, 0, 108, 129)
                 val actualDimensions = Rectangle(0,
                         0,
@@ -45,7 +45,7 @@ object UnpackerSpec : Spek({
                 assertEquals(
                         expectedDimensions,
                         actualDimensions,
-                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
+                        "Size of common not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
                 )
             }
         }
@@ -67,16 +67,16 @@ object UnpackerSpec : Spek({
                 assertEquals(
                         expectedDimensions,
                         actualDimensions,
-                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
+                        "Size of common not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
                 )
             }
         }
 
-        on("a file with a non-white background and one image") {
+        on("a file with a non-white background and one common") {
             val coloredBackgroundUrl = this.javaClass.classLoader.getResource("unpacker/ColoredBackground.png")
             val sprites = spriteSheetUnpacker.unpack(Paths.get(coloredBackgroundUrl.toURI()).readImage())
 
-            it("returns a list of one sprite image") {
+            it("returns a list of one sprite common") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
             }
 
@@ -89,7 +89,7 @@ object UnpackerSpec : Spek({
                 assertEquals(
                         expectedDimensions,
                         actualDimensions,
-                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
+                        "Size of common not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})"
                 )
             }
         }
@@ -135,7 +135,7 @@ object UnpackerSpec : Spek({
                 assertEquals(
                         expectedDimensions,
                         actualDimensions,
-                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
+                        "Size of common not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
             }
         }
 
@@ -156,7 +156,7 @@ object UnpackerSpec : Spek({
                 assertEquals(
                         expectedDimensions,
                         actualDimensions,
-                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
+                        "Size of common not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
             }
         }
 
@@ -177,7 +177,7 @@ object UnpackerSpec : Spek({
                 assertEquals(
                         expectedDimensions,
                         actualDimensions,
-                        "Size of image not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
+                        "Size of common not as expected. Expected (${expectedDimensions.width}, ${expectedDimensions.height}) but was (${actualDimensions.width}, ${actualDimensions.height})")
             }
         }
 

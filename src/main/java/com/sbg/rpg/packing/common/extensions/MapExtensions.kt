@@ -13,6 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.image
+package com.sbg.rpg.packing.common.extensions
 
-class ImageReadException(val errorMessage: String = "", val c: Throwable? = null): RuntimeException(errorMessage, c)
+fun <K, V : Comparable<V>> Map<K, V>.max(): Pair<K, V>? {
+    if (isEmpty()) return null
+
+    val max = entries.reduce {
+        current, next -> if (current.value < next.value) next
+                         else current
+    }
+
+    return Pair(max.key, max.value)
+}

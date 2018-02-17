@@ -17,12 +17,12 @@ package com.sbg.rpg.console
 
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
-import com.sbg.rpg.packing.image.SpriteCutter
-import com.sbg.rpg.packing.image.SpriteDrawer
-import com.sbg.rpg.packing.image.SpriteSheetWriter
-import com.sbg.rpg.packing.metadata.JsonMetadataCreator
-import com.sbg.rpg.packing.metadata.TextMetadataCreator
-import com.sbg.rpg.packing.metadata.YamlMetadataCreator
+import com.sbg.rpg.packing.common.SpriteCutter
+import com.sbg.rpg.packing.common.SpriteDrawer
+import com.sbg.rpg.packing.common.SpriteSheetWriter
+import com.sbg.rpg.packing.packer.metadata.JsonMetadataCreator
+import com.sbg.rpg.packing.packer.metadata.TextMetadataCreator
+import com.sbg.rpg.packing.packer.metadata.YamlMetadataCreator
 import com.sbg.rpg.packing.packer.SpriteSheetPacker
 import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager

@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.sbg.rpg.packing.metadata
+package com.sbg.rpg.packing.packer.metadata
 
-import com.sbg.rpg.packing.packer.SpriteBounds
+import com.sbg.rpg.packing.packer.model.SpriteBounds
 import org.apache.logging.log4j.LogManager
 
 /**

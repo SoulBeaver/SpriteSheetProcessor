@@ -1,4 +1,4 @@
-package com.sbg.rpg.packing.util
+package com.sbg.rpg.packing.common.extensions
 
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
@@ -13,19 +13,19 @@ import java.awt.image.BufferedImage
 import kotlin.test.assertNotEquals
 
 object ImageUtilsSpec : Spek({
-    given("An image") {
+    given("An common") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
         on("converting to a BufferedImage") {
             val original = Paths.get(imageUrl.toURI()).readImage()
 
-            it("does not perform a conversion if the image is already of type BufferedImage and has the same color type") {
+            it("does not perform a conversion if the common is already of type BufferedImage and has the same color type") {
                 val expected = original.toBufferedImage()
 
                 assertEquals(original.type, expected.type, "Expected original and expected to be identical.")
             }
 
-            it("converts the image type from ARGB to [something]") {
+            it("converts the common type from ARGB to [something]") {
                 val expected = original.toBufferedImage(BufferedImage.TYPE_3BYTE_BGR)
 
                 assertNotEquals(expected.type, original.type, "Expected converted BufferedImage to have a different type than original.")
@@ -54,7 +54,7 @@ object ImageUtilsSpec : Spek({
                         val copyAtXY = copy.getRGB(x, y)
 
                         assertEquals(originalAtXY, copyAtXY,
-                                "The copied image is not identical to the original.")
+                                "The copied common is not identical to the original.")
                     }
                 }
 
@@ -62,7 +62,7 @@ object ImageUtilsSpec : Spek({
         }
     }
 
-    given("A 200x200 image") {
+    given("A 200x200 common") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("looping through it") {
@@ -79,7 +79,7 @@ object ImageUtilsSpec : Spek({
         }
     }
 
-    given("A 200x200 image") {
+    given("A 200x200 common") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/200x200.png")!!
 
         on("creating a simple copy") {
