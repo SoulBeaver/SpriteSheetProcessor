@@ -1,7 +1,5 @@
-package com.sbg.rpg.packing.unpacker
+package com.sbg.rpg.packing.common
 
-import com.sbg.rpg.packing.common.SpriteCutter
-import com.sbg.rpg.packing.common.SpriteDrawer
 import com.sbg.rpg.packing.common.extensions.readImage
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given

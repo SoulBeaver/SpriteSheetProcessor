@@ -1,6 +1,5 @@
-package com.sbg.rpg.packing.common.extensions
+package com.sbg.rpg.console
 
-import com.sbg.rpg.console.CommandLineArguments
 import com.beust.jcommander.JCommander
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
