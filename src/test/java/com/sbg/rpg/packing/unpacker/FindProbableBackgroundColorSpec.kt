@@ -11,7 +11,7 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 
 object FindProbableBackgroundColorSpec: Spek({
-    given("An common with no sprites and a white background") {
+    given("An image with no sprites and a white background") {
         val emptyUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
 
         on("finding the probably background color") {
@@ -26,7 +26,7 @@ object FindProbableBackgroundColorSpec: Spek({
         }
     }
 
-    given("An common with a single sprite and a white background") {
+    given("An image with a single sprite and a white background") {
         val singleSpriteUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")
 
         on("finding the probably background color") {
@@ -41,7 +41,7 @@ object FindProbableBackgroundColorSpec: Spek({
         }
     }
 
-    given ("An common with many sprites and a purple background") {
+    given ("An image with many sprites and a purple background") {
         val manySpritesUrl = this.javaClass.classLoader.getResource("unpacker/ManySprites.png")
 
         on("finding the probably background color") {
@@ -56,7 +56,7 @@ object FindProbableBackgroundColorSpec: Spek({
         }
     }
 
-    given ("A densely packed common with many sprite and a pink background") {
+    given ("A densely packed image with many sprite and a pink background") {
         val transparentUrl = this.javaClass.classLoader.getResource("unpacker/DensePink.png")
 
         on("finding the probably background color") {
@@ -71,7 +71,7 @@ object FindProbableBackgroundColorSpec: Spek({
         }
     }
 
-    given ("An common with many sprites and a transparent background") {
+    given ("An image with many sprites and a transparent background") {
         val transparentUrl = this.javaClass.classLoader.getResource("unpacker/Pixel.png")
 
         on("finding the probably background color") {

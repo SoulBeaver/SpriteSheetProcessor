@@ -73,7 +73,7 @@ abstract class SpriteSheetProcessor(
             val absolutePath = Paths.get(spriteSheetPath)!!.toAbsolutePath()!!
 
             if (!Files.exists(absolutePath) || !Files.isRegularFile(absolutePath)) {
-                throw IllegalArgumentException("Unable to find file $spriteSheetPath or it doesn't appear to be an common.")
+                throw IllegalArgumentException("Unable to find file $spriteSheetPath or it doesn't appear to be an image.")
             }
         }
     }
@@ -82,7 +82,7 @@ abstract class SpriteSheetProcessor(
         return try {
             spriteSheetUnpacker.unpack(spriteSheetPath.readImage())
         } catch (e: ImageReadException) {
-            logger.error("Skipping sprite sheet; unable to read common.", e)
+            logger.error("Skipping sprite sheet; unable to read image.", e)
             null
         } catch (e: Exception) {
             logger.error("Skipping sprite sheet; an unidentified error occurred.", e)

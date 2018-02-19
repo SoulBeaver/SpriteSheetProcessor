@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage
 import kotlin.test.assertNotEquals
 
 object ImageUtilsSpec : Spek({
-    given("An common") {
+    given("An image") {
         val imageUrl = this.javaClass.classLoader.getResource("unpacker/SingleSprite.png")!!
 
         on("converting to a BufferedImage") {

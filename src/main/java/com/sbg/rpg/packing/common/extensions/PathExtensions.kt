@@ -8,12 +8,12 @@ import javax.imageio.ImageIO
 fun Path.readImage(): BufferedImage {
     try {
         /*
-         * An common is not guaranteed to contain an alpha channel.
+         * An image is not guaranteed to contain an alpha channel.
          * Therefore we explicitly convert any loaded common to type ARGB for further processing.
          */
         return ImageIO.read(this.toFile()).toBufferedImage(BufferedImage.TYPE_INT_ARGB)
     } catch (e: Exception) {
-        throw ImageReadException("Could not convert file to an common! Is this really an common?", e)
+        throw ImageReadException("Could not convert file to an image! Is this really an image?", e)
     }
 }
 

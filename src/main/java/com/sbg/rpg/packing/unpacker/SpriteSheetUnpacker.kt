@@ -82,7 +82,7 @@ class SpriteSheetUnpacker(
         for (pixel in workingImage) {
             val (point, color) = pixel
 
-            if (!isBackgroundColor(color, backgroundColor)) {
+            if (distance(color, backgroundColor) > colorSimilarityThreshold) {
                 logger.info("Found a sprite starting at (${point.x}, ${point.y}) with color $color")
                 val spritePlot = findContiguousSprite(workingImage, point, backgroundColor)
                 val spriteRectangle = spanRectangleFrom(spritePlot)
@@ -106,19 +106,23 @@ class SpriteSheetUnpacker(
      *
      *      https://www.compuphase.com/cmetric.htm
      */
-    private fun isBackgroundColor(backgroundColor: Color, color: Color): Boolean {
+    private fun distance(backgroundColor: Color, color: Color): Double {
         val rMean = (backgroundColor.red + color.red) / 2
 
         val r = backgroundColor.red - color.red
         val g = backgroundColor.green - color.green
         val b = backgroundColor.blue - color.blue
 
-        val distance = Math.sqrt(((((512 + rMean) * r * r) shr 8) + 4 * g * g + (((767 - rMean) * b * b) shr 8)).toDouble())
+        val weightR = 2.0 + rMean / 256.0
+        val weightG = 4.0
+        val weightB = 2.0 + (255.0 - rMean) / 256.0
+
+        val distance = Math.sqrt(weightR * r * r + weightG * g * g + weightB * b * b)
         if (distance > 0.0) {
             logger.debug("The distance is $distance")
         }
 
-        return distance < colorSimilarityThreshold
+        return distance
     }
 
 
@@ -130,9 +134,9 @@ class SpriteSheetUnpacker(
 
         while (unvisited.isNotEmpty()) {
             val currentPoint = unvisited.pop()
-            val currentColor = image.getRGB(currentPoint.x, currentPoint.y)
+            val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y), true)
 
-            if (currentColor != backgroundColor.rgb) {
+            if (distance(currentColor, backgroundColor) > colorSimilarityThreshold) {
                 unvisited.addAll(neighbors(currentPoint, image).filter {
                     !visited.contains(it) &&
                             !unvisited.contains(it) &&
