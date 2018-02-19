@@ -69,7 +69,7 @@ fun BufferedImage.copyWithBorder(dimensions: Dimension, borderColor: Color): Buf
             dimensions.height,
             type)
 
-    val widthDifference  = (dimensions.width - width) / 2
+    val widthDifference = (dimensions.width - width) / 2
     val heightDifference = (dimensions.height - height) / 2
 
     for (pixel in this) {
@@ -98,7 +98,7 @@ fun BufferedImage.erasePoints(points: List<Point>, withColor: Color) {
 }
 
 fun BufferedImage.probableBackgroundColor(): Color {
-    require(width > 0 && height > 0) { "Image must have positive, non-zero width and height; width=${width}, height=${height}" }
+    require(width > 0 && height > 0) { "Image must have positive, non-zero width and height; width=$width, height=$height" }
 
     val colorMap = HashMap<Color, Int>()
 

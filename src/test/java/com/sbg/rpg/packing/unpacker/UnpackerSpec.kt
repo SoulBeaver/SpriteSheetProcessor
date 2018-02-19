@@ -11,6 +11,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+import javax.imageio.ImageIO
 
 object UnpackerSpec : Spek({
     given("A SpriteSheet Unpacker") {
@@ -192,6 +193,34 @@ object UnpackerSpec : Spek({
                 val sprites = spriteSheetUnpacker.unpack(Paths.get(rectangleNoCornersUrl.toURI()).readImage())
 
                 assertEquals(10, sprites.size)
+            }
+        }
+
+        on("a .jpg file") {
+            val jpeg = this.javaClass.classLoader.getResource("unpacker/Jpeg.jpg")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(jpeg.toURI()).readImage())
+
+            it("returns a list of exactly one sprite") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+        }
+
+        on("a .jpg file of poor quality") {
+            val badJpeg = this.javaClass.classLoader.getResource("unpacker/BadJpeg.jpg")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(badJpeg.toURI()).readImage())
+
+            it("still returns only one sprite") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+        }
+
+        // It's pronounced .gif like Jeff. Feel free to unstar me now :)
+        on("a .gif file") {
+            val gif = this.javaClass.classLoader.getResource("unpacker/Gif.gif")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(gif.toURI()).readImage())
+
+            it("returns a list of exactly one sprite") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
             }
         }
     }

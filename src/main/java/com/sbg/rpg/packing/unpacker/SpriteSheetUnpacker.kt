@@ -33,8 +33,11 @@ import java.util.*
  *
  * However, to do that, you need the individual sprites first! This class, SpriteSheetUnpacker, cuts up a SpriteSheet
  * and delivers the individual sprites.
-*/
-class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
+ */
+class SpriteSheetUnpacker(
+        private val spriteCutter: SpriteCutter,
+        private val colorSimilarityThreshold: Int = 10) {
+
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
     /**
@@ -46,6 +49,7 @@ class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
      */
     fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
         val backgroundColor = spriteSheet.probableBackgroundColor()
+        logger.info("The background color (probably) is ${backgroundColor}")
 
         return calculateSpriteBounds(spriteSheet).pmap {
             spriteCutter.cut(spriteSheet, it, backgroundColor)
@@ -61,25 +65,29 @@ class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
      */
     fun calculateSpriteBounds(spriteSheet: BufferedImage): List<Rectangle> {
         val spriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
-        logger.debug("Found ${spriteDimensions.size} sprites.")
+        logger.info("Found ${spriteDimensions.size} sprites.")
 
         return spriteDimensions
     }
 
     private fun findSpriteDimensions(image: BufferedImage,
                                      backgroundColor: Color): List<Rectangle> {
+        logger.info(image.type)
+        logger.info(image.getRGB(0, 0))
+        logger.info(image.colorModel)
+
         val workingImage = image.copy()
 
         val spriteDimensions = ArrayList<Rectangle>()
         for (pixel in workingImage) {
             val (point, color) = pixel
 
-            if (color != backgroundColor) {
-                logger.debug("Found a sprite starting at (${point.x}, ${point.y})")
+            if (!isBackgroundColor(color, backgroundColor)) {
+                logger.info("Found a sprite starting at (${point.x}, ${point.y}) with color $color")
                 val spritePlot = findContiguousSprite(workingImage, point, backgroundColor)
                 val spriteRectangle = spanRectangleFrom(spritePlot)
 
-                logger.debug("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
+                logger.info("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
 
                 spriteDimensions.add(spriteRectangle)
                 workingImage.erasePoints(spritePlot, backgroundColor)
@@ -89,9 +97,34 @@ class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
         return spriteDimensions
     }
 
+    /*
+     * Props to StackOverflow for this efficient algorithm:
+     *
+     *      https://stackoverflow.com/questions/9018016/how-to-compare-two-colors-for-similarity-difference
+     *
+     * and an explanation for this algorithm can be found here:
+     *
+     *      https://www.compuphase.com/cmetric.htm
+     */
+    private fun isBackgroundColor(backgroundColor: Color, color: Color): Boolean {
+        val rMean = (backgroundColor.red + color.red) / 2
+
+        val r = backgroundColor.red - color.red
+        val g = backgroundColor.green - color.green
+        val b = backgroundColor.blue - color.blue
+
+        val distance = Math.sqrt(((((512 + rMean) * r * r) shr 8) + 4 * g * g + (((767 - rMean) * b * b) shr 8)).toDouble())
+        if (distance > 0.0) {
+            logger.debug("The distance is $distance")
+        }
+
+        return distance < colorSimilarityThreshold
+    }
+
+
     private fun findContiguousSprite(image: BufferedImage, point: Point, backgroundColor: Color): List<Point> {
         val unvisited = LinkedList<Point>()
-        val visited   = hashSetOf(point)
+        val visited = hashSetOf(point)
 
         unvisited.addAll(neighbors(point, image).filter { image.getRGB(it.x, it.y) != backgroundColor.rgb })
 
@@ -102,8 +135,8 @@ class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
             if (currentColor != backgroundColor.rgb) {
                 unvisited.addAll(neighbors(currentPoint, image).filter {
                     !visited.contains(it) &&
-                    !unvisited.contains(it) &&
-                    image.getRGB(it.x, it.y) != backgroundColor.rgb
+                            !unvisited.contains(it) &&
+                            image.getRGB(it.x, it.y) != backgroundColor.rgb
                 })
 
                 visited.add(currentPoint)
@@ -157,17 +190,17 @@ class SpriteSheetUnpacker(private val spriteCutter: SpriteCutter) {
         if (points.isEmpty())
             throw IllegalArgumentException("No points to span Rectangle from.")
 
-        val left = points.reduce {
-            current, next -> if (current.x > next.x) next else current
+        val left = points.reduce { current, next ->
+            if (current.x > next.x) next else current
         }
-        val top = points.reduce {
-            current, next -> if (current.y > next.y) next else current
+        val top = points.reduce { current, next ->
+            if (current.y > next.y) next else current
         }
-        val right = points.reduce {
-            current, next -> if (current.x < next.x) next else current
+        val right = points.reduce { current, next ->
+            if (current.x < next.x) next else current
         }
-        val bottom = points.reduce {
-            current, next -> if (current.y < next.y) next else current
+        val bottom = points.reduce { current, next ->
+            if (current.y < next.y) next else current
         }
 
         return Rectangle(left.x, top.y,
