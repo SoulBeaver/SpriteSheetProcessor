@@ -36,7 +36,8 @@ import java.util.*
  */
 class SpriteSheetUnpacker(
         private val spriteCutter: SpriteCutter,
-        private val colorSimilarityThreshold: Int = 10) {
+        private val colorSimilarityThreshold: Int = 10,
+        private val maxPixelDistance: Int = 3) {
 
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
 
@@ -49,9 +50,9 @@ class SpriteSheetUnpacker(
      */
     fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
         val backgroundColor = spriteSheet.probableBackgroundColor()
-        logger.info("The background color (probably) is ${backgroundColor}")
+        logger.debug("The background color (probably) is ${backgroundColor}")
 
-        return calculateSpriteBounds(spriteSheet).pmap {
+        return detectSpriteDimensions(spriteSheet).pmap {
             spriteCutter.cut(spriteSheet, it, backgroundColor)
         }
     }
@@ -63,66 +64,89 @@ class SpriteSheetUnpacker(
      * @param spriteSheet the sprite sheet to unpack
      * @return list of extracted sprite bounds
      */
-    fun calculateSpriteBounds(spriteSheet: BufferedImage): List<Rectangle> {
-        val spriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
-        logger.info("Found ${spriteDimensions.size} sprites.")
+    fun detectSpriteDimensions(spriteSheet: BufferedImage): List<Rectangle> {
 
-        return spriteDimensions
+        // Find all sprite boundaries
+        // Merge sprites completely inside other sprites
+        // Merge sprites that have a face inside another sprite
+
+        val allSpriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
+        logger.info("Found ${allSpriteDimensions.size} sprites.")
+
+        // any sprites completely inside other sprites? merge 'em.
+        val unconfinedSpriteDimensions = filterConfinedSpriteDimensions(allSpriteDimensions)
+
+        // any sprites have one or more of their edges inside anothers? merge 'em.
+        val mergedSpriteDimensions = mergeSpritesWithSharedEdges(unconfinedSpriteDimensions)
+
+        return mergedSpriteDimensions
+    }
+
+    private fun filterConfinedSpriteDimensions(spriteDimensions: List<Rectangle>): List<Rectangle> {
+        val unconfinedSpriteDimensions = mutableListOf<Rectangle>()
+
+        val spriteDimensionsByArea = spriteDimensions.sortedBy(Rectangle::area).reversed()
+        for (smallSpriteDimensions in spriteDimensions) {
+            for (largeSpriteDimensions in spriteDimensionsByArea) {
+
+                if (smallSpriteDimensions.area() >= largeSpriteDimensions.area()) {
+                    unconfinedSpriteDimensions.add(smallSpriteDimensions)
+                    break
+                }
+
+                if (largeSpriteDimensions.contains(smallSpriteDimensions)) {
+                    break
+                }
+            }
+        }
+
+        return unconfinedSpriteDimensions
+    }
+
+    private fun mergeSpritesWithSharedEdges(spriteDimensions: List<Rectangle>): List<Rectangle> {
+        val mergedSpriteDimensions = mutableListOf(*spriteDimensions.toTypedArray())
+
+        val spriteDimensionsReversed = spriteDimensions.reversed()
+        for (a: Rectangle in spriteDimensions) {
+            for (b in spriteDimensionsReversed) {
+                if (a == b) {
+                    break
+                }
+
+                if (a.containsLine(b)) {
+                    mergedSpriteDimensions.remove(a)
+                    mergedSpriteDimensions.remove(b)
+
+                    val c = a.union(b)
+                    mergedSpriteDimensions.add(c)
+                }
+            }
+        }
+
+        return mergedSpriteDimensions
     }
 
     private fun findSpriteDimensions(image: BufferedImage,
                                      backgroundColor: Color): List<Rectangle> {
-        logger.info(image.type)
-        logger.info(image.getRGB(0, 0))
-        logger.info(image.colorModel)
-
         val workingImage = image.copy()
 
         val spriteDimensions = ArrayList<Rectangle>()
         for (pixel in workingImage) {
             val (point, color) = pixel
 
-            if (distance(color, backgroundColor) > colorSimilarityThreshold) {
-                logger.info("Found a sprite starting at (${point.x}, ${point.y}) with color $color")
+            if (backgroundColor.distance(color) > colorSimilarityThreshold) {
+                logger.debug("Found a sprite starting at (${point.x}, ${point.y}) with color $color")
                 val spritePlot = findContiguousSprite(workingImage, point, backgroundColor)
-                val spriteRectangle = spanRectangleFrom(spritePlot)
+                val spriteBoundaries = constructSpriteBoundaryFromPlot(spritePlot)
 
-                logger.info("The identified sprite has an area of ${spriteRectangle.width}x${spriteRectangle.height}")
+                logger.debug("The identified sprite has an area of ${spriteBoundaries.width}x${spriteBoundaries.height}")
 
-                spriteDimensions.add(spriteRectangle)
+                spriteDimensions.add(spriteBoundaries)
                 workingImage.erasePoints(spritePlot, backgroundColor)
             }
         }
 
         return spriteDimensions
-    }
-
-    /*
-     * Props to StackOverflow for this efficient algorithm:
-     *
-     *      https://stackoverflow.com/questions/9018016/how-to-compare-two-colors-for-similarity-difference
-     *
-     * and an explanation for this algorithm can be found here:
-     *
-     *      https://www.compuphase.com/cmetric.htm
-     */
-    private fun distance(backgroundColor: Color, color: Color): Double {
-        val rMean = (backgroundColor.red + color.red) / 2
-
-        val r = backgroundColor.red - color.red
-        val g = backgroundColor.green - color.green
-        val b = backgroundColor.blue - color.blue
-
-        val weightR = 2.0 + rMean / 256.0
-        val weightG = 4.0
-        val weightB = 2.0 + (255.0 - rMean) / 256.0
-
-        val distance = Math.sqrt(weightR * r * r + weightG * g * g + weightB * b * b)
-        if (distance > 0.0) {
-            logger.debug("The distance is $distance")
-        }
-
-        return distance
     }
 
 
@@ -136,11 +160,13 @@ class SpriteSheetUnpacker(
             val currentPoint = unvisited.pop()
             val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y), true)
 
-            if (distance(currentColor, backgroundColor) > colorSimilarityThreshold) {
+            if (backgroundColor.distance(currentColor) > colorSimilarityThreshold) {
                 unvisited.addAll(neighbors(currentPoint, image).filter {
+                    val neighborColor = Color(image.getRGB(it.x, it.y))
+
                     !visited.contains(it) &&
                             !unvisited.contains(it) &&
-                            image.getRGB(it.x, it.y) != backgroundColor.rgb
+                            backgroundColor.distance(neighborColor) > colorSimilarityThreshold
                 })
 
                 visited.add(currentPoint)
@@ -190,7 +216,7 @@ class SpriteSheetUnpacker(
         return neighbors
     }
 
-    private fun spanRectangleFrom(points: List<Point>): Rectangle {
+    private fun constructSpriteBoundaryFromPlot(points: List<Point>): Rectangle {
         if (points.isEmpty())
             throw IllegalArgumentException("No points to span Rectangle from.")
 

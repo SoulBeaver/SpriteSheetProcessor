@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>1.2.21</kotlin.version>
+        <kotlin.version>1.2.41</kotlin.version>
         <spek.version>1.1.5</spek.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <jcommander.version>1.30</jcommander.version>

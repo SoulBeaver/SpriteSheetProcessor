@@ -46,7 +46,7 @@ class SpriteSheetProcessorController : Controller() {
             logger.debug("Unpacking ${spriteSheetPath.fileName}")
 
             val spriteSheet = spriteSheetPath.readImage()
-            val spriteBoundsList = spriteSheetUnpacker.calculateSpriteBounds(spriteSheet)
+            val spriteBoundsList = spriteSheetUnpacker.detectSpriteDimensions(spriteSheet)
 
             AnnotatedSpriteSheet(
                     spriteSheet,

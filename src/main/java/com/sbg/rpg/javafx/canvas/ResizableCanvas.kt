@@ -22,8 +22,8 @@ class ResizableCanvas: Canvas() {
 
     init {
         // Redraw canvas when size changes.
-        widthProperty().addListener { obs -> draw() }
-        heightProperty().addListener { obs -> draw() }
+        widthProperty().addListener { _ -> draw() }
+        heightProperty().addListener { _ -> draw() }
     }
 
     private fun draw() {

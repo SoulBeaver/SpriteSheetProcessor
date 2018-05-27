@@ -11,12 +11,12 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
-import javax.imageio.ImageIO
 
 object UnpackerSpec : Spek({
     given("A SpriteSheet Unpacker") {
         val spriteSheetUnpacker = SpriteSheetUnpacker(SpriteCutter(SpriteDrawer()))
 
+        /* */
         on("a file without sprites") {
             val emptyPngUrl = this.javaClass.classLoader.getResource("unpacker/Empty.png")
 
@@ -220,6 +220,33 @@ object UnpackerSpec : Spek({
             val sprites = spriteSheetUnpacker.unpack(Paths.get(gif.toURI()).readImage())
 
             it("returns a list of exactly one sprite") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+        }
+
+        on("a sprite with a lot of blank space") {
+            val boundsInBounds = this.javaClass.classLoader.getResource("unpacker/BoundsInBounds.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(boundsInBounds.toURI()).readImage())
+
+            it("returns only the largest rectangle containing all other candidates") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+        }
+
+        on("a sprite with text inside a rectangle") {
+            val text = this.javaClass.classLoader.getResource("unpacker/Text.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(text.toURI()).readImage())
+
+            it("returns only the entire area") {
+                assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
+            }
+        }
+
+        on("two sprites that intersect") {
+            val intersecting = this.javaClass.classLoader.getResource("unpacker/Intersecting.png")
+            val sprites = spriteSheetUnpacker.unpack(Paths.get(intersecting.toURI()).readImage())
+
+            it("returns one sprite covering both sub-sprites") {
                 assertEquals(1, sprites.size, "Expected to have found exactly one sprite")
             }
         }
