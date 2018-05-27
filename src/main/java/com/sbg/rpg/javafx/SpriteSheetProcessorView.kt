@@ -18,13 +18,16 @@ package com.sbg.rpg.javafx
 import com.sbg.rpg.javafx.canvas.ResizableCanvas
 import com.sbg.rpg.javafx.model.AnnotatedSpriteSheet
 import com.sbg.rpg.packing.common.extensions.toJavaFXImage
+import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.canvas.GraphicsContext
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
+import javafx.scene.effect.BlendMode
 import javafx.scene.input.DragEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
@@ -33,6 +36,8 @@ import javafx.stage.DirectoryChooser
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
 import tornadofx.hide
+import java.awt.Point
+import java.awt.Rectangle
 
 class SpriteSheetProcessorView: View() {
     private val logger = LogManager.getLogger(SpriteSheetProcessorView::class.simpleName)
@@ -63,6 +68,7 @@ class SpriteSheetProcessorView: View() {
 
         canvas.setOnDragOver { onCanvasDragging(it) }
         canvas.setOnDragDropped { onCanvasDropped(it) }
+        canvas.setOnMouseClicked { onMouseClicked(it) }
     }
 
     /**
@@ -181,6 +187,29 @@ class SpriteSheetProcessorView: View() {
         }
     }
 
+    @FXML
+    fun onMouseClicked(e: MouseEvent) {
+        val clickCoords = Point(e.sceneX.toInt(), e.sceneY.toInt())
+        logger.debug("Clicked on (${e.sceneX}, e.sceneY})")
+
+        runAsync {
+            controller.selectSprite(clickCoords)
+        } ui { sprite ->
+            if (sprite != null) {
+                val graphics = canvas.graphicsContext2D
+
+                with (graphics) {
+                    setFill(Color.BLACK)
+                    //setStroke(Color.BLACK)
+                    //setGlobalBlendMode(BlendMode.SCREEN)
+                    //globalAlpha = 0.5
+                    fillRect(sprite.x.toDouble(), sprite.y.toDouble(), sprite.width.toDouble(), sprite.height.toDouble())
+                    //fillRect(0.0, 0.0, 1000.0, 1000.0)
+                }
+            }
+        }
+    }
+
     private fun clearCanvas(graphics: GraphicsContext) {
         graphics.fill = Color.ANTIQUEWHITE
         graphics.fillRect(0.0, 0.0, canvas.width, canvas.height)
@@ -188,19 +217,19 @@ class SpriteSheetProcessorView: View() {
     }
 
     fun disableUI() {
-        combineButton.setDisable(true)
-        separateButton.setDisable(true)
-        excludeButton.setDisable(true)
-        exportButton.setDisable(true)
-        tutorialButton.setDisable(true)
+        combineButton.isDisable = true
+        separateButton.isDisable = true
+        excludeButton.isDisable = true
+        exportButton.isDisable = true
+        tutorialButton.isDisable = true
     }
 
     fun enableUI() {
-        combineButton.setDisable(false)
-        separateButton.setDisable(false)
-        excludeButton.setDisable(false)
-        exportButton.setDisable(false)
-        tutorialButton.setDisable(false)
+        combineButton.isDisable = true // TODO No functionality yet
+        separateButton.isDisable = true // TODO No functionality yet
+        excludeButton.isDisable = true // TODO No functionality yet
+        exportButton.isDisable = false
+        tutorialButton.isDisable = false
     }
 
     fun displayStatus(message: String) {

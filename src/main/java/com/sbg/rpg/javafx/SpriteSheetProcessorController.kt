@@ -18,12 +18,15 @@ package com.sbg.rpg.javafx
 import com.sbg.rpg.packing.common.SpriteCutter
 import com.sbg.rpg.packing.common.SpriteDrawer
 import com.sbg.rpg.javafx.model.AnnotatedSpriteSheet
+import com.sbg.rpg.packing.common.Sprite
 import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import com.sbg.rpg.packing.common.extensions.filenameWithoutExtension
 import com.sbg.rpg.packing.common.extensions.pmap
 import com.sbg.rpg.packing.common.extensions.readImage
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
+import java.awt.Point
+import java.awt.Rectangle
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -37,12 +40,32 @@ class SpriteSheetProcessorController : Controller() {
     private val spriteSheetUnpacker: SpriteSheetUnpacker = SpriteSheetUnpacker(SpriteCutter(SpriteDrawer()))
     private var spriteSheetPaths: List<Path> = emptyList()
 
+    private val annotatedSpriteSheets = mutableListOf<AnnotatedSpriteSheet>()
+    private val selectedSprites = mutableListOf<Rectangle>()
+
+    fun selectSprite(coords: Point): Rectangle? {
+        for (spriteSheet in annotatedSpriteSheets) {
+            val (spriteSheet, spriteBoundaries) = spriteSheet
+
+            for (sprite in spriteBoundaries) {
+                if (sprite.contains(coords)) {
+
+                    logger.debug("Found sprite $sprite")
+                    return sprite
+                }
+            }
+        }
+
+        return null
+    }
+
     fun unpackSpriteSheets(spriteSheetFiles: List<File>): List<AnnotatedSpriteSheet> {
         logger.debug("Loading files $spriteSheetFiles")
 
         this.spriteSheetPaths = spriteSheetFiles.map { Paths.get(it.absolutePath) }
 
-        val annotatedSpriteSheets = spriteSheetPaths.pmap { spriteSheetPath ->
+        annotatedSpriteSheets.clear()
+        annotatedSpriteSheets.addAll(spriteSheetPaths.pmap { spriteSheetPath ->
             logger.debug("Unpacking ${spriteSheetPath.fileName}")
 
             val spriteSheet = spriteSheetPath.readImage()
@@ -52,7 +75,7 @@ class SpriteSheetProcessorController : Controller() {
                     spriteSheet,
                     spriteBoundsList
             )
-        }
+        })
 
         return annotatedSpriteSheets
     }
