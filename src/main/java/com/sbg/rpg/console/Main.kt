@@ -20,14 +20,14 @@ import com.beust.jcommander.ParameterException
 import com.sbg.rpg.packing.common.SpriteCutter
 import com.sbg.rpg.packing.common.SpriteDrawer
 import com.sbg.rpg.packing.common.SpriteSheetWriter
+import com.sbg.rpg.packing.packer.SpriteSheetPacker
 import com.sbg.rpg.packing.packer.metadata.JsonMetadataCreator
 import com.sbg.rpg.packing.packer.metadata.TextMetadataCreator
 import com.sbg.rpg.packing.packer.metadata.YamlMetadataCreator
-import com.sbg.rpg.packing.packer.SpriteSheetPacker
 import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
+import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.Level
 
 fun main(args: Array<String>) {
     try {

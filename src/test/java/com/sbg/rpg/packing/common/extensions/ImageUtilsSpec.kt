@@ -4,12 +4,12 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
-import java.nio.file.Paths
-import kotlin.test.assertFalse
-import kotlin.test.assertEquals
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.image.BufferedImage
+import java.nio.file.Paths
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 
 object ImageUtilsSpec : Spek({

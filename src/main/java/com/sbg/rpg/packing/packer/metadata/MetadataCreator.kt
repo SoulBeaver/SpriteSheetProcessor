@@ -15,8 +15,8 @@
  */
 package com.sbg.rpg.packing.packer.metadata
 
-import com.sbg.rpg.packing.packer.model.SpriteBounds
+import com.sbg.rpg.packing.packer.model.IndexedSpriteBounds
 
 interface MetadataCreator {
-    fun create(spriteBoundsList: List<SpriteBounds>): String
+    fun create(indexedSpriteBoundsList: List<IndexedSpriteBounds>): String
 }

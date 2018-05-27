@@ -2,29 +2,28 @@ package com.sbg.rpg.packing.packer
 
 import com.sbg.rpg.packing.common.Sprite
 import com.sbg.rpg.packing.common.SpriteDrawer
+import com.sbg.rpg.packing.common.extensions.area
 import com.sbg.rpg.packing.packer.metadata.MetadataCreator
-import com.sbg.rpg.packing.packer.model.SpriteBounds
+import com.sbg.rpg.packing.packer.model.IndexedSpriteBounds
+import com.sbg.rpg.packing.packer.model.PackedSpriteSheet
 import com.sbg.rpg.packing.packer.model.Strip
 import com.sbg.rpg.packing.packer.model.growHorizontally
-import com.sbg.rpg.packing.common.extensions.area
 import org.apache.logging.log4j.LogManager
 import java.awt.Point
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
 
-data class PackedSpriteSheet(val canvas: BufferedImage, val metadata: String)
-
 class SpriteSheetPacker(private val spriteDrawer: SpriteDrawer, private val metadataCreator: MetadataCreator) {
     private val logger = LogManager.getLogger(SpriteSheetPacker::class.simpleName)
 
-    public fun pack(sprites: List<Sprite>): PackedSpriteSheet {
+    fun pack(sprites: List<Sprite>): PackedSpriteSheet {
         logger.debug("Packing ${sprites.size} sprites.")
 
         val spritesByAreaDesc = sprites.sortedBy(Sprite::area).reversed()
 
         logger.debug("Sprite areas:  ${sprites.sortedBy(Sprite::area).map(Sprite::area).reversed()}")
 
-        val positionedSprites = packSprites(sprites, squareStrip(spritesByAreaDesc.first()))
+        val positionedSprites = packSprites(spritesByAreaDesc, squareStrip(spritesByAreaDesc.first()))
 
         logger.debug("Positioned sprites:  ${positionedSprites.map { it.startingPoint }}")
 
@@ -119,7 +118,7 @@ class SpriteSheetPacker(private val spriteDrawer: SpriteDrawer, private val meta
 
     private fun createMetadata(positionedSprites: List<PositionedSprite>): String {
         val spriteBounds = positionedSprites.mapIndexed { idx, (sprite, coords) ->
-            SpriteBounds(idx, Rectangle(coords.x, coords.y, coords.x + sprite.width, coords.y + sprite.height))
+            IndexedSpriteBounds(idx, Rectangle(coords.x, coords.y, coords.x + sprite.width, coords.y + sprite.height))
         }
 
         return metadataCreator.create(spriteBounds)

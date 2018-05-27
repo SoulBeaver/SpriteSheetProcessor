@@ -17,4 +17,4 @@ package com.sbg.rpg.packing.packer.model
 
 import java.awt.Rectangle
 
-data class SpriteBounds(val frame: Int, val bounds: Rectangle)
+data class IndexedSpriteBounds(val frame: Int, val bounds: Rectangle)

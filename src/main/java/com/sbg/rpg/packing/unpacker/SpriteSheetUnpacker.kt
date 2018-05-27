@@ -15,14 +15,15 @@
  */
 package com.sbg.rpg.packing.unpacker
 
-import com.sbg.rpg.packing.common.*
+import com.sbg.rpg.packing.common.SpriteBounds
+import com.sbg.rpg.packing.common.SpriteCutter
+import com.sbg.rpg.packing.common.SpriteSheet
 import com.sbg.rpg.packing.common.extensions.*
-import java.awt.image.BufferedImage
-import java.awt.Image
-import java.awt.Color
-import java.awt.Rectangle
-import java.awt.Point
 import org.apache.logging.log4j.LogManager
+import java.awt.Color
+import java.awt.Point
+import java.awt.Rectangle
+import java.awt.image.BufferedImage
 import java.util.*
 
 /**
@@ -36,7 +37,9 @@ import java.util.*
  */
 class SpriteSheetUnpacker(
         private val spriteCutter: SpriteCutter,
+        // TODO: make value user-configurable
         private val colorSimilarityThreshold: Int = 10,
+        // TODO: user-configurable variable to adjust the unpacking algorithm which may or may not help the general effort
         private val maxPixelDistance: Int = 3) {
 
     private val logger = LogManager.getLogger(SpriteSheetUnpacker::class.simpleName)
@@ -50,9 +53,9 @@ class SpriteSheetUnpacker(
      */
     fun unpack(spriteSheet: BufferedImage): List<BufferedImage> {
         val backgroundColor = spriteSheet.probableBackgroundColor()
-        logger.debug("The background color (probably) is ${backgroundColor}")
+        logger.debug("The background color (probably) is $backgroundColor")
 
-        return detectSpriteDimensions(spriteSheet).pmap {
+        return discoverSprites(spriteSheet).pmap {
             spriteCutter.cut(spriteSheet, it, backgroundColor)
         }
     }
@@ -64,105 +67,125 @@ class SpriteSheetUnpacker(
      * @param spriteSheet the sprite sheet to unpack
      * @return list of extracted sprite bounds
      */
-    fun detectSpriteDimensions(spriteSheet: BufferedImage): List<Rectangle> {
+    fun discoverSprites(spriteSheet: SpriteSheet): List<SpriteBounds> {
 
-        // Find all sprite boundaries
-        // Merge sprites completely inside other sprites
-        // Merge sprites that have a face inside another sprite
+        val spriteBoundsList = findSprites(spriteSheet, spriteSheet.probableBackgroundColor())
+        logger.info("Found ${spriteBoundsList.size} sprites.")
 
-        val allSpriteDimensions = findSpriteDimensions(spriteSheet, spriteSheet.probableBackgroundColor())
-        logger.info("Found ${allSpriteDimensions.size} sprites.")
-
-        // any sprites completely inside other sprites? merge 'em.
-        val unconfinedSpriteDimensions = filterConfinedSpriteDimensions(allSpriteDimensions)
+        // any sprites completely inside other sprites? exclude 'em.
+        val filteredSpriteBoundsList = filterSpritesContainedCompletelyInOtherSprites(spriteBoundsList)
+        logger.debug("${spriteBoundsList.size} sprites remaining after filtering.")
 
         // any sprites have one or more of their edges inside anothers? merge 'em.
-        val mergedSpriteDimensions = mergeSpritesWithSharedEdges(unconfinedSpriteDimensions)
+        val filteredAndMergedSpriteBoundsList = mergeSpritesWithOverlappingEdges(filteredSpriteBoundsList)
+        logger.debug("${spriteBoundsList.size} sprites remaining after merging sprites with overlapping edges.")
 
-        return mergedSpriteDimensions
+        return filteredAndMergedSpriteBoundsList
     }
 
-    private fun filterConfinedSpriteDimensions(spriteDimensions: List<Rectangle>): List<Rectangle> {
-        val unconfinedSpriteDimensions = mutableListOf<Rectangle>()
+    /*
+     * Sometimes we have sprites that have components that aren't connected, but still part of the same sprite.
+     *
+     * See the `unpacker/Intersecting.png` image in the test/resources directly for an example of this. Goku's aura
+     * near the top forms a crown that isn't directly connected to the rest of his sprite, but should clearly not be treated
+     * as a separate sprite. Instead, we check if the edges of their corresponding boundaries are contained inside each other.
+     *
+     * It's very important that there is a distinction made between entire edges inside of other sprite bounds and not
+     * simply searching for an intersection. Densely packed sprite sheets may have many intersections among sprites, but
+     * should not be merged.
+     *
+     * As a consideration for the future, this option might become toggleable.
+     */
+    private fun mergeSpritesWithOverlappingEdges(spriteBoundsList: List<SpriteBounds>): List<SpriteBounds> {
+        if (spriteBoundsList.size <= 1)
+            return spriteBoundsList
 
-        val spriteDimensionsByArea = spriteDimensions.sortedBy(Rectangle::area).reversed()
-        for (smallSpriteDimensions in spriteDimensions) {
-            for (largeSpriteDimensions in spriteDimensionsByArea) {
+        val mergedSpriteBoundsList = mutableListOf(*spriteBoundsList.toTypedArray())
 
-                if (smallSpriteDimensions.area() >= largeSpriteDimensions.area()) {
-                    unconfinedSpriteDimensions.add(smallSpriteDimensions)
-                    break
-                }
-
-                if (largeSpriteDimensions.contains(smallSpriteDimensions)) {
-                    break
-                }
-            }
-        }
-
-        return unconfinedSpriteDimensions
-    }
-
-    private fun mergeSpritesWithSharedEdges(spriteDimensions: List<Rectangle>): List<Rectangle> {
-        val mergedSpriteDimensions = mutableListOf(*spriteDimensions.toTypedArray())
-
-        val spriteDimensionsReversed = spriteDimensions.reversed()
-        for (a: Rectangle in spriteDimensions) {
-            for (b in spriteDimensionsReversed) {
+        for (a: Rectangle in spriteBoundsList) {
+            for (b in spriteBoundsList.reversed()) {
                 if (a == b) {
                     break
                 }
 
                 if (a.containsLine(b)) {
-                    mergedSpriteDimensions.remove(a)
-                    mergedSpriteDimensions.remove(b)
+                    mergedSpriteBoundsList.remove(a)
+                    mergedSpriteBoundsList.remove(b)
 
                     val c = a.union(b)
-                    mergedSpriteDimensions.add(c)
+                    mergedSpriteBoundsList.add(c)
                 }
             }
         }
 
-        return mergedSpriteDimensions
+        return mergedSpriteBoundsList
     }
 
-    private fun findSpriteDimensions(image: BufferedImage,
-                                     backgroundColor: Color): List<Rectangle> {
-        val workingImage = image.copy()
+    /*
+     * Some sprites are located entirely inside of other sprites. A sprite that is within another sprite completely
+     * is considered part of that sprite and its boundaries are discarded.
+     */
+    private fun filterSpritesContainedCompletelyInOtherSprites(spriteBoundsList: List<SpriteBounds>): List<SpriteBounds> {
+        if (spriteBoundsList.size <= 1)
+            return spriteBoundsList
 
-        val spriteDimensions = ArrayList<Rectangle>()
-        for (pixel in workingImage) {
+        val filteredSpriteBoundsList = mutableListOf<SpriteBounds>()
+
+        val spriteBoundsListByAreaAsc = spriteBoundsList.sortedBy(SpriteBounds::area)
+        for (spriteBoundsAsc in spriteBoundsListByAreaAsc) {
+            for (spriteBoundsDesc in spriteBoundsListByAreaAsc.reversed()) {
+
+                if (spriteBoundsAsc.area() >= spriteBoundsDesc.area()) {
+                    filteredSpriteBoundsList.add(spriteBoundsAsc)
+                    break
+                }
+
+                if (spriteBoundsDesc.contains(spriteBoundsAsc)) {
+                    break
+                }
+            }
+        }
+
+        return filteredSpriteBoundsList
+    }
+
+    private fun findSprites(spriteSheet: SpriteSheet,
+                            backgroundColor: Color): List<SpriteBounds> {
+        val workingCopy = spriteSheet.copy()
+
+        val spriteBoundsList = ArrayList<Rectangle>()
+        for (pixel in workingCopy) {
             val (point, color) = pixel
 
             if (backgroundColor.distance(color) > colorSimilarityThreshold) {
                 logger.debug("Found a sprite starting at (${point.x}, ${point.y}) with color $color")
-                val spritePlot = findContiguousSprite(workingImage, point, backgroundColor)
-                val spriteBoundaries = constructSpriteBoundaryFromPlot(spritePlot)
+                val spritePlot = plotSprite(workingCopy, point, backgroundColor)
+                val spriteBounds = constructSpriteBoundsFromPlot(spritePlot)
 
-                logger.debug("The identified sprite has an area of ${spriteBoundaries.width}x${spriteBoundaries.height}")
+                logger.debug("The identified sprite has an area of ${spriteBounds.width}x${spriteBounds.height}")
 
-                spriteDimensions.add(spriteBoundaries)
-                workingImage.erasePoints(spritePlot, backgroundColor)
+                spriteBoundsList.add(spriteBounds)
+                workingCopy.erasePoints(spritePlot, backgroundColor)
             }
         }
 
-        return spriteDimensions
+        return spriteBoundsList
     }
 
 
-    private fun findContiguousSprite(image: BufferedImage, point: Point, backgroundColor: Color): List<Point> {
+    private fun plotSprite(spriteSheet: SpriteSheet, point: Point, backgroundColor: Color): List<Point> {
         val unvisited = LinkedList<Point>()
         val visited = hashSetOf(point)
 
-        unvisited.addAll(neighbors(point, image).filter { image.getRGB(it.x, it.y) != backgroundColor.rgb })
+        unvisited.addAll(neighbors(point, spriteSheet).filter { spriteSheet.getRGB(it.x, it.y) != backgroundColor.rgb })
 
         while (unvisited.isNotEmpty()) {
             val currentPoint = unvisited.pop()
-            val currentColor = Color(image.getRGB(currentPoint.x, currentPoint.y), true)
+            val currentColor = Color(spriteSheet.getRGB(currentPoint.x, currentPoint.y), true)
 
             if (backgroundColor.distance(currentColor) > colorSimilarityThreshold) {
-                unvisited.addAll(neighbors(currentPoint, image).filter {
-                    val neighborColor = Color(image.getRGB(it.x, it.y))
+                unvisited.addAll(neighbors(currentPoint, spriteSheet).filter {
+                    val neighborColor = Color(spriteSheet.getRGB(it.x, it.y))
 
                     !visited.contains(it) &&
                             !unvisited.contains(it) &&
@@ -176,10 +199,10 @@ class SpriteSheetUnpacker(
         return visited.toList()
     }
 
-    private fun neighbors(point: Point, image: Image): List<Point> {
+    private fun neighbors(point: Point, spriteSheet: BufferedImage): List<Point> {
         val neighbors = ArrayList<Point>(8)
-        val imageWidth = image.getWidth(null) - 1
-        val imageHeight = image.getHeight(null) - 1
+        val imageWidth = spriteSheet.getWidth(null) - 1
+        val imageHeight = spriteSheet.getHeight(null) - 1
 
         // Left neighbor
         if (point.x > 0)
@@ -216,7 +239,7 @@ class SpriteSheetUnpacker(
         return neighbors
     }
 
-    private fun constructSpriteBoundaryFromPlot(points: List<Point>): Rectangle {
+    private fun constructSpriteBoundsFromPlot(points: List<Point>): Rectangle {
         if (points.isEmpty())
             throw IllegalArgumentException("No points to span Rectangle from.")
 

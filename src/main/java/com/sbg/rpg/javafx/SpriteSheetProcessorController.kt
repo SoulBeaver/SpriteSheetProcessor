@@ -15,13 +15,13 @@
  */
 package com.sbg.rpg.javafx
 
+import com.sbg.rpg.javafx.model.AnnotatedSpriteSheet
 import com.sbg.rpg.packing.common.SpriteCutter
 import com.sbg.rpg.packing.common.SpriteDrawer
-import com.sbg.rpg.javafx.model.AnnotatedSpriteSheet
-import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import com.sbg.rpg.packing.common.extensions.filenameWithoutExtension
 import com.sbg.rpg.packing.common.extensions.pmap
 import com.sbg.rpg.packing.common.extensions.readImage
+import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import tornadofx.Controller
 import java.io.File
@@ -42,19 +42,17 @@ class SpriteSheetProcessorController : Controller() {
 
         this.spriteSheetPaths = spriteSheetFiles.map { Paths.get(it.absolutePath) }
 
-        val annotatedSpriteSheets = spriteSheetPaths.pmap { spriteSheetPath ->
+        return spriteSheetPaths.pmap { spriteSheetPath ->
             logger.debug("Unpacking ${spriteSheetPath.fileName}")
 
             val spriteSheet = spriteSheetPath.readImage()
-            val spriteBoundsList = spriteSheetUnpacker.detectSpriteDimensions(spriteSheet)
+            val spriteBoundsList = spriteSheetUnpacker.discoverSprites(spriteSheet)
 
             AnnotatedSpriteSheet(
                     spriteSheet,
                     spriteBoundsList
             )
         }
-
-        return annotatedSpriteSheets
     }
 
     fun saveSprites(directory: File) {

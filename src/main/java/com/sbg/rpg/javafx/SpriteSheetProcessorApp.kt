@@ -34,14 +34,6 @@ class SpriteSheetProcessorApp : App() {
     init {
 
     }
-
-    override fun start(stage: Stage) {
-        super.start(stage)
-    }
-}
-
-class SpriteSheetView : View() {
-    override val root = HBox(Label("It works!"))
 }
 
 fun main(args: Array<String>) {

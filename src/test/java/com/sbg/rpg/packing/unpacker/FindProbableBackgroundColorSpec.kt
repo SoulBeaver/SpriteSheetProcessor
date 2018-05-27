@@ -2,13 +2,13 @@ package com.sbg.rpg.packing.unpacker
 
 import com.sbg.rpg.packing.common.extensions.probableBackgroundColor
 import com.sbg.rpg.packing.common.extensions.readImage
-import java.nio.file.Paths
-import java.awt.Color
-import kotlin.test.assertEquals
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+import java.awt.Color
+import java.nio.file.Paths
+import kotlin.test.assertEquals
 
 object FindProbableBackgroundColorSpec: Spek({
     given("An image with no sprites and a white background") {

@@ -15,11 +15,11 @@
  */
 package com.sbg.rpg.packing.packer.metadata
 
-import com.sbg.rpg.packing.packer.model.SpriteBounds
+import com.sbg.rpg.packing.packer.model.IndexedSpriteBounds
 import org.apache.logging.log4j.LogManager
 
 /**
- * Converts a list of SpriteBounds (Int * Rectangle), essentially a pair of Frame Index and the location and area of the Rectangle,
+ * Converts a list of IndexedSpriteBounds (Int * Rectangle), essentially a pair of Frame Index and the location and area of the Rectangle,
  * into a text string representation. The string is guaranteed to have proper line breaks for each OS and a
  * somewhat readable format.
  *
@@ -35,20 +35,20 @@ import org.apache.logging.log4j.LogManager
  *     ...
  * </pre>
  *
- * @param spriteBoundsList The SpriteBounds to convert
- * @return A plain text representation of the SpriteBounds or
+ * @param indexedSpriteBoundsList The IndexedSpriteBounds to convert
+ * @return A plain text representation of the IndexedSpriteBounds or
  *         en empty ("") string if empty
  */
 class TextMetadataCreator: MetadataCreator {
     private val logger = LogManager.getLogger(TextMetadataCreator::class.simpleName)
 
-    override fun create(spriteBoundsList: List<SpriteBounds>): String {
-        if (spriteBoundsList.isEmpty()) {
+    override fun create(indexedSpriteBoundsList: List<IndexedSpriteBounds>): String {
+        if (indexedSpriteBoundsList.isEmpty()) {
             logger.warn("No spriteBounds in list, returning empty string.")
             return ""
         }
 
-        val entries = spriteBoundsList.map {
+        val entries = indexedSpriteBoundsList.map {
             "${it.frame}=${it.bounds.x} ${it.bounds.y} ${it.bounds.width} ${it.bounds.height}"
         }
 

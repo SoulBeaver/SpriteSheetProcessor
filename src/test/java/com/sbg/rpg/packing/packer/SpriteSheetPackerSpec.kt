@@ -1,9 +1,9 @@
 package com.sbg.rpg.packing.packer
 
-import com.sbg.rpg.packing.common.extensions.iterator
 import com.sbg.rpg.packing.common.SpriteDrawer
-import com.sbg.rpg.packing.packer.metadata.TextMetadataCreator
+import com.sbg.rpg.packing.common.extensions.iterator
 import com.sbg.rpg.packing.common.extensions.readImage
+import com.sbg.rpg.packing.packer.metadata.TextMetadataCreator
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
@@ -107,8 +107,8 @@ object SpriteSheetPackerSpec: Spek({
                 it("packs them into a single common") {
                     val (canvas, _) = packer.pack(sprites)
 
-                    assertEquals(canvas.width, 62)
-                    assertEquals(canvas.height, 77)
+                    assertEquals(31, canvas.width)
+                    assertEquals(115, canvas.height)
 
                     for ((point, color) in expected) {
                         assertEquals(color.rgb, canvas.getRGB(point.x, point.y))
@@ -142,8 +142,8 @@ object SpriteSheetPackerSpec: Spek({
                 it("packs them into a single common") {
                     val (canvas, _) = packer.pack(sprites)
 
-                    assertEquals(canvas.width, 143)
-                    assertEquals(canvas.height, 209)
+                    assertEquals(160, canvas.width)
+                    assertEquals(174, canvas.height)
 
                     for ((point, color) in expected) {
                         assertEquals(color.rgb, canvas.getRGB(point.x, point.y))

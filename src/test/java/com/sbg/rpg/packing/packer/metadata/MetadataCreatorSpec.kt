@@ -1,17 +1,17 @@
 package com.sbg.rpg.packing.packer.metadata
 
-import com.sbg.rpg.packing.packer.model.SpriteBounds
+import com.sbg.rpg.packing.packer.model.IndexedSpriteBounds
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
-import kotlin.test.assertTrue
 import java.awt.Rectangle
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 object MetadataCreatorSpec: Spek({
-    given("An empty list of SpriteBounds") {
-        val spriteBoundsList = listOf<SpriteBounds>()
+    given("An empty list of IndexedSpriteBounds") {
+        val spriteBoundsList = listOf<IndexedSpriteBounds>()
 
         on("converting to yaml") {
             val metadataCreator = YamlMetadataCreator()
@@ -48,7 +48,7 @@ object MetadataCreatorSpec: Spek({
     }
 
     given("A single SpriteBound") {
-        val spriteBoundsList = listOf(SpriteBounds(0, Rectangle(0, 0, 50, 50)))
+        val spriteBoundsList = listOf(IndexedSpriteBounds(0, Rectangle(0, 0, 50, 50)))
 
         on("converting to yaml") {
             val metadataCreator = YamlMetadataCreator()
@@ -61,7 +61,7 @@ object MetadataCreatorSpec: Spek({
                 val result = metadataCreator.create(spriteBoundsList)
 
                 assertTrue(result.isNotEmpty(),
-                        "Expected a proper yaml string for single SpriteBounds entry")
+                        "Expected a proper yaml string for single IndexedSpriteBounds entry")
                 assertEquals(expected, result,
                         "Expected $expected, but was $result")
             }
@@ -76,7 +76,7 @@ object MetadataCreatorSpec: Spek({
                 val result = metadataCreator.create(spriteBoundsList)
 
                 assertTrue(result.isNotEmpty(),
-                        "Expected a proper json string for single SpriteBounds entry")
+                        "Expected a proper json string for single IndexedSpriteBounds entry")
                 assertEquals(expected, result,
                         "Expected $expected, but was $result")
             }
@@ -91,16 +91,16 @@ object MetadataCreatorSpec: Spek({
                 val result = metadataCreator.create(spriteBoundsList)
 
                 assertTrue(result.isNotEmpty(),
-                        "Expected a plan text string for single SpriteBounds entry")
+                        "Expected a plan text string for single IndexedSpriteBounds entry")
                 assertEquals(expected, result,
                         "Expected $expected, but was $result")
             }
         }
     }
 
-    given("Multiple SpriteBounds") {
-        val spriteBoundsList = listOf(SpriteBounds(0, Rectangle(0, 0, 50, 50)),
-                SpriteBounds(1, Rectangle(51, 51, 50, 50)))
+    given("Multiple IndexedSpriteBounds") {
+        val spriteBoundsList = listOf(IndexedSpriteBounds(0, Rectangle(0, 0, 50, 50)),
+                IndexedSpriteBounds(1, Rectangle(51, 51, 50, 50)))
 
         on("converting to yaml") {
             val metadataCreator = YamlMetadataCreator()

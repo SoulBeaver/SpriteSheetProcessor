@@ -1,15 +1,15 @@
 package com.sbg.rpg.console
 
 import com.beust.jcommander.JCommander
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import com.beust.jcommander.ParameterException
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 object CommandLineArgumentsSpec: Spek({
     given("Command line arguments") {

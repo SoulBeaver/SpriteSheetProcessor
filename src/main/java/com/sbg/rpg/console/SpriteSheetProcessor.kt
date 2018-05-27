@@ -18,10 +18,10 @@ package com.sbg.rpg.console
 import com.sbg.rpg.packing.common.ImageReadException
 import com.sbg.rpg.packing.common.Sprite
 import com.sbg.rpg.packing.common.SpriteSheetWriter
-import com.sbg.rpg.packing.packer.SpriteSheetPacker
-import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import com.sbg.rpg.packing.common.extensions.filenameWithoutExtension
 import com.sbg.rpg.packing.common.extensions.readImage
+import com.sbg.rpg.packing.packer.SpriteSheetPacker
+import com.sbg.rpg.packing.unpacker.SpriteSheetUnpacker
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.nio.file.Files

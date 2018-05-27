@@ -3,14 +3,14 @@ package com.sbg.rpg.packing.unpacker
 import com.sbg.rpg.packing.common.SpriteCutter
 import com.sbg.rpg.packing.common.SpriteDrawer
 import com.sbg.rpg.packing.common.extensions.readImage
-import java.nio.file.Paths
-import kotlin.test.assertTrue
-import kotlin.test.assertEquals
-import java.awt.Rectangle
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+import java.awt.Rectangle
+import java.nio.file.Paths
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 object UnpackerSpec : Spek({
     given("A SpriteSheet Unpacker") {

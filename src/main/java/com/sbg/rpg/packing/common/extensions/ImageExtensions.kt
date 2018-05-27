@@ -18,7 +18,10 @@ package com.sbg.rpg.packing.common.extensions
 import com.sbg.rpg.packing.common.Pixel
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.WritableImage
-import java.awt.*
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Image
+import java.awt.Point
 import java.awt.image.BufferedImage
 import java.util.*
 

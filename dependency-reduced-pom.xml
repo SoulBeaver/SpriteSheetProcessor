@@ -115,12 +115,12 @@
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
-      <version>1.2.21</version>
+      <artifactId>kotlin-test</artifactId>
+      <version>1.2.41</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>kotlin-test</artifactId>
+          <artifactId>kotlin-test-common</artifactId>
           <groupId>org.jetbrains.kotlin</groupId>
         </exclusion>
       </exclusions>
@@ -169,28 +169,17 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>com.nhaarman</groupId>
-      <artifactId>mockito-kotlin</artifactId>
-      <version>1.5.0</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>mockito-core</artifactId>
-          <groupId>org.mockito</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
   <properties>
     <tornadofx.version>1.7.14</tornadofx.version>
+    <mockk.version>1.7.5</mockk.version>
     <junit.jupiter.version>5.0.3</junit.jupiter.version>
     <junit.version>4.12</junit.version>
     <gson.version>2.6.2</gson.version>
     <snakeyaml.version>1.17</snakeyaml.version>
     <spek.version>1.1.5</spek.version>
     <jcommander.version>1.30</jcommander.version>
-    <kotlin.version>1.2.21</kotlin.version>
+    <kotlin.version>1.2.41</kotlin.version>
     <junit.vintage.version>${junit.version}.3</junit.vintage.version>
     <log4j2.version>2.5</log4j2.version>
     <junit.platform.version>1.0.3</junit.platform.version>

@@ -11,7 +11,7 @@ import java.awt.Color
  *
  *      https://www.compuphase.com/cmetric.htm
  */
-public fun Color.distance(color: Color): Double {
+fun Color.distance(color: Color): Double {
     val rMean = (this.red + color.red) / 2
 
     val r = this.red - color.red

@@ -16,7 +16,7 @@
 package com.sbg.rpg.console
 
 import com.beust.jcommander.Parameter
-import java.util.ArrayList
+import java.util.*
 
 data class CommandLineArguments(
         @Parameter(description = "Sprite sheets to (un)pack",
