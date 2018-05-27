@@ -31,8 +31,11 @@ How much of it is done? You can unpack any SpriteSheet into individual sprites.
 
     # Extract to directory currently in
     java -jar SpriteSheetProcessor.jar -e . Heroes.gif
+    
+    # Multiple sprite sheets (with fail-fast)
+    java -jar SpriteSheetProcessor.jar -ff -e . Heroes.gif FX.png UI.png 
 
-#### JavaFX (WiP)
+#### JavaFX (WIP)
 
 This will let you confirm and edit (to an extent) any errors encountered by the unpacking process.
 
@@ -40,17 +43,31 @@ So far only unpacking is supported- sprite packing is coming soon!
 
 ![JavaFX App][1]
 
-#### Updates
+#### Upcoming Features
 
-**2017-02-19**
+1. Click and drag to select sprites in the JavaFX App.
+2. Add functionality to Combined, Separate and Exclude (probably removing Separate) in the JavaFX App.
+3. Add Packing functionality to the JavaFX App.
+4. User-configurable options to help detecting sprites.
+
+#### Changelog
+
+**2018-05-27**
+
+* Improved sprite detection and packing density in some cases.
+    * Now removed sprites wholly contained inside other sprites
+    * Merges sprites that share an edge of their sprite boundaries
+    * Packing now packs the sprites from largest to smallest
+
+**2018-02-19**
 
 * Color Distance implemented, can now reliably cut .jpeg and other lossy formats.
 
-**2017-02-17**
+**2018-02-17**
 
 * Sprite Sheet Packing has been added to the console version.
 
-**2017-02-16**
+**2018-02-16**
 
 * Sprite Sheet Packing algorithm v1 is complete.
 
